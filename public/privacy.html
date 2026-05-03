@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G.U.R.U. — Privacy Policy</title>
+<style>
+  body { font-family: system-ui, sans-serif; max-width: 720px; margin: 0 auto; padding: 3rem 1.5rem; color: #1a2535; line-height: 1.7; }
+  h1 { font-size: 28px; margin-bottom: 0.25rem; }
+  .subtitle { color: #64748b; margin-bottom: 2.5rem; font-size: 14px; }
+  h2 { font-size: 16px; font-weight: 700; margin: 2rem 0 0.5rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.4rem; }
+  p, li { font-size: 14px; }
+  ul { padding-left: 1.4rem; }
+  li { margin-bottom: 0.3rem; }
+  a { color: #0070f3; }
+  .last-updated { font-size: 12px; color: #94a3b8; margin-top: 3rem; }
+</style>
+</head>
+<body>
+
+<h1>Privacy Policy</h1>
+<p class="subtitle">G.U.R.U. — Guided University Research Utility &nbsp;·&nbsp; Effective: 3 May 2025</p>
+
+<h2>1. Overview</h2>
+<p>G.U.R.U. is a browser-based AI research tool. This policy explains what data is collected, where it is stored, and how it is used. We are committed to keeping your research data private and under your control.</p>
+
+<h2>2. Data We Do Not Collect</h2>
+<ul>
+  <li>We do not collect your name, email address, or any personally identifying information</li>
+  <li>We do not run analytics, tracking scripts, or advertising pixels</li>
+  <li>We do not sell or share your data with any third party</li>
+  <li>We do not store your Gemini API key — it lives only in your browser's localStorage</li>
+  <li>We do not read your research content, vault entries, or chat history</li>
+</ul>
+
+<h2>3. Data Stored Locally (Your Device Only)</h2>
+<p>The following data is stored exclusively in your browser's localStorage and never leaves your device unless you enable Cloud Sync:</p>
+<ul>
+  <li>Your Gemini API key</li>
+  <li>Your research directive (PhD focus description)</li>
+  <li>Chat history (last 50 messages)</li>
+  <li>Vault entries (research notes, document excerpts)</li>
+  <li>Saved references and OSCOLA citations</li>
+  <li>App settings (model, voice, temperature)</li>
+  <li>Pro licence key (hashed for validation)</li>
+</ul>
+
+<h2>4. Cloud Sync (Pro Feature — Optional)</h2>
+<p>If you enable Cloud Sync, your vault entries and chat history are stored in Google Firebase Firestore. The following applies:</p>
+<ul>
+  <li>Your data is stored under a SHA-256 hash of your chosen passphrase — not your name or email</li>
+  <li>Only someone who knows your exact passphrase can access your cloud node</li>
+  <li>We cannot access your data, as we do not store your passphrase</li>
+  <li>Data is transmitted over HTTPS and stored in Google's EU/US data centres</li>
+  <li>You can delete your cloud data at any time by clearing your vault within the app</li>
+</ul>
+
+<h2>5. Gemini API (Google)</h2>
+<p>G.U.R.U. sends your questions and vault context directly to Google's Gemini API using your own API key. This means:</p>
+<ul>
+  <li>Your prompts are sent to Google's servers for processing</li>
+  <li>Google's own <a href="https://ai.google.dev/terms" target="_blank">Gemini API Terms of Service</a> and privacy policy apply to this processing</li>
+  <li>We recommend reviewing Google's data usage policies before using the API with sensitive research material</li>
+  <li>G.U.R.U. does not log, intercept, or store the content of any API request</li>
+</ul>
+
+<h2>6. Google Docs / Sheets Add-on</h2>
+<p>The G.U.R.U. Google Workspace add-on stores your API key and sync passphrase in Google's UserProperties service, scoped to your Google account. No data is sent to any G.U.R.U. server. Document content is only processed when you explicitly trigger an action (e.g. "Analyse Selection").</p>
+
+<h2>7. Pro Licence Validation</h2>
+<p>When you enter a Pro licence key, G.U.R.U. hashes it locally and makes a read-only request to our Firestore licence registry to confirm the key is active. The request contains only the hash — your actual key is never transmitted.</p>
+
+<h2>8. Cookies</h2>
+<p>G.U.R.U. does not use cookies. All storage is via the browser's localStorage API.</p>
+
+<h2>9. Children</h2>
+<p>G.U.R.U. is intended for use by university students and researchers (18+). We do not knowingly collect any data from children under 16.</p>
+
+<h2>10. Changes to This Policy</h2>
+<p>We may update this policy as the product evolves. The effective date at the top of this page will reflect the most recent version. Continued use of G.U.R.U. after changes constitutes acceptance.</p>
+
+<h2>11. Contact</h2>
+<p>For privacy questions or data deletion requests, contact us at: <a href="mailto:vdhiraj2@gmail.com">vdhiraj2@gmail.com</a></p>
+
+<p class="last-updated">Last updated: 3 May 2025 · G.U.R.U. v199</p>
+</body>
+</html>

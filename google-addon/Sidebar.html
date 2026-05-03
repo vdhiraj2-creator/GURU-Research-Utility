@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Google Sans', Arial, sans-serif; font-size: 13px; background: #0a0f1a; color: #cbd5e1; min-height: 100vh; }
+  :root {
+    --pulse: #00ffcc;
+    --card:  #0f1829;
+    --border: #1e3050;
+    --blue:  #3b82f6;
+    --purple:#a78bfa;
+    --red:   #ef4444;
+  }
+
+  /* Header */
+  .hdr { background: var(--card); border-bottom: 1px solid var(--border); padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+  .hdr-badge { font-family: monospace; font-size: 7px; letter-spacing: 0.1em; color: #020407; background: var(--pulse); border-radius: 3px; padding: 1px 5px; }
+  .guru-name { display: inline-flex; align-items: center; gap: 0; line-height: 1; }
+  .guru-letter { font-family: monospace; font-size: 15px; font-weight: 700; color: #ffffff; text-shadow: 0 0 1px #fff, 0 0 8px #fff, 0 0 14px rgba(0,255,204,0.9); letter-spacing: 0; }
+  .guru-dot { font-family: monospace; font-size: 15px; font-weight: 700; color: var(--pulse); display: inline-block; margin: 0 1px; animation: gdot 2.4s ease-in-out infinite; }
+  .guru-dot:nth-child(2) { animation-delay: 0s; }
+  .guru-dot:nth-child(4) { animation-delay: 0.6s; }
+  .guru-dot:nth-child(6) { animation-delay: 1.2s; }
+  .guru-dot:nth-child(8) { animation-delay: 1.8s; }
+  @keyframes gdot { 0%,100% { opacity:0.12; transform:scale(0.65); text-shadow:none; } 50% { opacity:1; transform:scale(1.5); text-shadow:0 0 10px var(--pulse), 0 0 22px rgba(0,255,204,0.7); } }
+
+  /* Tabs */
+  .tabs { display: flex; border-bottom: 1px solid var(--border); background: var(--card); }
+  .tab { flex: 1; padding: 8px 4px; font-family: monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; text-align: center; cursor: pointer; color: #334155; border: none; background: none; transition: color 0.2s; }
+  .tab.active { color: var(--pulse); border-bottom: 2px solid var(--pulse); }
+
+  /* Panels */
+  .panel { display: none; padding: 12px 14px; }
+  .panel.active { display: block; }
+
+  /* Form elements */
+  label { display: block; font-family: monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: #475569; margin-bottom: 4px; margin-top: 12px; }
+  label:first-child { margin-top: 0; }
+  input, textarea, select {
+    width: 100%; background: var(--card); border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 9px; color: #e2e8f0; font-size: 12px;
+    font-family: monospace; outline: none; transition: border-color 0.2s;
+  }
+  input:focus, textarea:focus, select:focus { border-color: rgba(0,255,204,0.4); }
+  textarea { min-height: 80px; resize: vertical; }
+
+  /* Buttons */
+  .btn { display: block; width: 100%; margin-top: 8px; padding: 8px; border-radius: 6px; border: none; cursor: pointer; font-family: monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; transition: opacity 0.15s; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary  { background: var(--pulse); color: #020407; }
+  .btn-blue     { background: transparent; border: 1px solid rgba(59,130,246,0.4); color: var(--blue); }
+  .btn-purple   { background: transparent; border: 1px solid rgba(167,139,250,0.4); color: var(--purple); }
+  .btn-danger   { background: transparent; border: 1px solid rgba(239,68,68,0.3); color: var(--red); font-size: 9px; }
+  .btn-row { display: flex; gap: 6px; margin-top: 8px; }
+  .btn-row .btn { margin-top: 0; }
+
+  /* Status / output */
+  .status { font-family: monospace; font-size: 10px; min-height: 14px; margin-top: 8px; transition: color 0.2s; }
+  .status.ok  { color: var(--pulse); }
+  .status.err { color: var(--red); }
+  .output { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 10px; font-size: 12px; line-height: 1.6; color: #94a3b8; margin-top: 8px; white-space: pre-wrap; display: none; max-height: 260px; overflow-y: auto; }
+
+  /* Vault list */
+  .vault-entry { background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; cursor: pointer; transition: border-color 0.15s; }
+  .vault-entry:hover { border-color: rgba(59,130,246,0.4); }
+  .vault-title { font-size: 11px; color: #e2e8f0; margin-bottom: 3px; }
+  .vault-preview { font-family: monospace; font-size: 10px; color: #475569; line-height: 1.4; }
+  .vault-actions { display: flex; gap: 4px; margin-top: 5px; }
+  .vault-act { font-family: monospace; font-size: 9px; padding: 2px 7px; border-radius: 3px; border: none; cursor: pointer; background: transparent; transition: color 0.15s; }
+  .vault-act.insert { border: 1px solid rgba(0,255,204,0.2); color: #475569; }
+  .vault-act.insert:hover { color: var(--pulse); border-color: rgba(0,255,204,0.4); }
+  .vault-act.del { border: 1px solid rgba(239,68,68,0.15); color: #334155; }
+  .vault-act.del:hover { color: var(--red); border-color: rgba(239,68,68,0.35); }
+
+  .empty { font-family: monospace; font-size: 10px; color: #334155; text-align: center; padding: 20px 0; }
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 2px solid var(--border); border-top-color: var(--pulse); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 5px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .section-title { font-family: monospace; font-size: 8px; letter-spacing: 0.15em; text-transform: uppercase; color: #334155; border-bottom: 1px solid var(--border); padding-bottom: 5px; margin: 14px 0 8px; }
+  .hint { font-size: 10px; color: #334155; line-height: 1.5; margin-top: 4px; }
+
+  /* Theme toggle */
+  #theme-btn { margin-left: auto; background: transparent; border: 1px solid var(--border); border-radius: 5px; color: #475569; cursor: pointer; font-size: 13px; padding: 2px 6px; line-height: 1; flex-shrink: 0; }
+  #theme-btn:hover { border-color: var(--pulse); color: var(--pulse); }
+
+  /* ── Light mode ── */
+  body.light {
+    background: #f0f4f8;
+    color: #1a2535;
+    --card:   #ffffff;
+    --border: #d1dce8;
+    --pulse:  #007a5e;
+    --blue:   #1d4ed8;
+    --purple: #6d28d9;
+    --red:    #dc2626;
+  }
+  body.light .hdr           { background: #fff; }
+  body.light .tabs          { background: #f8fafc; }
+  body.light .tab           { color: #64748b; }
+  body.light .panel         { color: #1a2535; }
+  body.light label          { color: #64748b; }
+  body.light input, body.light textarea, body.light select { background: #f8fafc; color: #1a2535; border-color: var(--border); }
+  body.light .btn-primary   { color: #fff; }
+  body.light .status        { color: #475569; }
+  body.light .output        { background: #f8fafc; color: #475569; }
+  body.light .vault-entry   { background: #fff; }
+  body.light .vault-title   { color: #1a2535; }
+  body.light .section-title { color: #64748b; }
+  body.light .hint          { color: #64748b; }
+  body.light .empty         { color: #94a3b8; }
+  body.light .guru-letter   { color: #1a2535; text-shadow: 0 0 1px rgba(0,122,94,0.4), 0 0 6px rgba(0,122,94,0.2); }
+  body.light #theme-btn     { color: #64748b; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
+  <div class="hdr-badge">DOCS</div>
+  <button id="theme-btn" onclick="toggleTheme()" title="Toggle light / dark mode">☀️</button>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('ask')">Ask</button>
+  <button class="tab" onclick="switchTab('vault')">Vault</button>
+  <button class="tab" onclick="switchTab('tools')">Tools</button>
+  <button class="tab" onclick="switchTab('cfg')">Config</button>
+</div>
+
+<!-- ASK TAB -->
+<div id="tab-ask" class="panel active">
+  <label>Question / Prompt</label>
+  <textarea id="ask-prompt" placeholder="Ask GURU about the selected text, your research, or any legal question..."></textarea>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="doAsk()">Ask GURU</button>
+    <button class="btn btn-blue" onclick="doAnalyseSelection()">Analyse Selection</button>
+  </div>
+  <div id="ask-status" class="status"></div>
+  <div id="ask-output" class="output"></div>
+  <div class="btn-row" id="ask-insert-row" style="display:none;">
+    <button class="btn btn-blue" onclick="insertOutput('ask')">Insert at Cursor</button>
+    <button class="btn btn-purple" onclick="appendFootnoteFromOutput()">Insert as Footnote</button>
+  </div>
+</div>
+
+<!-- VAULT TAB -->
+<div id="tab-vault" class="panel">
+  <button class="btn btn-primary" onclick="pushSelectionToVault()">↑ Push Selection to Vault</button>
+  <button class="btn btn-blue" style="margin-top:6px;" onclick="pushWholeDoc()">↑ Push Full Document</button>
+  <div id="vault-status" class="status"></div>
+
+  <div class="section-title">Vault Contents</div>
+  <button class="btn btn-purple" onclick="loadVault()" style="margin-bottom:8px;">↓ Refresh Vault</button>
+  <div id="vault-list"><div class="empty">Click Refresh to load vault entries</div></div>
+</div>
+
+<!-- TOOLS TAB -->
+<div id="tab-tools" class="panel">
+  <div class="section-title">OSCOLA Citation</div>
+  <label>Raw Reference</label>
+  <textarea id="tool-oscola" placeholder="Paste any citation, URL, or bibliography entry..."></textarea>
+  <button class="btn btn-primary" onclick="doOscola()">Format as OSCOLA</button>
+  <div id="oscola-status" class="status"></div>
+  <div id="oscola-output" class="output"></div>
+  <div class="btn-row" id="oscola-insert-row" style="display:none;">
+    <button class="btn btn-blue" onclick="insertOutput('oscola')">Insert at Cursor</button>
+    <button class="btn btn-purple" onclick="appendFootnoteFromOscola()">Insert as Footnote</button>
+  </div>
+
+  <div class="section-title">Suggest Edits</div>
+  <p class="hint">Select text in your document then click below.</p>
+  <button class="btn btn-blue" onclick="doSuggestEdits()">Improve Selected Text</button>
+  <div id="edit-status" class="status"></div>
+  <div id="edit-output" class="output"></div>
+  <div class="btn-row" id="edit-insert-row" style="display:none;">
+    <button class="btn btn-primary" onclick="insertOutput('edit')">Replace with Suggestion</button>
+  </div>
+</div>
+
+<!-- CONFIG TAB -->
+<div id="tab-cfg" class="panel">
+  <label>Gemini API Key</label>
+  <input type="password" id="cfg-key" placeholder="AIza...">
+  <p class="hint">Your own Gemini API key — never shared.</p>
+
+  <label>GURU Sync Passphrase</label>
+  <input type="password" id="cfg-pass" placeholder="Same passphrase as in Jarvis app...">
+  <p class="hint">Must match the passphrase set in Jarvis Config → Cloud Sync. This connects to the same vault.</p>
+
+  <button class="btn btn-primary" onclick="saveCfg()">Save</button>
+  <div id="cfg-status" class="status"></div>
+
+  <div class="section-title">About</div>
+  <p class="hint">GURU Research Intelligence add-on — connects Google Docs & Sheets to your shared Firestore research vault. Same passphrase = same memory as the Jarvis web app.</p>
+</div>
+
+<script>
+  let _key  = '';
+  let _pass = '';
+  let _lastOutput = { ask: '', oscola: '', edit: '' };
+
+  // ── Theme ──────────────────────────────────────────────────────────
+  function applyTheme(t) {
+    const light = t === 'light';
+    document.body.classList.toggle('light', light);
+    const btn = document.getElementById('theme-btn');
+    if (btn) btn.textContent = light ? '🌙' : '☀️';
+  }
+  function toggleTheme() {
+    const next = document.body.classList.contains('light') ? 'dark' : 'light';
+    localStorage.setItem('guru_theme', next);
+    applyTheme(next);
+  }
+  // Init theme from same key as main app
+  applyTheme(localStorage.getItem('guru_theme') || 'dark');
+
+  // ---- Boot: load saved config ----
+  google.script.run
+    .withSuccessHandler(p => {
+      _key  = p.geminiKey  || '';
+      _pass = p.passphrase || '';
+      if (_key)  document.getElementById('cfg-key').value  = '••••••••••••••••';
+      if (_pass) document.getElementById('cfg-pass').value = '••••••••••••••••';
+    })
+    .loadUserProps();
+
+  // ---- Tabs ----
+  function switchTab(id) {
+    document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', ['ask','vault','tools','cfg'][i] === id));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    if (id === 'vault') loadVault();
+  }
+
+  // ---- Helpers ----
+  function setStatus(id, msg, ok) {
+    const el = document.getElementById(id + '-status');
+    if (!el) return;
+    el.textContent = msg;
+    el.className   = 'status ' + (ok === false ? 'err' : ok ? 'ok' : '');
+  }
+  function showOutput(id, text) {
+    _lastOutput[id] = text;
+    const el = document.getElementById(id + '-output');
+    if (el) { el.textContent = text; el.style.display = 'block'; }
+    const row = document.getElementById(id + '-insert-row');
+    if (row) row.style.display = 'flex';
+  }
+  function spin(id) { setStatus(id, '', null); const el = document.getElementById(id+'-status'); el.innerHTML = '<span class="spinner"></span> Working…'; }
+  function getKey()  { const v = document.getElementById('cfg-key').value.trim();  return v.startsWith('•') ? _key  : (v || _key); }
+  function getPass() { const v = document.getElementById('cfg-pass').value.trim(); return v.startsWith('•') ? _pass : (v || _pass); }
+
+  // ---- Ask ----
+  function doAsk() {
+    const prompt = document.getElementById('ask-prompt').value.trim();
+    if (!prompt) { setStatus('ask', 'Enter a question first.', false); return; }
+    spin('ask');
+    google.script.run
+      .withSuccessHandler(r => { setStatus('ask', '✓ Done', true); showOutput('ask', r); })
+      .withFailureHandler(e => setStatus('ask', '✗ ' + e.message, false))
+      .callGemini(getKey(), prompt, null);
+  }
+
+  function doAnalyseSelection() {
+    spin('ask');
+    google.script.run
+      .withSuccessHandler(text => {
+        if (!text) { setStatus('ask', 'No text selected in the document.', false); return; }
+        const prompt = document.getElementById('ask-prompt').value.trim() || null;
+        google.script.run
+          .withSuccessHandler(r => { setStatus('ask', '✓ Done', true); showOutput('ask', r); })
+          .withFailureHandler(e => setStatus('ask', '✗ ' + e.message, false))
+          .analyseSelection(getKey(), prompt ? prompt + '\n\n' + text : text, getPass());
+      })
+      .withFailureHandler(e => setStatus('ask', '✗ ' + e.message, false))
+      .getSelectedText();
+  }
+
+  function insertOutput(id) {
+    const text = _lastOutput[id];
+    if (!text) return;
+    google.script.run.insertTextAtCursor(text);
+  }
+
+  function appendFootnoteFromOutput() {
+    const text = _lastOutput['ask'];
+    if (!text) return;
+    google.script.run
+      .withSuccessHandler(ok => { if (!ok) setStatus('ask', 'No cursor position — footnote appended to body.', null); })
+      .appendFootnote(text);
+  }
+
+  // ---- Vault ----
+  function pushSelectionToVault() {
+    const pass = getPass();
+    if (!pass) { setStatus('vault', 'Set your sync passphrase in Config first.', false); return; }
+    spin('vault');
+    google.script.run
+      .withSuccessHandler(() => {
+        google.script.run
+          .withSuccessHandler(text => {
+            if (!text) { setStatus('vault', 'No text selected.', false); return; }
+            google.script.run
+              .withSuccessHandler(r => { setStatus('vault', `✓ Pushed "${r.title.slice(0,40)}…" to vault`, true); })
+              .withFailureHandler(e => setStatus('vault', '✗ ' + e.message, false))
+              .pushToVault(pass, getKey(), null, text);
+          })
+          .getSelectedText();
+      })
+      .withFailureHandler(() => {}) // getSelectedText may throw in sheets — ignore
+      .getSelectedText();
+    // Simpler direct call:
+    google.script.run
+      .withSuccessHandler(text => {
+        if (!text) { setStatus('vault', 'Select some text first.', false); return; }
+        google.script.run
+          .withSuccessHandler(r => setStatus('vault', `✓ Pushed to vault`, true))
+          .withFailureHandler(e => setStatus('vault', '✗ ' + e.message, false))
+          .pushToVault(pass, getKey(), null, text);
+      })
+      .withFailureHandler(e => setStatus('vault', '✗ ' + e.message, false))
+      .getSelectedText();
+  }
+
+  function pushWholeDoc() {
+    const pass = getPass();
+    if (!pass) { setStatus('vault', 'Set your sync passphrase in Config first.', false); return; }
+    spin('vault');
+    google.script.run
+      .withSuccessHandler(body => {
+        google.script.run
+          .withSuccessHandler(title => {
+            google.script.run
+              .withSuccessHandler(r => setStatus('vault', `✓ Pushed "${title}" to vault`, true))
+              .withFailureHandler(e => setStatus('vault', '✗ ' + e.message, false))
+              .pushToVault(pass, getKey(), title, body);
+          })
+          .getDocumentTitle();
+      })
+      .withFailureHandler(e => setStatus('vault', '✗ ' + e.message, false))
+      .getDocumentBody();
+  }
+
+  function loadVault() {
+    const pass = getPass();
+    const list = document.getElementById('vault-list');
+    if (!pass) { list.innerHTML = '<div class="empty">Set sync passphrase in Config to load vault</div>'; return; }
+    list.innerHTML = '<div class="empty"><span class="spinner"></span> Loading…</div>';
+    google.script.run
+      .withSuccessHandler(entries => {
+        if (!entries.length) { list.innerHTML = '<div class="empty">Vault is empty</div>'; return; }
+        list.innerHTML = '';
+        entries.forEach(e => {
+          const div  = document.createElement('div');
+          div.className = 'vault-entry';
+          div.innerHTML =
+            `<div class="vault-title">${esc(e.title)}</div>` +
+            `<div class="vault-preview">${esc(e.preview)}…</div>` +
+            `<div class="vault-actions">` +
+            `<button class="vault-act insert" onclick="insertVaultEntry(${JSON.stringify(e.preview + '…')})">Insert</button>` +
+            `<button class="vault-act del" onclick="deleteEntry('${esc(e.id)}', this)">× Remove</button>` +
+            `</div>`;
+          list.appendChild(div);
+        });
+      })
+      .withFailureHandler(e => { list.innerHTML = `<div class="empty">Error: ${esc(e.message)}</div>`; })
+      .pullVault(pass);
+  }
+
+  function insertVaultEntry(text) {
+    google.script.run.insertTextAtCursor(text);
+  }
+
+  function deleteEntry(id, btn) {
+    if (btn.dataset.confirming === 'true') {
+      google.script.run
+        .withSuccessHandler(() => loadVault())
+        .deleteVaultEntry(getPass(), id);
+    } else {
+      btn.dataset.confirming = 'true';
+      btn.textContent = 'Confirm ×';
+      btn.style.color = '#ef4444';
+      setTimeout(() => { btn.dataset.confirming = 'false'; btn.textContent = '× Remove'; btn.style.color = ''; }, 3000);
+    }
+  }
+
+  // ---- Tools ----
+  function doOscola() {
+    const raw = document.getElementById('tool-oscola').value.trim();
+    if (!raw) return;
+    spin('oscola');
+    google.script.run
+      .withSuccessHandler(r => { setStatus('oscola', '✓ Formatted', true); showOutput('oscola', r); })
+      .withFailureHandler(e => setStatus('oscola', '✗ ' + e.message, false))
+      .formatOscola(getKey(), raw);
+  }
+
+  function appendFootnoteFromOscola() {
+    const text = _lastOutput['oscola'];
+    if (!text) return;
+    google.script.run.appendFootnote(text);
+  }
+
+  function doSuggestEdits() {
+    spin('edit');
+    google.script.run
+      .withSuccessHandler(text => {
+        if (!text) { setStatus('edit', 'Select text in your document first.', false); return; }
+        google.script.run
+          .withSuccessHandler(r => { setStatus('edit', '✓ Suggestion ready', true); showOutput('edit', r); })
+          .withFailureHandler(e => setStatus('edit', '✗ ' + e.message, false))
+          .suggestEdits(getKey(), text);
+      })
+      .withFailureHandler(e => setStatus('edit', '✗ ' + e.message, false))
+      .getSelectedText();
+  }
+
+  // ---- Config ----
+  function saveCfg() {
+    const k = document.getElementById('cfg-key').value.trim();
+    const p = document.getElementById('cfg-pass').value.trim();
+    if (!k.startsWith('•') && k) _key  = k;
+    if (!p.startsWith('•') && p) _pass = p;
+    google.script.run
+      .withSuccessHandler(() => setStatus('cfg', '✓ Saved', true))
+      .withFailureHandler(e => setStatus('cfg', '✗ ' + e.message, false))
+      .saveUserProps(_key.startsWith('•') ? null : _key, _pass.startsWith('•') ? null : _pass);
+  }
+
+  // ---- Utils ----
+  function esc(s) {
+    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+</script>
+</body>
+</html>

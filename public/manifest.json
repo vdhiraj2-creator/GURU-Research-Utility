@@ -1,0 +1,18 @@
+{
+  "name": "G.U.R.U. — Research Intelligence",
+  "short_name": "G.U.R.U.",
+  "description": "Guided University Research Utility — AI doctoral research intelligence",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020407",
+  "theme_color": "#020407",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

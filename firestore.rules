@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Hash-routed sovereign nodes — no auth required.
+    // nodeHash must be a lowercase SHA-256 hex string (64 chars).
+    match /jarvis_nodes/{nodeHash}/{collection}/{document=**} {
+      allow read, write: if nodeHash.matches('[0-9a-f]{64}')
+                         && (collection == 'chat' || collection == 'vault');
+    }
+
+    // Pro licence registry — public read, no write from client.
+    // Keys are added via admin SDK only (add_licence.js).
+    // Clients hash their key and check if the hash document exists here.
+    match /licences/{keyHash} {
+      allow read:  if keyHash.matches('[0-9a-f]{64}');
+      allow write: if false;
+    }
+
+  }
+}
