@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>GURU Research Intelligence</title>
+<style>
+* { box-sizing:border-box; margin:0; padding:0; }
+:root { --pulse:#00ffcc; --card:#0f1829; --border:#1e3050; --blue:#3b82f6; --purple:#a78bfa; --red:#ef4444; }
+body { font-family:'Google Sans',Arial,sans-serif; font-size:13px; background:#0a0f1a; color:#cbd5e1; height:100vh; display:flex; flex-direction:column; overflow:hidden; }
+.hdr { background:var(--card); border-bottom:1px solid var(--border); padding:8px 12px; display:flex; align-items:center; gap:8px; flex-shrink:0; }
+.hdr-logo { font-family:monospace; font-size:9px; letter-spacing:0.15em; text-transform:uppercase; color:var(--pulse); }
+.hdr-badge { font-family:monospace; font-size:7px; color:#020407; background:var(--pulse); border-radius:3px; padding:1px 5px; }
+.tabs { display:flex; border-bottom:1px solid var(--border); background:var(--card); flex-shrink:0; }
+.tab { flex:1; padding:7px 2px; font-family:monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; text-align:center; cursor:pointer; color:#334155; border:none; background:none; }
+.tab.active { color:var(--pulse); border-bottom:2px solid var(--pulse); }
+.panels { flex:1; overflow-y:auto; }
+.panel { display:none; padding:12px; }
+.panel.active { display:block; }
+label { display:block; font-family:monospace; font-size:9px; letter-spacing:0.08em; text-transform:uppercase; color:#475569; margin:10px 0 3px; }
+label:first-child { margin-top:0; }
+input, textarea { width:100%; background:var(--card); border:1px solid var(--border); border-radius:6px; padding:6px 8px; color:#e2e8f0; font-size:12px; font-family:monospace; outline:none; }
+textarea { min-height:75px; resize:vertical; }
+input:focus, textarea:focus { border-color:rgba(0,255,204,0.4); }
+.btn { display:block; width:100%; margin-top:7px; padding:7px; border-radius:6px; border:none; cursor:pointer; font-family:monospace; font-size:10px; letter-spacing:0.06em; text-transform:uppercase; }
+.btn-primary { background:var(--pulse); color:#020407; }
+.btn-blue    { background:transparent; border:1px solid rgba(59,130,246,0.4); color:var(--blue); }
+.btn-purple  { background:transparent; border:1px solid rgba(167,139,250,0.4); color:var(--purple); }
+.btn-row { display:flex; gap:5px; margin-top:7px; }
+.btn-row .btn { margin-top:0; }
+.status { font-family:monospace; font-size:10px; min-height:14px; margin-top:6px; }
+.status.ok  { color:var(--pulse); }
+.status.err { color:var(--red); }
+.output { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:9px; font-size:11px; line-height:1.6; color:#94a3b8; margin-top:7px; white-space:pre-wrap; display:none; max-height:220px; overflow-y:auto; }
+.vault-entry { background:var(--card); border:1px solid var(--border); border-radius:6px; padding:8px 9px; margin-bottom:5px; }
+.vault-title { font-size:11px; color:#e2e8f0; margin-bottom:2px; }
+.vault-preview { font-family:monospace; font-size:10px; color:#475569; line-height:1.4; }
+.vault-acts { display:flex; gap:4px; margin-top:4px; }
+.va { font-family:monospace; font-size:9px; padding:2px 6px; border-radius:3px; border:none; cursor:pointer; background:transparent; }
+.va.ins { border:1px solid rgba(0,255,204,0.2); color:#475569; }
+.va.ins:hover { color:var(--pulse); }
+.va.del { border:1px solid rgba(239,68,68,0.15); color:#334155; }
+.va.del:hover { color:var(--red); }
+.empty { font-family:monospace; font-size:10px; color:#334155; text-align:center; padding:18px 0; }
+.spinner { display:inline-block; width:11px; height:11px; border:2px solid var(--border); border-top-color:var(--pulse); border-radius:50%; animation:spin 0.7s linear infinite; vertical-align:middle; margin-right:4px; }
+@keyframes spin { to { transform:rotate(360deg); } }
+.hint { font-size:10px; color:#334155; line-height:1.5; margin-top:3px; }
+.stitle { font-family:monospace; font-size:8px; letter-spacing:0.12em; text-transform:uppercase; color:#334155; border-bottom:1px solid var(--border); padding-bottom:4px; margin:12px 0 7px; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-logo">GURU // RESEARCH</div>
+  <div class="hdr-badge">ONLYOFFICE</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('ask')">Ask</button>
+  <button class="tab" onclick="switchTab('vault')">Vault</button>
+  <button class="tab" onclick="switchTab('tools')">Tools</button>
+  <button class="tab" onclick="switchTab('cfg')">Config</button>
+</div>
+
+<div class="panels">
+
+  <!-- ASK -->
+  <div id="tab-ask" class="panel active">
+    <label>Question / Prompt</label>
+    <textarea id="ask-prompt" placeholder="Ask GURU, or click Analyse Selection to discuss highlighted text..."></textarea>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="doAsk()">Ask GURU</button>
+      <button class="btn btn-blue" onclick="doAnalyse()">Analyse Selection</button>
+    </div>
+    <div id="ask-status" class="status"></div>
+    <div id="ask-output" class="output"></div>
+    <div class="btn-row" id="ask-ins-row" style="display:none;">
+      <button class="btn btn-blue" onclick="insertOutput('ask')">Insert at Cursor</button>
+    </div>
+  </div>
+
+  <!-- VAULT -->
+  <div id="tab-vault" class="panel">
+    <button class="btn btn-primary" onclick="pushSelection()">↑ Push Selection to Vault</button>
+    <div id="vault-status" class="status"></div>
+    <div class="stitle">Vault Contents</div>
+    <button class="btn btn-purple" onclick="loadVault()" style="margin-bottom:7px;">↓ Refresh</button>
+    <div id="vault-list"><div class="empty">Click Refresh to load vault</div></div>
+  </div>
+
+  <!-- TOOLS -->
+  <div id="tab-tools" class="panel">
+    <div class="stitle">OSCOLA Citation</div>
+    <label>Raw Reference</label>
+    <textarea id="tool-oscola" placeholder="Paste any citation, URL, or bibliography entry..."></textarea>
+    <button class="btn btn-primary" onclick="doOscola()">Format as OSCOLA</button>
+    <div id="oscola-status" class="status"></div>
+    <div id="oscola-output" class="output"></div>
+    <div class="btn-row" id="oscola-ins-row" style="display:none;">
+      <button class="btn btn-blue" onclick="insertOutput('oscola')">Insert at Cursor</button>
+    </div>
+    <div class="stitle">Suggest Edits</div>
+    <p class="hint">Select text in the document then click below.</p>
+    <button class="btn btn-blue" onclick="doSuggestEdits()">Improve Selected Text</button>
+    <div id="edit-status" class="status"></div>
+    <div id="edit-output" class="output"></div>
+    <div class="btn-row" id="edit-ins-row" style="display:none;">
+      <button class="btn btn-primary" onclick="insertOutput('edit')">Insert at Cursor</button>
+    </div>
+  </div>
+
+  <!-- CONFIG -->
+  <div id="tab-cfg" class="panel">
+    <label>Gemini API Key</label>
+    <input type="password" id="cfg-key" placeholder="AIza...">
+    <label>GURU Sync Passphrase</label>
+    <input type="password" id="cfg-pass" placeholder="Same as GURU Config → Cloud Sync">
+    <p class="hint">Must match the passphrase in the GURU web app — this connects to the same vault.</p>
+    <button class="btn btn-primary" onclick="saveCfg()">Save</button>
+    <div id="cfg-status" class="status"></div>
+    <div class="stitle">About</div>
+    <p class="hint">GURU Research Intelligence v198 — all tools share the same Firestore vault. Set the same passphrase in web app, Google Docs, Word, and here.</p>
+  </div>
+
+</div>
+
+<script>
+const FB_PROJECT = 'jarvisphd-80ecb';
+const FB_KEY     = 'AIzaSyDvhnELWOnfaVBAT-jQTswysebjaHffxKc';
+const GEMINI     = 'gemini-2.5-flash';
+
+let _apiKey = localStorage.getItem('jarvis_api_key')  || '';
+let _pass   = localStorage.getItem('jarvis_sync_pass') || '';
+let _out    = { ask:'', oscola:'', edit:'' };
+
+if (_apiKey) document.getElementById('cfg-key').value  = '••••••••••••••••';
+if (_pass)   document.getElementById('cfg-pass').value = '••••••••••••••••';
+
+function switchTab(id) {
+  ['ask','vault','tools','cfg'].forEach((t, i) => {
+    document.querySelectorAll('.tab')[i].classList.toggle('active', t===id);
+    document.getElementById('tab-'+t).classList.toggle('active', t===id);
+  });
+  if (id==='vault') loadVault();
+}
+
+function getKey()  { const v=document.getElementById('cfg-key').value.trim();  return v.startsWith('•')?_apiKey:(v||_apiKey); }
+function getPass() { const v=document.getElementById('cfg-pass').value.trim(); return v.startsWith('•')?_pass:(v||_pass); }
+function setStatus(id, msg, ok) { const el=document.getElementById(id+'-status'); el.textContent=msg; el.className='status '+(ok===false?'err':ok?'ok':''); }
+function spin(id) { const el=document.getElementById(id+'-status'); el.innerHTML='<span class="spinner"></span> Working…'; el.className='status'; }
+function showOut(id, text) {
+  _out[id]=text;
+  const el=document.getElementById(id+'-output'); el.textContent=text; el.style.display='block';
+  const row=document.getElementById(id+'-ins-row'); if(row) row.style.display='flex';
+}
+
+// OnlyOffice API — guard against Asc not yet ready
+function ooReady() { return window.Asc && window.Asc.plugin; }
+function getSelection() {
+  if (!ooReady()) return Promise.resolve('');
+  return new Promise(r => window.Asc.plugin.executeMethod('GetSelectedText',
+    [false,{Numbering:false,Math:false,TableCellSeparator:false,ParaSeparator:'\n',SectionSeparator:'\n'}], r));
+}
+function insertText(t) {
+  if (!ooReady()) return;
+  window.Asc.plugin.executeMethod('PasteText',[t]);
+}
+function insertOutput(id) { if(_out[id]) insertText(_out[id]); }
+
+// SHA-256
+async function sha256(str) {
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+// Firestore
+function fsUrl(h,c,id) {
+  return `https://firestore.googleapis.com/v1/projects/${FB_PROJECT}/databases/(default)/documents/jarvis_nodes/${h}/${c}${id?'/'+id:''}?key=${FB_KEY}`;
+}
+async function fsWrite(h,c,id,data) {
+  const f={}; for(const[k,v] of Object.entries(data)) f[k]={stringValue:String(v)};
+  await fetch(fsUrl(h,c,id),{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({fields:f})});
+}
+async function fsReadAll(h,c) {
+  const r=await fetch(fsUrl(h,c,null)); const d=await r.json();
+  return (d.documents||[]).map(doc=>{const o={};for(const[k,v] of Object.entries(doc.fields||{}))o[k]=v.stringValue||'';return o;});
+}
+async function fsDelete(h,c,id) { await fetch(fsUrl(h,c,id),{method:'DELETE'}); }
+
+async function getVaultCtx(q) {
+  try {
+    const p=getPass(); if(!p) return '';
+    const h=await sha256(p); const es=await fsReadAll(h,'vault'); if(!es.length) return '';
+    const ws=q.toLowerCase().split(/\s+/).filter(w=>w.length>3);
+    const sc=es.map(e=>({e,s:ws.reduce((a,w)=>a+(e.content.toLowerCase().split(w).length-1),0)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s);
+    return (sc.length?sc:es.map(e=>({e}))).slice(0,4).map(x=>`[${x.e.title||'Entry'}]\n${(x.e.content||'').slice(0,500)}`).join('\n---\n');
+  } catch(e){return '';}
+}
+
+// Gemini
+async function callGemini(prompt, ctx) {
+  const k=getKey(); if(!k) throw new Error('Add Gemini API key in Config');
+  const sys=(ctx?`You are GURU, a doctoral AI research supervisor in UK law.\n\nVault:\n${ctx}\n\n---\n`:'You are GURU, a doctoral AI research supervisor in UK law.\n\n');
+  const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI}:generateContent?key=${k}`,
+    {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts:[{text:sys+prompt}]}],generationConfig:{temperature:0.7}})});
+  const d=await r.json(); if(d.error) throw new Error(d.error.message);
+  return d?.candidates?.[0]?.content?.parts?.[0]?.text||'';
+}
+
+// Actions
+async function doAsk() {
+  const p=document.getElementById('ask-prompt').value.trim(); if(!p){setStatus('ask','Enter a question.',false);return;}
+  spin('ask');
+  try { const ctx=await getVaultCtx(p); showOut('ask',await callGemini(p,ctx)); setStatus('ask','✓ Done',true); }
+  catch(e){setStatus('ask','✗ '+e.message,false);}
+}
+async function doAnalyse() {
+  spin('ask');
+  try {
+    const t=await getSelection(); if(!t){setStatus('ask','Select text first.',false);return;}
+    const extra=document.getElementById('ask-prompt').value.trim();
+    const ctx=await getVaultCtx(t);
+    showOut('ask',await callGemini((extra?extra+'\n\n':'')+'Critically analyse this from a doctoral law perspective:\n\n'+t,ctx));
+    setStatus('ask','✓ Done',true);
+  } catch(e){setStatus('ask','✗ '+e.message,false);}
+}
+async function pushSelection() {
+  spin('vault');
+  try {
+    const t=await getSelection(); if(!t){setStatus('vault','Select text first.',false);return;}
+    const p=getPass(); if(!p){setStatus('vault','Set sync passphrase in Config.',false);return;}
+    const h=await sha256(p); const id='oo-'+Date.now();
+    await fsWrite(h,'vault',id,{id,title:t.slice(0,60).replace(/\n/g,' '),content:t,source:'onlyoffice',session:'onlyoffice',sessionId:id,date:new Date().toISOString(),type:'document'});
+    setStatus('vault','✓ Pushed to vault',true);
+  } catch(e){setStatus('vault','✗ '+e.message,false);}
+}
+async function loadVault() {
+  const list=document.getElementById('vault-list'); const p=getPass();
+  if(!p){list.innerHTML='<div class="empty">Set sync passphrase in Config</div>';return;}
+  list.innerHTML='<div class="empty"><span class="spinner"></span> Loading…</div>';
+  try {
+    const h=await sha256(p); const es=await fsReadAll(h,'vault');
+    if(!es.length){list.innerHTML='<div class="empty">Vault is empty</div>';return;}
+    es.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+    list.innerHTML='';
+    es.slice(0,20).forEach(e=>{
+      const div=document.createElement('div'); div.className='vault-entry';
+      div.innerHTML=`<div class="vault-title">${esc(e.title||'(untitled)')}</div><div class="vault-preview">${esc((e.content||'').slice(0,130))}…</div><div class="vault-acts"><button class="va ins" onclick="insertText(${JSON.stringify((e.content||'').slice(0,500))})">Insert</button><button class="va del" data-id="${esc(e.id)}" onclick="delEntry(this)">× Remove</button></div>`;
+      list.appendChild(div);
+    });
+  } catch(e){list.innerHTML=`<div class="empty">Error: ${esc(e.message)}</div>`;}
+}
+async function delEntry(btn) {
+  if(btn.dataset.confirming==='true'){
+    const h=await sha256(getPass()); await fsDelete(h,'vault',btn.dataset.id); loadVault();
+  } else {
+    btn.dataset.confirming='true'; btn.textContent='Confirm ×'; btn.style.color='#ef4444';
+    setTimeout(()=>{btn.dataset.confirming='false';btn.textContent='× Remove';btn.style.color='';},3000);
+  }
+}
+async function doOscola() {
+  const raw=document.getElementById('tool-oscola').value.trim(); if(!raw) return;
+  spin('oscola');
+  try { showOut('oscola',await callGemini(`Convert to OSCOLA 4th edition. Output ONLY the citation.\n\nInput: ${raw}`,null)); setStatus('oscola','✓ Formatted',true); }
+  catch(e){setStatus('oscola','✗ '+e.message,false);}
+}
+async function doSuggestEdits() {
+  spin('edit');
+  try {
+    const t=await getSelection(); if(!t){setStatus('edit','Select text first.',false);return;}
+    showOut('edit',await callGemini(`Improve for doctoral clarity and rigour. Return ONLY the revised text.\n\n${t}`,null));
+    setStatus('edit','✓ Ready',true);
+  } catch(e){setStatus('edit','✗ '+e.message,false);}
+}
+function saveCfg() {
+  const k=document.getElementById('cfg-key').value.trim(); const p=document.getElementById('cfg-pass').value.trim();
+  if(k&&!k.startsWith('•')){_apiKey=k;localStorage.setItem('jarvis_api_key',k);}
+  if(p&&!p.startsWith('•')){_pass=p;localStorage.setItem('jarvis_sync_pass',p);}
+  setStatus('cfg','✓ Saved',true);
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+// Safe init — poll until OnlyOffice injects window.Asc
+(function waitForAsc(attempts) {
+    if (window.Asc && window.Asc.plugin) {
+        window.Asc.plugin.init   = function() {};
+        window.Asc.plugin.button = function() {
+            window.Asc.plugin.executeCommand('close', '');
+        };
+    } else if (attempts < 100) {
+        setTimeout(() => waitForAsc(attempts + 1), 100);
+    }
+})(0);
+</script>
+</body>
+</html>

@@ -26,7 +26,7 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1400,
         height: 900,
-        title: 'GURU — Research Intelligence',
+        title: 'G.U.R.U. V2.0 — Doctoral Research Intelligence',
         backgroundColor: '#05070a',
         webPreferences: {
             nodeIntegration:  false,

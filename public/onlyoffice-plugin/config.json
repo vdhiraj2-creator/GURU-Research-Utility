@@ -1,0 +1,23 @@
+{
+    "name": "GURU Research Intelligence",
+    "guid": "asc.{3D4B2A1C-5E6F-7A8B-9C0D-1E2F3A4B5C6D}",
+    "version": "1.9.8",
+    "minVersion": "6.0.0",
+    "variations": [
+        {
+            "description": "AI doctoral research supervisor with shared vault",
+            "url": "index.html",
+            "icons": {
+                "normal": "icon.png",
+                "2x":     "icon.png"
+            },
+            "isVisual": true,
+            "isModal": false,
+            "isInsideMode": true,
+            "initDataType": "none",
+            "initData": "",
+            "isUpdateOleOnResize": false,
+            "buttons": []
+        }
+    ]
+}

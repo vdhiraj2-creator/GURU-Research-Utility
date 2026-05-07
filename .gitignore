@@ -1,10 +1,7 @@
 node_modules/
+dist/
+my_keys.txt
 private/
-*.key
-*.env
-.firebase/
-firebase-debug.log
-make_icon.py
-build.js
-GURU_User_Guide.pdf
-GURU_User_Guide.html
+vault/
+*.txt
+.env

@@ -1,18 +1,47 @@
 {
-  "name": "jarvis-phd-nexus",
-  "version": "1.15.0",
-  "description": "Sovereign PhD Research Node - Professional Suite",
+  "name": "guru-doctoral-research",
+  "version": "2.0.0",
+  "description": "G.U.R.U. — Guided University Research Utility · Doctoral Research Intelligence",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder"
+    "build": "electron-builder",
+    "build:linux": "electron-builder --linux",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac"
   },
-  "author": "Dr. Varma",
+  "author": {
+    "name": "Dhiraj Varma",
+    "email": "vdhiraj2@gmail.com"
+  },
+  "build": {
+    "appId": "com.guru.doctoral-research",
+    "productName": "G.U.R.U.",
+    "copyright": "Copyright © 2026 Dhiraj Varma",
+    "icon": "icon.png",
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Education",
+      "description": "G.U.R.U. — Guided University Research Utility"
+    },
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "icon.png"
+    },
+    "mac": {
+      "target": ["dmg"],
+      "category": "public.app-category.education"
+    },
+    "nsis": {
+      "shortcutName": "G.U.R.U.",
+      "artifactName": "GURU-V2-Setup.exe"
+    }
+  },
   "dependencies": {
-    "electron": "^28.0.0",
     "terser": "^5.46.2"
   },
   "devDependencies": {
+    "electron": "^28.0.0",
     "electron-builder": "^24.0.0"
   }
 }

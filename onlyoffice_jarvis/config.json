@@ -1,0 +1,22 @@
+{
+    "name": "Jarvis ASI",
+    "guid": "asc.{66426462-6642-6642-6642-664266426642}",
+    "version": "205.0",
+    "variations": [
+        {
+            "description": "PhD Research ASI - OSCOLA Enabled",
+            "url": "index.html",
+            "icons": ["icon.png"],
+            "isVisual": true,
+            "isModal": false,
+            "isInsideMode": true,
+            "main": "index.html",
+            "buttons": [
+                {
+                    "text": "Jarvis ASI",
+                    "primary": true
+                }
+            ]
+        }
+    ]
+}

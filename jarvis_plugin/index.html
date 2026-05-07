@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Jarvis ASI for ONLYOFFICE</title>
+    <!-- ONLYOFFICE Plugin Bridge -->
+    <script type="text/javascript" src="https://api.onlyoffice.com/plugin/bootstrap.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { 
+            --bg: #020407; 
+            --card: #080d14; 
+            --border: #0f1f30; 
+            --pulse: #00ffcc; 
+        }
+        body { 
+            font-family: 'Syne', sans-serif; 
+            background-color: var(--bg); 
+            color: #cbd5e1; 
+            margin: 0; 
+            padding: 15px; 
+            overflow-x: hidden; 
+            font-size: 13px; 
+        }
+        .bubble { 
+            padding: 1rem; 
+            border-radius: 10px; 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            margin-bottom: 1.5rem; 
+            border-left: 3px solid var(--pulse); 
+            line-height: 1.6; 
+        }
+        .role-tag { 
+            font-family: 'Space Mono', monospace; 
+            font-size: 8px; 
+            text-transform: uppercase; 
+            color: var(--pulse); 
+            opacity: 0.6; 
+            margin-bottom: 8px; 
+            display: block;
+        }
+        .btn-jarvis { 
+            background: var(--pulse); 
+            color: black; 
+            font-family: 'Space Mono'; 
+            font-size: 10px; 
+            font-weight: 800; 
+            padding: 12px; 
+            border-radius: 8px; 
+            width: 100%; 
+            text-transform: uppercase; 
+            cursor: pointer; 
+            border: none;
+            transition: transform 0.1s;
+        }
+        .btn-jarvis:active { 
+            transform: scale(0.98); 
+        }
+        .loading {
+            font-family: 'Space Mono';
+            font-size: 9px;
+            color: #4ade80;
+            margin-top: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="mb-6">
+        <div class="role-tag">ASI Status: <span id="status" class="text-white">Active</span></div>
+        <button id="btn-analyze" class="btn-jarvis">Critique Selection</button>
+        <div id="loading-bar" class="loading">➔ Consulting Research Nexus...</div>
+    </div>
+
+    <div id="output-area">
+        <p class="text-[11px] text-gray-500 italic">Highlight a passage in your thesis and click 'Critique' to begin synthesis.</p>
+    </div>
+
+    <script>
+        // Start ONLYOFFICE Plugin Initialization
+        window.Asc.plugin.init = function() {
+            document.getElementById("btn-analyze").onclick = function() {
+                // Fetch selection from the actual ONLYOFFICE document
+                window.Asc.plugin.executeMethod("GetSelection", [], function(selection) {
+                    if (!selection || selection.trim() === "") {
+                        document.getElementById("status").innerText = "No text selected";
+                        return;
+                    }
+                    executeASI(selection);
+                });
+            };
+        };
+
+        async function executeASI(text) {
+            const statusEl = document.getElementById("status");
+            const outputEl = document.getElementById("output-area");
+            const loadingEl = document.getElementById("loading-bar");
+            
+            // Fetch API Key from browser local storage (this is shared with your Dashboard)
+            const key = localStorage.getItem('jarvis_api_key');
+            const directive = localStorage.getItem('jarvis_directive') || "Genomic Negligence PhD Focus.";
+
+            if (!key) {
+                outputEl.innerHTML = `<div class="bubble text-red-400 font-mono text-[10px]">ERROR: API Key not found. Please set it in your Jarvis Dashboard first.</div>`;
+                return;
+            }
+
+            loadingEl.style.display = "block";
+            statusEl.innerText = "Synthesizing";
+
+            try {
+                // Calling the Gemini 2.5 Flash model directly from the sidebar
+                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' + key, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        system_instruction: { 
+                            parts: [{ text: "You are Jarvis ASI. Thesis Focus: " + directive + ". Mode: Critique. Use strict OSCOLA 4th Edition. Provide rigorous doctoral feedback." }] 
+                        },
+                        contents: [{ 
+                            role: 'user', 
+                            parts: [{ text: text }] 
+                        }]
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    throw new Error(data.error.message);
+                }
+
+                const result = data.candidates[0].content.parts[0].text;
+
+                // Render the bubble with the critique
+                outputEl.innerHTML = `
+                    <div class="bubble">
+                        <div class="role-tag">JARVIS // DOCTORAL FEEDBACK</div>
+                        <div class="whitespace-pre-wrap">` + result + `</div>
+                    </div>
+                `;
+                statusEl.innerText = "Complete";
+            } catch (e) {
+                statusEl.innerText = "Failed";
+                outputEl.innerHTML = `<div class="bubble text-red-500">ASI HANDSHAKE ERROR: ` + e.message + `</div>`;
+            } finally {
+                loadingEl.style.display = "none";
+            }
+        }
+
+        // Standard ONLYOFFICE button behavior
+        window.Asc.plugin.button = function(id) {
+            this.executeCommand("close", "");
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>G.U.R.U. — User Guide V2.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pulse: #00ffcc;
+    --bg: #020407;
+    --card: #080d14;
+    --border: #0f1f30;
+    --text: #c8d6e5;
+    --muted: #475569;
+    --blue: #3b82f6;
+    --purple: #a78bfa;
+    --amber: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'EB Garamond', Georgia, serif;
+    font-size: 16px;
+    line-height: 1.85;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 4rem 2.5rem 6rem;
+  }
+  /* ── Cover ── */
+  .cover {
+    text-align: center;
+    padding: 6rem 0 5rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4rem;
+    page-break-after: always;
+  }
+  .cover-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 48px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    color: var(--pulse);
+    margin-bottom: 0.5rem;
+  }
+  .cover-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3rem;
+  }
+  .cover-title {
+    font-size: 28px;
+    font-style: italic;
+    color: #e2e8f0;
+    margin-bottom: 0.75rem;
+  }
+  .cover-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+  /* ── TOC ── */
+  .toc { page-break-after: always; margin-bottom: 4rem; }
+  .toc h2 { margin-bottom: 1.5rem; }
+  .toc ol { padding-left: 1.5rem; }
+  .toc li { margin-bottom: 0.4rem; }
+  .toc a { color: var(--pulse); text-decoration: none; opacity: 0.8; }
+  .toc a:hover { opacity: 1; }
+  .toc-sub { font-size: 14px; color: var(--muted); margin-left: 1rem; }
+  /* ── Typography ── */
+  h1 {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--pulse);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+    margin: 3.5rem 0 1.5rem;
+    page-break-after: avoid;
+  }
+  h2 {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 2.5rem 0 1rem;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin: 1.5rem 0 0.6rem;
+    page-break-after: avoid;
+  }
+  p { margin-bottom: 0.9rem; }
+  strong { color: #e2e8f0; font-weight: 600; }
+  em { font-style: italic; color: #94a3b8; }
+  a { color: var(--pulse); }
+  /* ── Blocks ── */
+  .callout {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--pulse);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    margin: 1.25rem 0;
+    font-size: 15px;
+  }
+  .callout.blue  { border-left-color: var(--blue); }
+  .callout.amber { border-left-color: var(--amber); }
+  .callout.purple{ border-left-color: var(--purple); }
+  .callout-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--pulse);
+    margin-bottom: 0.4rem;
+  }
+  .callout.blue  .callout-label { color: var(--blue); }
+  .callout.amber .callout-label { color: var(--amber); }
+  .callout.purple .callout-label { color: var(--purple); }
+  code {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    color: var(--pulse);
+  }
+  .step-list { list-style: none; padding: 0; counter-reset: steps; }
+  .step-list li { counter-increment: steps; display: flex; gap: 1rem; margin-bottom: 1rem; }
+  .step-list li::before {
+    content: counter(steps);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--pulse);
+    border: 1px solid rgba(0,255,204,0.3);
+    border-radius: 50%;
+    width: 22px; height: 22px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; margin-top: 4px;
+  }
+  ul.plain { padding-left: 1.5rem; }
+  ul.plain li { margin-bottom: 0.4rem; }
+  /* ── Database grid ── */
+  .db-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .db-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.6rem 0.9rem;
+    font-size: 13px;
+  }
+  .db-item strong { display: block; font-size: 13px; color: #e2e8f0; }
+  .db-item span { font-family: 'Space Mono', monospace; font-size: 9px; color: var(--muted); }
+  /* ── Mode table ── */
+  table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 14px; }
+  th { font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid var(--border); padding: 0.5rem 0.75rem; text-align: left; }
+  td { border-bottom: 1px solid rgba(15,31,48,0.6); padding: 0.6rem 0.75rem; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  .badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 3px;
+    border: 1px solid;
+    white-space: nowrap;
+  }
+  .badge-green  { color: var(--pulse); border-color: rgba(0,255,204,0.3); }
+  .badge-blue   { color: var(--blue);  border-color: rgba(59,130,246,0.3); }
+  .badge-amber  { color: var(--amber); border-color: rgba(245,158,11,0.3); }
+  .badge-purple { color: var(--purple);border-color: rgba(167,139,250,0.3); }
+  /* ── Workflow ── */
+  .workflow {
+    display: flex; flex-direction: column; gap: 0;
+    margin: 1.25rem 0;
+    position: relative;
+  }
+  .wf-step {
+    display: flex; gap: 1.25rem; align-items: flex-start;
+    padding: 0.75rem 0;
+    border-left: 2px solid var(--border);
+    padding-left: 1.5rem;
+    margin-left: 1rem;
+  }
+  .wf-step:last-child { border-left-color: transparent; }
+  .wf-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    color: var(--pulse);
+    background: var(--bg);
+    border: 1px solid rgba(0,255,204,0.3);
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    margin-left: -1.6rem;
+    margin-top: 3px;
+  }
+  .wf-content strong { display: block; color: #e2e8f0; margin-bottom: 0.2rem; font-size: 15px; }
+  .wf-content p { font-size: 14px; color: #94a3b8; margin: 0; }
+  /* ── Footer / divider ── */
+  .section-rule { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+  .footer {
+    margin-top: 5rem;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+  /* ── Print styles ── */
+  @media print {
+    body { background: #fff; color: #111; max-width: 100%; padding: 0 1.5cm; font-size: 11pt; }
+    .cover-logo { color: #009977; }
+    .cover-sub, .cover-meta, h1, h2, .callout-label, code { color: #009977 !important; }
+    h3, strong { color: #111; }
+    .callout { background: #f8fafb; border-color: #ddd; border-left-color: #009977; }
+    .callout.blue { border-left-color: #2563eb; }
+    .callout.amber { border-left-color: #d97706; }
+    a { color: #009977; }
+    .db-item { background: #f8fafb; border-color: #ddd; }
+    table, th, td { border-color: #ddd; }
+    h1 { border-bottom-color: #ddd; page-break-before: always; margin-top: 0; }
+    h1:first-of-type { page-break-before: avoid; }
+    .cover { page-break-after: always; border-bottom-color: #ddd; }
+    .toc { page-break-after: always; }
+    .toc a { color: #009977; }
+    .badge-green { color: #009977; border-color: #009977; }
+    .badge-blue { color: #2563eb; border-color: #2563eb; }
+    .badge-amber { color: #d97706; border-color: #d97706; }
+    .badge-purple { color: #7c3aed; border-color: #7c3aed; }
+    .wf-num { color: #009977; border-color: #009977; background: #fff; }
+    .footer { color: #999; border-top-color: #ddd; }
+    @page { margin: 2cm 2.5cm; }
+    @page :first { margin-top: 3cm; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════
+     COVER
+═══════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">G.U.R.U.</div>
+  <div class="cover-sub">Guided University Research Utility &nbsp;·&nbsp; Doctoral Research Intelligence</div>
+  <div class="cover-title">User Guide &amp; Workflow Reference</div>
+  <br>
+  <div class="cover-meta">Version 2.0 &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; All rights reserved</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     TABLE OF CONTENTS
+═══════════════════════════════════════════════════════════ -->
+<div class="toc">
+<h1 id="toc">Contents</h1>
+<ol>
+  <li><a href="#intro">Introduction — What is G.U.R.U.?</a></li>
+  <li><a href="#start">Quick Start — Five Minutes to Research</a></li>
+  <li><a href="#interface">Interface Overview</a></li>
+  <li><a href="#dialectic">Dialectic — The Research Interface</a>
+    <div class="toc-sub">
+      Supervision Modes &nbsp;·&nbsp; 22-Database Search &nbsp;·&nbsp; Voice &nbsp;·&nbsp; Relay &nbsp;·&nbsp; Attachments
+    </div>
+  </li>
+  <li><a href="#library">Research Library</a>
+    <div class="toc-sub">
+      Vault &nbsp;·&nbsp; Reference Manager &nbsp;·&nbsp; Chapter Tags &nbsp;·&nbsp; Citation Graph &nbsp;·&nbsp; Full Text &nbsp;·&nbsp; Export &nbsp;·&nbsp; Zotero &nbsp;·&nbsp; Gap Analysis
+    </div>
+  </li>
+  <li><a href="#modes">Supervision Mode Reference</a></li>
+  <li><a href="#viva">Viva — Oral Examination Preparation</a></li>
+  <li><a href="#present">Present — Presentation Mode</a></li>
+  <li><a href="#journal">Living Journal &amp; Supervisor Reports</a></li>
+  <li><a href="#tools">Tools — Argument &amp; Logic Maps</a></li>
+  <li><a href="#data">Data — Spreadsheet Analysis</a></li>
+  <li><a href="#config">Configuration</a></li>
+  <li><a href="#databases">Database Coverage — All 22 Sources</a></li>
+  <li><a href="#workflows">Recommended Workflows</a></li>
+  <li><a href="#tips">Tips &amp; Shortcuts</a></li>
+</ol>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     1 · INTRODUCTION
+═══════════════════════════════════════════════════════════ -->
+<h1 id="intro">1 — Introduction</h1>
+
+<p>G.U.R.U. is an AI-powered doctoral research intelligence system designed specifically for PhD candidates in law and cognate disciplines. It combines a large-language-model supervisor with simultaneous access to 22 academic and legal databases, a full reference management system, oral examination preparation, argument mapping, and supervisor reporting — all within a single browser-based application requiring no installation.</p>
+
+<p>GURU is not a general-purpose chatbot. It is calibrated to your specific research directive, speaks in the register of a senior legal practitioner and academic, applies OSCOLA 4th Edition throughout, and builds an understanding of your research that deepens over each session.</p>
+
+<div class="callout">
+  <div class="callout-label">Core principle</div>
+  GURU is designed to function as three things simultaneously: a <strong>legal practitioner</strong> who understands the law in context, a <strong>legal academic</strong> who knows the scholarly terrain, and a <strong>domain expert</strong> in the scientific or technical field underpinning your research.
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     2 · QUICK START
+═══════════════════════════════════════════════════════════ -->
+<h1 id="start">2 — Quick Start</h1>
+
+<ol class="step-list">
+  <li><strong>Get a free Gemini API key</strong> from <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a>. No payment required.</li>
+  <li>Open GURU and navigate to the <strong>Config</strong> tab.</li>
+  <li>Paste your key into <strong>Gemini API Key</strong> and press Save &amp; Calibrate.</li>
+  <li>Write your <strong>PhD Research Focus</strong> — be specific: <em>"Medical negligence and genomic testing under UK tort law, focusing on CRISPR liability, duty of disclosure, and rights-based compensation frameworks. PhD at University of Brighton."</em></li>
+  <li>Return to <strong>Dialectic</strong> and ask your first research question. GURU is now calibrated to your field.</li>
+</ol>
+
+<div class="callout amber">
+  <div class="callout-label">Optional: Claude API</div>
+  GURU also supports Anthropic's Claude models. Add a Claude API key in Config to switch providers, or use Claude for specific modes while keeping Gemini for others.
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     3 · INTERFACE
+═══════════════════════════════════════════════════════════ -->
+<h1 id="interface">3 — Interface Overview</h1>
+
+<p>The GURU interface has three structural areas:</p>
+
+<ul class="plain">
+  <li><strong>Header bar</strong> — G.U.R.U. logo and tagline · Voice toggle · Light/Dark mode · Help · Navigation tabs</li>
+  <li><strong>Main workspace</strong> — the active tab view, full width</li>
+  <li><strong>Input area</strong> — research directive strip (shows active focus) · attachment · voice buttons · Search toggle · Relay toggle · text input · mode selector · Submit</li>
+</ul>
+
+<h2>Navigation tabs</h2>
+<table>
+  <tr><th>Tab</th><th>Purpose</th></tr>
+  <tr><td><span class="badge badge-green">Dialectic</span></td><td>Main AI research conversation — all supervision modes live here</td></tr>
+  <tr><td><span class="badge badge-blue">Library</span></td><td>Research Vault (uploaded documents) + Reference Manager (citations)</td></tr>
+  <tr><td><span class="badge badge-amber">Viva</span></td><td>Simulated PhD oral examination with an AI internal examiner</td></tr>
+  <tr><td><span class="badge badge-green">Present</span></td><td>Structured presentation of your thesis argument</td></tr>
+  <tr><td><span class="badge badge-blue">Archive</span></td><td>Full chat history across sessions</td></tr>
+  <tr><td><span class="badge badge-purple">Tools</span></td><td>Argument maps, logic diagrams, analytical tools</td></tr>
+  <tr><td><span class="badge badge-amber">Journal</span></td><td>Living research journal + supervisor report generation</td></tr>
+  <tr><td><span class="badge badge-green">Data</span></td><td>Spreadsheet read, edit, and AI analysis</td></tr>
+  <tr><td><span class="badge badge-blue">Config</span></td><td>API keys, model selection, directive, voice, Zotero, cloud sync</td></tr>
+</table>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     4 · DIALECTIC
+═══════════════════════════════════════════════════════════ -->
+<h1 id="dialectic">4 — Dialectic</h1>
+
+<p>The Dialectic tab is the primary research interface. Every query is processed against your research directive, your Reference Library, your Research Vault, and — when Search is active — 22 simultaneous academic and legal databases.</p>
+
+<h2>The input toolbar</h2>
+<table>
+  <tr><th>Control</th><th>Function</th></tr>
+  <tr><td><code>📎</code></td><td>Attach files — PDF, images, .xlsx spreadsheets, .txt, .md. GURU reads the content and incorporates it into the conversation.</td></tr>
+  <tr><td><code>🎤</code></td><td>One-shot voice input — speak your query, click again to submit.</td></tr>
+  <tr><td><code>LIVE</code></td><td>Seamless voice mode — microphone reopens automatically after each response for continuous conversation.</td></tr>
+  <tr><td><code>🔍 SEARCH</code></td><td>Activates 22-database parallel search. When on, every query searches academic literature and legal databases simultaneously and injects results into the AI context. Sources are auto-saved to your Reference Library.</td></tr>
+  <tr><td><code>⇄ RELAY</code></td><td>Paste a response from your Gemini Gem or Claude Project. GURU extracts citations into your Library and uses the content as research context.</td></tr>
+</table>
+
+<h2>Supervision modes</h2>
+<p>Select the mode from the popover at the right of the input bar. Each mode changes GURU's analytical approach:</p>
+<table>
+  <tr><th>Mode</th><th>Behaviour</th><th>Best for</th></tr>
+  <tr><td><span class="badge badge-green">Supervise</span></td><td>Balanced doctoral supervision — guides thinking, develops arguments</td><td>General research questions, literature discussion</td></tr>
+  <tr><td><span class="badge badge-amber">Critique</span></td><td>Rigorous critique — identifies every logical weakness and gap</td><td>Reviewing your own draft passages before submission</td></tr>
+  <tr><td><span class="badge badge-blue">Sources</span></td><td>Identifies which claims need citations and suggests authorities</td><td>Checking a passage for citation gaps (activates search automatically)</td></tr>
+  <tr><td><span class="badge badge-green">Consistency</span></td><td>Maps argumentative structure, flags contradictions and circular reasoning</td><td>Checking thesis coherence across a chapter or section</td></tr>
+  <tr><td><span class="badge badge-purple">Expand</span></td><td>Deepens analysis, suggests counterarguments and additional authorities</td><td>Developing a well-formed argument further</td></tr>
+  <tr><td><span class="badge badge-amber">Examiner</span></td><td>External PhD examiner perspective — doctoral examination standards</td><td>Viva preparation, stress-testing your thesis</td></tr>
+  <tr><td><span class="badge badge-amber">Draft</span></td><td>Academic legal writing assistant — produces ready-to-use authoritative prose</td><td>Drafting thesis sections, structuring arguments in writing</td></tr>
+</table>
+
+<h2>Search — 22 databases in parallel</h2>
+<p>When <code>🔍 SEARCH</code> is active, GURU queries all 22 databases simultaneously the moment you submit. Results appear progressively in the status bar as databases respond. All results are automatically saved to your Reference Library with OSCOLA citations.</p>
+
+<div class="callout">
+  <div class="callout-label">How search integrates</div>
+  Retrieved sources are injected directly into the AI's context for that query — GURU reads the abstracts, authors, and DOIs and cites them in its response. The sources are simultaneously saved to your Library. You do not need to do anything extra.
+</div>
+
+<h2>Voice output</h2>
+<p>Click <strong>Voice</strong> in the header to enable audio output of GURU's responses. GURU uses Gemini TTS (high-quality, gravitas voices including Charon, Fenrir, Kore) with automatic fallback to your device's speech synthesis if Gemini TTS is unavailable.</p>
+<p>Select your preferred voice in <strong>Config → GURU Voice</strong>. Charon is recommended for doctoral supervision contexts.</p>
+
+<h2>The Research Relay</h2>
+<p>Neither Gemini Gems nor Claude Projects expose a public API, so GURU cannot query them directly. The Relay provides an efficient manual bridge:</p>
+<ol class="step-list">
+  <li>Ask your question in your Gemini Gem or Claude Project and copy the response.</li>
+  <li>In GURU, click <code>⇄ RELAY</code>.</li>
+  <li>Paste the response and click <strong>Relay into GURU</strong>.</li>
+  <li>GURU scans for case citations, statutes, and DOIs — saves them to your Library — and uses the full content as research context for your next query.</li>
+</ol>
+
+<h2>File attachments</h2>
+<p>Click <code>📎</code> to attach files to your query:</p>
+<ul class="plain">
+  <li><strong>PDFs</strong> — GURU reads the full text using PDF.js. Attach thesis drafts, source articles, court judgments.</li>
+  <li><strong>Images</strong> — GURU analyses diagrams, figures, screenshots, and handwritten notes.</li>
+  <li><strong>Spreadsheets (.xlsx, .csv)</strong> — GURU reads the data via SheetJS and can analyse, interpret, or discuss the content.</li>
+  <li><strong>Text files (.txt, .md)</strong> — Loaded directly as context.</li>
+</ul>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     5 · LIBRARY
+═══════════════════════════════════════════════════════════ -->
+<h1 id="library">5 — Research Library</h1>
+
+<p>The Library tab combines two previously separate systems into a single scrollable view: the <strong>Research Vault</strong> (uploaded documents) and the <strong>Reference Manager</strong> (bibliographic citations).</p>
+
+<h2>Research Vault</h2>
+<p>The Vault stores documents you upload for GURU to read and reference. Use it for:</p>
+<ul class="plain">
+  <li>PDFs of source articles you have downloaded</li>
+  <li>Draft thesis chapters for critique or consistency analysis</li>
+  <li>Session logs and research notes</li>
+  <li>Judgments, legislation, and policy documents</li>
+</ul>
+<p>Drag and drop files into the vault drop zone, or click <strong>+ Load Files</strong>. GURU can then reference, quote, and cross-cite these sources in any Dialectic conversation.</p>
+
+<h2>Reference Manager</h2>
+<p>The Reference Manager automatically accumulates bibliographic references from three sources:</p>
+<ol class="step-list">
+  <li><strong>Search results</strong> — every source GURU finds via 🔍 SEARCH is saved automatically with OSCOLA formatting.</li>
+  <li><strong>AI responses</strong> — GURU scans its own responses for case citations, statute references, and DOIs and saves them.</li>
+  <li><strong>Manual entry</strong> — click <strong>+ Add Reference</strong> to add sources via Paste Text, DOI Lookup, or Manual form.</li>
+</ol>
+
+<h3>Adding references manually</h3>
+<table>
+  <tr><th>Method</th><th>When to use</th></tr>
+  <tr><td>Paste Text</td><td>Copy a citation in any format (APA, Harvard, MLA, Chicago) from Google Scholar, a journal page, or a legal database — GURU converts it to OSCOLA automatically.</td></tr>
+  <tr><td>DOI Lookup</td><td>Paste a DOI (e.g. <code>10.1038/nature12345</code>) — GURU fetches full metadata from CrossRef.</td></tr>
+  <tr><td>Manual</td><td>Fill in fields directly — best for sources without DOIs: reports, working papers, grey literature.</td></tr>
+</table>
+
+<h2>Per-reference features</h2>
+<p>Each reference card in the Library provides:</p>
+<table>
+  <tr><th>Button</th><th>Function</th></tr>
+  <tr><td>Copy OSCOLA</td><td>Copies the OSCOLA footnote citation to clipboard</td></tr>
+  <tr><td>Copy Bib</td><td>Copies the OSCOLA bibliography entry</td></tr>
+  <tr><td>Copy Fn</td><td>Copies the citation as an OSCOLA footnote ready to paste into a Word footnote field</td></tr>
+  <tr><td>Full Text ↗</td><td>Queries Unpaywall for a free legal PDF. Opens directly if one exists (~50% of recent papers)</td></tr>
+  <tr><td>Cited By ↗</td><td>Queries Semantic Scholar for papers that cite this source — shows up to 6 citing papers with Save to Refs option</td></tr>
+  <tr><td>BAILII ↗</td><td>(Case law only) Opens a BAILII search pre-populated with the case name</td></tr>
+  <tr><td>→ Chat</td><td>Sends the reference into the Dialectic as context for the next query</td></tr>
+  <tr><td>📄 In Vault</td><td>Navigates to the linked PDF in your Vault (shown when a PDF is associated)</td></tr>
+</table>
+
+<h2>Chapter organisation</h2>
+<p>Each reference card includes a chapter selector. Assign any reference to a thesis chapter (Introduction, Literature Review, Ch1–5, Methodology, Conclusion) and chapter filter pills appear above the reference list. Switch between chapters to view only the sources relevant to each section.</p>
+
+<h2>Reading notes</h2>
+<p>Each reference card has a notes textarea for reading annotations, quoted passages, page references, and critical observations. Notes are saved permanently and incorporated into GURU's research context when discussing that source.</p>
+
+<h2>Gap Analysis</h2>
+<p>Click <strong>📊 Gap Analysis</strong> in the Library header. GURU analyses your entire reference list against your research directive and returns a structured audit identifying: strengths, gaps by jurisdiction and time period, source type imbalances, and five specific search recommendations.</p>
+
+<h2>Exporting references</h2>
+<ul class="plain">
+  <li><strong>Refs .rtf</strong> — Word-processor-compatible bibliography export with Table of Cases, Table of Legislation, and other sources formatted in OSCOLA.</li>
+  <li><strong>Refs RIS</strong> — Universal reference format compatible with Zotero, Mendeley, EndNote, and RefWorks.</li>
+</ul>
+
+<h2>Zotero integration</h2>
+<ol class="step-list">
+  <li>Create a free account at <a href="https://zotero.org">zotero.org</a>.</li>
+  <li>Go to <strong>zotero.org/settings/keys</strong> — note your User ID and create a new API key with write access.</li>
+  <li>Paste both into <strong>Config → Zotero Integration</strong> and save.</li>
+  <li>Click <strong>⇄ Zotero</strong> in the Library header to push your entire reference list to Zotero in one operation.</li>
+</ol>
+<p>Once in Zotero, use their PDF reader for full annotation, highlighting, and note-taking. Relay annotated notes back into GURU via the ⇄ Relay button.</p>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     6 · MODES REFERENCE
+═══════════════════════════════════════════════════════════ -->
+<h1 id="modes">6 — Supervision Mode Reference</h1>
+
+<h3>Supervise</h3>
+<p>The default mode. GURU acts as a doctoral supervisor — it guides your thinking, develops your arguments, identifies connections to your reference library, and responds at the level of rigour expected at PhD. Use it for general research discussion, literature questions, and developing your theoretical framework.</p>
+
+<h3>Critique</h3>
+<p>GURU becomes a demanding critic. It reads your passage and systematically identifies every logical weakness, unsupported claim, methodological flaw, circular argument, and gap in reasoning. It will not soften its assessment. Paste any draft passage and receive a detailed critique before submission.</p>
+
+<h3>Sources</h3>
+<p>GURU identifies which specific claims in your passage require citation and suggests the most relevant cases, statutes, and academic sources in OSCOLA format. Activating this mode automatically turns on 🔍 SEARCH so that real sources from 22 databases are suggested.</p>
+
+<h3>Consistency</h3>
+<p>GURU maps the argumentative structure of your passage and identifies internal contradictions, logical incoherence, and inconsistencies with your stated thesis position. Use it when a passage has been revised multiple times and you want to check it still holds together.</p>
+
+<h3>Expand</h3>
+<p>GURU takes a well-formed argument and strengthens it — suggesting additional supporting authorities, deepening the doctrinal analysis, proposing counterarguments to engage, and identifying how the argument could develop further.</p>
+
+<h3>Examiner</h3>
+<p>GURU adopts the perspective of an external PhD examiner. It applies doctoral examination standards: originality of contribution, critical engagement with the literature, methodological rigour, command of the field. Use this for viva preparation and stress-testing individual passages.</p>
+
+<h3>Draft</h3>
+<p>GURU assists with academic legal writing. It produces authoritative prose in the register of a senior barrister or legal academic — structured, formally signposted, with inline OSCOLA citations. Provide your argument in rough form and GURU will return a draft passage you can refine.</p>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     7 · VIVA
+═══════════════════════════════════════════════════════════ -->
+<h1 id="viva">7 — Viva</h1>
+
+<p>The Viva tab simulates a PhD oral examination. GURU acts as an internal examiner with full knowledge of your research directive and vault contents. It questions your thesis at the level of rigour of a real viva voce.</p>
+
+<div class="callout blue">
+  <div class="callout-label">Before you start</div>
+  Upload your thesis chapters or a thesis summary to your Vault first. GURU will reference the actual content of your work during the examination — making the simulation significantly more realistic.
+</div>
+
+<p>Three modes are available:</p>
+<ul class="plain">
+  <li><strong>Text only</strong> — examiner questions appear in text; you type responses</li>
+  <li><strong>Examiner speaks</strong> — examiner questions are spoken aloud via TTS</li>
+  <li><strong>Full voice</strong> — examiner speaks; you respond via microphone</li>
+</ul>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     8 · PRESENT
+═══════════════════════════════════════════════════════════ -->
+<h1 id="present">8 — Present</h1>
+
+<p>The Present tab generates a structured academic presentation of your research. GURU draws on your directive, vault, and reference library to produce a systematic overview suitable for presenting to supervisors, at conferences, or in seminars.</p>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     9 · LIVING JOURNAL
+═══════════════════════════════════════════════════════════ -->
+<h1 id="journal">9 — Living Journal &amp; Supervisor Reports</h1>
+
+<p>The Journal tab is a structured research diary that accumulates your argument maps and critical reflections over time. It serves two functions:</p>
+
+<ul class="plain">
+  <li><strong>Living record</strong> — each argument map you generate in Tools can be saved to the Journal with a critical reflection. The journal builds a documented record of your intellectual progress.</li>
+  <li><strong>Supervisor reports</strong> — GURU analyses your journal entries and generates a formal progress report formatted for emailing to your supervisors, covering: research progress, argument development, sources reviewed, and outstanding questions.</li>
+</ul>
+
+<p>To email a report: add your supervisor's email address in <strong>Config → Supervisor Report</strong>. GURU pre-fills the To field when you trigger report generation.</p>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     10 · TOOLS
+═══════════════════════════════════════════════════════════ -->
+<h1 id="tools">10 — Tools</h1>
+
+<p>The Tools tab generates visual argument and logic maps using Mermaid diagram syntax. These are useful for mapping the structure of a legal argument, visualising relationships between cases and doctrine, or diagramming your theoretical framework.</p>
+
+<p>Generated maps can be:</p>
+<ul class="plain">
+  <li>Viewed inline in GURU</li>
+  <li>Opened in <a href="https://mermaid.live">mermaid.live</a> for editing and export</li>
+  <li>Saved to your Living Journal with a critical reflection</li>
+</ul>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     11 · DATA
+═══════════════════════════════════════════════════════════ -->
+<h1 id="data">11 — Data</h1>
+
+<p>The Data tab provides spreadsheet functionality for quantitative research data. Upload or create spreadsheets, edit cells, and ask GURU to analyse, interpret, or discuss the data in the context of your research.</p>
+
+<p>Supported formats: <code>.xlsx</code>, <code>.csv</code>. You can also attach spreadsheets directly in Dialectic for AI analysis within a conversation.</p>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     12 · CONFIG
+═══════════════════════════════════════════════════════════ -->
+<h1 id="config">12 — Configuration</h1>
+
+<h2>API Configuration</h2>
+<table>
+  <tr><th>Setting</th><th>Details</th></tr>
+  <tr><td>Gemini API Key</td><td>Free from <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a>. Required for Gemini models and TTS.</td></tr>
+  <tr><td>AI Provider</td><td>Switch between Gemini and Claude globally, or set per-mode below.</td></tr>
+  <tr><td>Anthropic API Key</td><td>From <a href="https://console.anthropic.com">console.anthropic.com</a>. Required to use Claude models.</td></tr>
+  <tr><td>Model per Mode</td><td>Assign different models to Dialectic Chat, Viva, Tools, and Supervisor Report independently.</td></tr>
+</table>
+
+<h2>Research Directive</h2>
+<p>The most important configuration setting. Write a specific description of your research: topic, institution, theoretical framework, jurisdiction, methodological approach. GURU uses this to calibrate every response. The directive also appears in the strip above the input bar as a persistent reminder.</p>
+
+<div class="callout">
+  <div class="callout-label">Example directive</div>
+  <em>"Genomic negligence under UK tort law — specifically liability for failure to disclose pathogenic genetic variants (BRCA1/BRCA2) and CRISPR treatment risks. Rights-based approach using Article 8 ECHR. PhD at University of Brighton School of Law. Focus on duty of care, causation (loss of autonomy), and novel heads of damage."</em>
+</div>
+
+<h2>Voice</h2>
+<p>Select your preferred voice for GURU's TTS output. Charon (deep, authoritative) is recommended for doctoral contexts. The system voice option uses your device's built-in TTS with no API cost.</p>
+
+<h2>Zotero Integration</h2>
+<p>Add your Zotero User ID and API Key (from <a href="https://zotero.org/settings/keys">zotero.org/settings/keys</a>) to enable direct reference pushing from GURU to your Zotero library.</p>
+
+<h2>Cloud Sync (Pro)</h2>
+<p>Pro licence holders can enable cross-device cloud sync via Firebase. Set a memorable passphrase — the same passphrase on any device connects to the same cloud node. Chat history, vault entries, and references sync in real time.</p>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     13 · DATABASES
+═══════════════════════════════════════════════════════════ -->
+<h1 id="databases">13 — Database Coverage</h1>
+
+<p>When 🔍 SEARCH is active, GURU queries all 22 databases simultaneously. Results are deduplicated by DOI and URL, and the top 10 most relevant are injected into the AI context and saved to your Library.</p>
+
+<h2>Academic &amp; Journals</h2>
+<div class="db-grid">
+  <div class="db-item"><strong>OpenAlex</strong><span>250M+ scholarly works · all disciplines</span></div>
+  <div class="db-item"><strong>CrossRef</strong><span>Law journals · DOI metadata · strong legal coverage</span></div>
+  <div class="db-item"><strong>PubMed</strong><span>35M+ biomedical &amp; genomics articles</span></div>
+  <div class="db-item"><strong>PubMed Central (PMC)</strong><span>Full-text open access biomedical literature</span></div>
+  <div class="db-item"><strong>Europe PMC</strong><span>Open-access life sciences</span></div>
+  <div class="db-item"><strong>Semantic Scholar</strong><span>200M+ papers · semantic relevance ranking</span></div>
+  <div class="db-item"><strong>DOAJ</strong><span>19M+ open access articles · all jurisdictions</span></div>
+  <div class="db-item"><strong>arXiv</strong><span>Preprints — biomedical, law-economics, genomics</span></div>
+  <div class="db-item"><strong>ClinicalTrials.gov</strong><span>CRISPR and gene therapy trial registrations</span></div>
+  <div class="db-item"><strong>WHO IRIS</strong><span>WHO genomics guidelines and global health policy</span></div>
+</div>
+
+<h2>Genetics &amp; Clinical</h2>
+<div class="db-grid">
+  <div class="db-item"><strong>ClinVar (NCBI)</strong><span>Clinical significance of genetic variants · pathogenicity classifications</span></div>
+  <div class="db-item"><strong>OMIM (NCBI)</strong><span>Online Mendelian Inheritance in Man · genetic disease reference</span></div>
+  <div class="db-item"><strong>NCBI Gene</strong><span>Human gene summaries and function</span></div>
+  <div class="db-item"><strong>UniProt</strong><span>Protein/gene function · disease associations</span></div>
+  <div class="db-item"><strong>Orphanet</strong><span>Rare genetic disease database · 6,000+ conditions</span></div>
+  <div class="db-item"><strong>GWAS Catalog (EBI)</strong><span>Genome-wide association studies</span></div>
+</div>
+
+<h2>Case Law</h2>
+<div class="db-grid">
+  <div class="db-item"><strong>HUDOC</strong><span>European Court of Human Rights · all ECHR judgments</span></div>
+  <div class="db-item"><strong>Find Case Law (UK)</strong><span>UKSC · Court of Appeal · High Court · Tribunals</span></div>
+  <div class="db-item"><strong>CourtListener</strong><span>US federal and all 50 state courts</span></div>
+  <div class="db-item"><strong>Caselaw Access Project</strong><span>US historical case law — Harvard Law School</span></div>
+</div>
+
+<h2>Legislation &amp; Policy</h2>
+<div class="db-grid">
+  <div class="db-item"><strong>legislation.gov.uk</strong><span>UK statutes &amp; statutory instruments</span></div>
+  <div class="db-item"><strong>EUR-Lex</strong><span>EU law · CJEU cases · Directives · pre-Brexit binding law</span></div>
+  <div class="db-item"><strong>Hansard (UK Parliament)</strong><span>Parliamentary debates · legislative intent</span></div>
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     14 · WORKFLOWS
+═══════════════════════════════════════════════════════════ -->
+<h1 id="workflows">14 — Recommended Workflows</h1>
+
+<h2>Literature Review</h2>
+<div class="workflow">
+  <div class="wf-step"><div class="wf-num">1</div><div class="wf-content"><strong>Set research directive</strong><p>Write a specific directive in Config covering your topic, jurisdiction, theoretical framework, and institution.</p></div></div>
+  <div class="wf-step"><div class="wf-num">2</div><div class="wf-content"><strong>Search by concept</strong><p>Enable 🔍 SEARCH in Dialectic and ask GURU about the core concepts in your research. GURU queries all 22 databases and saves results to your Library automatically.</p></div></div>
+  <div class="wf-step"><div class="wf-num">3</div><div class="wf-content"><strong>Use Cited By for depth</strong><p>Open the Library, find a key source, and click Cited By ↗. Save the most relevant citing papers. This maps the intellectual lineage of key authorities.</p></div></div>
+  <div class="wf-step"><div class="wf-num">4</div><div class="wf-content"><strong>Tag by chapter</strong><p>Use the chapter selector on each ref card to organise sources by thesis chapter. Filter by chapter to assess coverage per section.</p></div></div>
+  <div class="wf-step"><div class="wf-num">5</div><div class="wf-content"><strong>Run Gap Analysis</strong><p>Click 📊 Gap Analysis in the Library header. GURU identifies missing jurisdictions, source type imbalances, and recommends five priority searches.</p></div></div>
+  <div class="wf-step"><div class="wf-num">6</div><div class="wf-content"><strong>Export to Zotero</strong><p>Click ⇄ Zotero to push your full library to Zotero for deep PDF annotation and reading.</p></div></div>
+</div>
+
+<h2>Viva Preparation</h2>
+<div class="workflow">
+  <div class="wf-step"><div class="wf-num">1</div><div class="wf-content"><strong>Upload thesis to Vault</strong><p>Load your thesis chapters as PDFs or text files into the Research Vault. GURU will reference actual content during examination.</p></div></div>
+  <div class="wf-step"><div class="wf-num">2</div><div class="wf-content"><strong>Stress-test in Examiner mode</strong><p>In Dialectic, switch to Examiner mode and paste key passages. Ask GURU to question your contribution, methodology, and argument.</p></div></div>
+  <div class="wf-step"><div class="wf-num">3</div><div class="wf-content"><strong>Full simulation in Viva tab</strong><p>Open the Viva tab and run a full simulated oral examination with voice enabled. Practice your spoken responses under examination conditions.</p></div></div>
+  <div class="wf-step"><div class="wf-num">4</div><div class="wf-content"><strong>Identify weak points</strong><p>Use Critique mode on passages where GURU's Examiner mode raised questions. Understand the weakness before the real examination.</p></div></div>
+</div>
+
+<h2>Citation Management</h2>
+<div class="workflow">
+  <div class="wf-step"><div class="wf-num">1</div><div class="wf-content"><strong>Search populates Library automatically</strong><p>Enable 🔍 SEARCH — every GURU response automatically saves cited sources to your Library with OSCOLA formatting.</p></div></div>
+  <div class="wf-step"><div class="wf-num">2</div><div class="wf-content"><strong>Add Google Scholar finds</strong><p>In Google Scholar, click Cite under a result, copy the citation, go to Library → + Add Reference → Paste Text. GURU converts to OSCOLA.</p></div></div>
+  <div class="wf-step"><div class="wf-num">3</div><div class="wf-content"><strong>Get full text</strong><p>Click Full Text ↗ on any ref card with a DOI. Unpaywall finds the free legal PDF — open it directly or download and upload to your Vault.</p></div></div>
+  <div class="wf-step"><div class="wf-num">4</div><div class="wf-content"><strong>Copy footnote to Word</strong><p>When writing, click Copy Fn on any ref card. The OSCOLA footnote is in your clipboard — paste directly into a Word footnote field.</p></div></div>
+  <div class="wf-step"><div class="wf-num">5</div><div class="wf-content"><strong>Export bibliography</strong><p>Click Refs .rtf for a formatted OSCOLA bibliography, or Refs RIS to import the full library into Zotero or Mendeley.</p></div></div>
+</div>
+
+<h2>Supervisor Report</h2>
+<div class="workflow">
+  <div class="wf-step"><div class="wf-num">1</div><div class="wf-content"><strong>Build your journal</strong><p>After generating argument maps in Tools, click Save to Journal and add a critical reflection on what the map revealed about your argument.</p></div></div>
+  <div class="wf-step"><div class="wf-num">2</div><div class="wf-content"><strong>Generate report</strong><p>Open the Journal tab and click Generate Supervisor Report. GURU analyses your journal entries and produces a formal progress report.</p></div></div>
+  <div class="wf-step"><div class="wf-num">3</div><div class="wf-content"><strong>Email to supervisors</strong><p>The report is pre-addressed to the email(s) in your Config. Review, export as RTF if needed, and send.</p></div></div>
+</div>
+
+<hr class="section-rule">
+
+<!-- ═══════════════════════════════════════════════════════════
+     15 · TIPS
+═══════════════════════════════════════════════════════════ -->
+<h1 id="tips">15 — Tips &amp; Shortcuts</h1>
+
+<ul class="plain">
+  <li><strong>Enter</strong> submits a query. Use <strong>Shift+Enter</strong> for a new line within the input.</li>
+  <li>Keep your research directive updated as your thesis evolves — it is the single most important calibration setting.</li>
+  <li>Use <strong>Sources mode</strong> on every draft passage before your supervisor sees it. It will flag every uncited claim.</li>
+  <li>The <strong>Relay button</strong> is particularly powerful when combined with a Gemini Gem you have trained on your thesis — paste its responses into GURU to merge Gem-specific knowledge with GURU's search and reference management.</li>
+  <li>Chapter tags on references become essential once your library exceeds 50 sources. Tag as you go, not retrospectively.</li>
+  <li>For case law, always check <strong>BAILII ↗</strong> after GURU cites a UK case — BAILII is the definitive free source for the full judgment text.</li>
+  <li>The <strong>Gap Analysis</strong> is most useful after you have accumulated at least 30–40 references. Run it before each supervisor meeting.</li>
+  <li>If Gemini TTS is unavailable (API not configured or usage quota reached), GURU automatically falls back to your device's speech synthesis — voice output continues uninterrupted.</li>
+  <li>Cloud sync (Pro) uses a SHA-256 hash of your passphrase as the Firestore node identifier — no account or personal data is stored. Use the same passphrase on any device to access your library and chat history.</li>
+</ul>
+
+<div class="callout purple">
+  <div class="callout-label">Pro licence</div>
+  Pro unlocks: streaming responses · PDF vault · temperature control · extended context window (up to 20 messages) · cloud sync across devices. Licence keys are in the format <code>GURU-XXXX-XXXX-XXXX</code>. Enter in Config → GURU Pro.
+</div>
+
+<hr class="section-rule">
+
+<div class="footer">
+  G.U.R.U. — Guided University Research Utility &nbsp;·&nbsp; Doctoral Research Intelligence &nbsp;·&nbsp; V2.0<br>
+  Generated by G.U.R.U. &nbsp;·&nbsp; 2026 &nbsp;·&nbsp; All rights reserved
+</div>
+
+</body>
+</html>
