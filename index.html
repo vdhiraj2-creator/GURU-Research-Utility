@@ -7700,6 +7700,14 @@ ${body}
                 setTab('chat'); return;
             }
 
+            // Warn if a weaker model is selected for tools — diagram generation needs reliable instruction-following
+            const _toolsProv  = getProviderForMode('tools');
+            const _toolsModel = getModelForMode('tools');
+            const _weakModels = ['llama-3.1-8b-instant', 'gemma2-9b-it', 'phi4-mini', 'gemma3:4b', 'llama3.2:3b'];
+            if (_weakModels.some(m => _toolsModel.includes(m.split(':')[0]))) {
+                addBubble('system', `Note: your Tools model (${_toolsModel}) is optimised for speed, not diagram generation. If the argument map has syntax errors, switch to a larger model in Config → Tools & Maps.`);
+            }
+
             const summary = researchMsgs.slice(-20)
                 .map(m => `${m.role === 'user' ? 'Student' : 'GURU'}: ${m.text.slice(0, 300)}`)
                 .join('\n\n');
