@@ -1939,7 +1939,7 @@
                     <input type="password" id="cfg-key" class="s-input" placeholder="AIza...">
                 </div>
                 <div class="s-group">
-                    <label class="s-label">AI Provider</label>
+                    <label class="s-label">Set All Modes To</label>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
                         <button id="btn-provider-gemini" class="btn-save" style="flex:1;" onclick="setProvider('gemini')">Gemini</button>
                         <button id="btn-provider-claude" class="btn-save" style="flex:1;background:transparent;border:1px solid rgba(167,139,250,0.4);color:#a78bfa;" onclick="setProvider('claude')">Claude</button>
@@ -1967,22 +1967,27 @@
                     <p class="s-note" style="margin-top:0.5rem;">Runs models locally — no internet needed after setup. Requires <strong>Ollama</strong> installed. Best models for this hardware: <code>phi4-mini</code> (fast), <code>llama3.2:8b</code> (balanced).<br>From the web app set <code style="word-break:break-all;">OLLAMA_ORIGINS=https://jarvisphd-80ecb.web.app</code> — or use the desktop build for seamless offline access.</p>
                 </div>
                 <div class="s-group">
-                    <label class="s-label">Model per Mode</label>
+                    <label class="s-label">Provider &amp; Model per Mode</label>
+                    <p class="s-note" style="margin-bottom:0.5rem;">Mix providers freely — e.g. Groq 70B for chat, Gemini Deep for viva, Groq 8B for tools.</p>
                     <div style="display:grid;gap:0.5rem;">
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;align-items:center;">
+                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
                             <span class="s-note" style="margin:0;">Dialectic Chat</span>
-                            <select id="cfg-model-chat" class="s-input" style="font-size:10px;padding:4px 8px;"></select>
+                            <select id="cfg-prov-chat"   class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('chat')"></select>
+                            <select id="cfg-model-chat"  class="s-input" style="font-size:10px;padding:4px 8px;"></select>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;align-items:center;">
+                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
                             <span class="s-note" style="margin:0;">Viva Examination</span>
-                            <select id="cfg-model-viva" class="s-input" style="font-size:10px;padding:4px 8px;"></select>
+                            <select id="cfg-prov-viva"   class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('viva')"></select>
+                            <select id="cfg-model-viva"  class="s-input" style="font-size:10px;padding:4px 8px;"></select>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;align-items:center;">
+                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
                             <span class="s-note" style="margin:0;">Tools &amp; Maps</span>
+                            <select id="cfg-prov-tools"  class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('tools')"></select>
                             <select id="cfg-model-tools" class="s-input" style="font-size:10px;padding:4px 8px;"></select>
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.4rem;align-items:center;">
+                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
                             <span class="s-note" style="margin:0;">Supervisor Report</span>
+                            <select id="cfg-prov-report" class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('report')"></select>
                             <select id="cfg-model-report" class="s-input" style="font-size:10px;padding:4px 8px;"></select>
                         </div>
                     </div>
@@ -2887,11 +2892,34 @@ ${body}}`;
             return `guru_model_${provider}_${mode}`;
         }
 
+        // Returns the provider for a specific mode, falling back to the global provider.
+        function getProviderForMode(mode) {
+            return localStorage.getItem(`guru_provider_${mode}`) || localStorage.getItem(SK_PROVIDER) || 'gemini';
+        }
+
         function getModelForMode(mode) {
-            const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            const provider = getProviderForMode(mode);
             if (provider === 'ollama') return localStorage.getItem(SK_MODEL_OLLAMA) || 'phi4-mini';
             const defaults = { gemini: 'gemini-2.5-flash', claude: 'claude-sonnet-4-6', groq: 'llama-3.3-70b-versatile' };
             return localStorage.getItem(_modelKey(provider, mode)) || defaults[provider] || 'gemini-2.5-flash';
+        }
+
+        // Called when a per-mode provider select changes — repopulates the model select.
+        function onModeProviderChange(mode) {
+            const provSel  = document.getElementById(`cfg-prov-${mode}`);
+            const modelSel = document.getElementById(`cfg-model-${mode}`);
+            if (!provSel || !modelSel) return;
+            const p = provSel.value;
+            const modelLists = {
+                gemini: [{ value:'gemini-2.5-flash',label:'gemini-2.5-flash — Fast'},{ value:'gemini-2.5-pro',label:'gemini-2.5-pro — Deep'},{ value:'gemini-2.0-flash',label:'gemini-2.0-flash — Light'}],
+                claude: [{ value:'claude-opus-4-7',label:'Opus 4.7 — Most capable'},{ value:'claude-sonnet-4-6',label:'Sonnet 4.6 — Balanced'},{ value:'claude-haiku-4-5-20251001',label:'Haiku 4.5 — Fast'}],
+                groq:   [{ value:'llama-3.3-70b-versatile',label:'Llama 3.3 70B — Best'},{ value:'llama-3.1-8b-instant',label:'Llama 3.1 8B — Fast'},{ value:'gemma2-9b-it',label:'Gemma 2 9B'}],
+                ollama: [{ value: localStorage.getItem(SK_MODEL_OLLAMA)||'phi4-mini', label: localStorage.getItem(SK_MODEL_OLLAMA)||'phi4-mini (local)' }],
+            };
+            const models = modelLists[p] || modelLists.gemini;
+            const stored = localStorage.getItem(_modelKey(p, mode));
+            modelSel.innerHTML = models.map(m => `<option value="${m.value}"${m.value===stored?' selected':''}>${m.label}</option>`).join('');
+            if (!stored) modelSel.value = models[0].value;
         }
 
         function saveSettings() {
@@ -2905,11 +2933,15 @@ ${body}}`;
             const extCtx = (document.getElementById('cfg-ext-context')?.value || '').trim();
             localStorage.setItem(SK_EXT_CONTEXT, extCtx);
 
-            // Save per-mode model selections (provider-scoped keys)
-            const _saveProv = localStorage.getItem(SK_PROVIDER) || 'gemini';
-            [['cfg-model-chat','chat'],['cfg-model-viva','viva'],['cfg-model-tools','tools'],['cfg-model-report','report']].forEach(([id, mode]) => {
-                const sel = document.getElementById(id);
-                if (sel && sel.value) localStorage.setItem(_modelKey(_saveProv, mode), sel.value);
+            // Save per-mode provider + model selections
+            ['chat','viva','tools','report'].forEach(mode => {
+                const provSel  = document.getElementById(`cfg-prov-${mode}`);
+                const modelSel = document.getElementById(`cfg-model-${mode}`);
+                if (provSel  && provSel.value)  localStorage.setItem(`guru_provider_${mode}`, provSel.value);
+                if (modelSel && modelSel.value) {
+                    const prov = provSel?.value || getProviderForMode(mode);
+                    localStorage.setItem(_modelKey(prov, mode), modelSel.value);
+                }
             });
             // Keep SK_MODEL in sync with chat model for backward compatibility
             const chatSel = document.getElementById('cfg-model-chat');
@@ -3014,6 +3046,8 @@ ${body}}`;
 
         function setProvider(p) {
             localStorage.setItem(SK_PROVIDER, p);
+            // Quick-set: apply to all modes at once
+            ['chat','viva','tools','report'].forEach(mode => localStorage.setItem(`guru_provider_${mode}`, p));
             _refreshProviderUI();
         }
 
@@ -3068,14 +3102,21 @@ ${body}}`;
             const modelMap = { gemini: geminiModels, claude: claudeModels, groq: groqModels };
             const models = modelMap[p] || geminiModels;
 
-            if (p !== 'ollama') {
-                [['cfg-model-chat','chat'],['cfg-model-viva','viva'],['cfg-model-tools','tools'],['cfg-model-report','report']].forEach(([id, mode]) => {
-                    const sel = document.getElementById(id);
-                    if (!sel) return;
-                    sel.innerHTML = models.map(m => `<option value="${m.value}">${m.label}</option>`).join('');
-                    sel.value = localStorage.getItem(_modelKey(p, mode)) || models[0].value;
-                });
-            }
+            // Populate per-mode provider selects and model selects
+            const providerOptions = [
+                { value:'gemini', label:'Gemini' },
+                { value:'claude', label:'Claude' },
+                { value:'groq',   label:'Groq' },
+                { value:'ollama', label:'Ollama' },
+            ].map(o => `<option value="${o.value}">${o.label}</option>`).join('');
+            ['chat','viva','tools','report'].forEach(mode => {
+                const provSel = document.getElementById(`cfg-prov-${mode}`);
+                if (provSel) {
+                    provSel.innerHTML = providerOptions;
+                    provSel.value = getProviderForMode(mode);
+                }
+                onModeProviderChange(mode);
+            });
 
             // Restore key fields
             const claudeKeyEl = document.getElementById('cfg-claude-key');
@@ -3356,7 +3397,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
         // BRAIN — Gemini agentic loop
         // ============================================================
         async function callBrain(userMessage, files = []) {
-            const _p = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            const _p = getProviderForMode('chat');
             if (_p === 'claude')  return callBrainClaude(userMessage, files);
             if (_p === 'groq')    return callBrainGroq(userMessage, files);
             if (_p === 'ollama')  return callBrainOllama(userMessage, files);
@@ -3841,8 +3882,19 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             }
         }
 
+        async function _callOAISimple(baseUrl, authHeaders, model, prompt, maxTokens = 4096) {
+            const resp = await fetch(`${baseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders },
+                body: JSON.stringify({ model, max_tokens: maxTokens, messages: [{ role: 'user', content: prompt }] })
+            });
+            const data = await resp.json();
+            if (!resp.ok) throw new Error(data?.error?.message || `HTTP ${resp.status}`);
+            return data?.choices?.[0]?.message?.content || '';
+        }
+
         async function _callToolAI(prompt, mode = 'tools') {
-            const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            const provider = getProviderForMode(mode);
             const model    = getModelForMode(mode);
             const s        = getSettings();
             if (provider === 'claude') {
@@ -3856,6 +3908,13 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                 const data = await resp.json();
                 if (!resp.ok) throw new Error(data?.error?.message || `HTTP ${resp.status}`);
                 return data?.content?.[0]?.text || '';
+            } else if (provider === 'groq') {
+                const key = localStorage.getItem(SK_GROQ_KEY);
+                if (!key) throw new Error('No Groq API key configured in Config.');
+                return _callOAISimple('https://api.groq.com/openai/v1', { Authorization: `Bearer ${key}` }, model, prompt);
+            } else if (provider === 'ollama') {
+                const base = (localStorage.getItem(SK_OLLAMA_URL) || 'http://localhost:11434').replace(/\/$/, '');
+                return _callOAISimple(`${base}/v1`, {}, model, prompt);
             } else {
                 if (!s.key) throw new Error('No Gemini API key configured in Config.');
                 const resp = await fetch(
@@ -3871,7 +3930,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
 
         // Search-augmented tool caller — uses Tavily for real web search, falls back to native AI tools
         async function _callToolAIWithSearch(prompt, mode = 'tools', searchQuery = '') {
-            const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            const provider = getProviderForMode(mode);
             const model    = getModelForMode(mode);
             const s        = getSettings();
 
@@ -5718,10 +5777,12 @@ ${bodyHtml}
 
         async function callViva(studentAnswer) {
             const s        = getSettings();
-            const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            const provider = getProviderForMode('viva');
             const vivaModel = getModelForMode('viva');
 
-            if (provider !== 'claude' && !s.key) return { text: 'No API key. Go to Config tab.', thought: null };
+            if (provider === 'gemini' && !s.key) return { text: 'No Gemini API key. Go to Config tab.', thought: null };
+            if (provider === 'groq'   && !localStorage.getItem(SK_GROQ_KEY)) return { text: 'No Groq API key. Go to Config tab.', thought: null };
+            if (provider === 'claude' && !localStorage.getItem(SK_CLAUDE_KEY)) return { text: 'No Claude API key. Go to Config tab.', thought: null };
 
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${vivaModel}:generateContent?key=${s.key}`;
 
@@ -5807,8 +5868,8 @@ Respond with valid JSON — no markdown fences:
   "socratic": null
 }`;
 
-            // ── Claude path ──
-            if (provider === 'claude') {
+            // ── Non-Gemini path (Claude / Groq / Ollama) — all go through _callToolAI ──
+            if (provider !== 'gemini') {
                 const fullPrompt = systemPrompt + '\n\n---\n\n' +
                     vivaHistory.slice(-10).map(m => `${m.role === 'examiner' ? 'EXAMINER' : 'STUDENT'}: ${m.text}`).join('\n\n') +
                     (studentAnswer ? `\n\nSTUDENT: ${studentAnswer}` : '\n\nSTUDENT: Please formally open the viva voce examination.');
