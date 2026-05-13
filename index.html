@@ -3315,7 +3315,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                 if (f.sheetText) userParts.push({ text: f.sheetText });
                 else if (f.base64) userParts.push({ inlineData: { mimeType: f.mimeType, data: f.base64 } });
             });
-            if (!userParts.length) userParts.push({ text: 'Analyse the attached document.' });
+            if (!userParts.length) userParts.push({ text: 'The student has attached a document with no accompanying message. If the content (references, bibliography, notes) appears to already be saved in their research vault or reference library, acknowledge this clearly and ask what they would like to do with it. Otherwise, summarise the key legal arguments, sources, and doctrinal points.' });
 
             // ── Phase 1: tool dispatch (skip for simple queries) ──────────
             let toolResultsText = '';
