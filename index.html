@@ -24,7 +24,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>G.U.R.U. — Doctoral Research Intelligence</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111111'/><path d='M16 3.5 L18.4 13.6 L28.5 16 L18.4 18.4 L16 28.5 L13.6 18.4 L3.5 16 L13.6 13.6 Z' fill='%231fb896'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111111'/><line x1='16' y1='5' x2='16' y2='27' stroke='%231fb896' stroke-width='2.5' stroke-linecap='round'/><line x1='6.5' y1='10.5' x2='25.5' y2='21.5' stroke='%231fb896' stroke-width='2.5' stroke-linecap='round'/><line x1='25.5' y1='10.5' x2='6.5' y2='21.5' stroke='%231fb896' stroke-width='2.5' stroke-linecap='round'/></svg>">
     <meta name="application-name" content="G.U.R.U.">
     <meta name="apple-mobile-web-app-title" content="G.U.R.U.">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -121,7 +121,7 @@
         body.light-mode .empty-state { color: var(--text-3); }
         body.light-mode .guru-letter { color: var(--text-1); }
         body.light-mode .guru-dot { color: var(--accent); }
-        body.light-mode #guru-mark path { fill: var(--accent); }
+        body.light-mode #guru-mark line { stroke: var(--accent); }
         body.light-mode #guru-voice-btn { border-color: var(--border); color: var(--text-2); }
         body.light-mode #guru-voice-btn.active { color: var(--accent); border-color: var(--accent); }
         body.light-mode .btn-save { background: var(--accent); color: #fff; }
@@ -512,7 +512,7 @@
         /* ============================================================
            SETTINGS VIEW
         ============================================================ */
-        #view-settings { max-width: 580px; margin: 0 auto; padding: 2rem 1.5rem; }
+        #view-settings { max-width: 700px; margin: 0 auto; padding: 2rem 2.5rem; }
         .s-section {
             font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.15em;
             text-transform: uppercase; color: #1e293b; padding-bottom: 0.5rem;
@@ -673,7 +673,7 @@
         /* ============================================================
            v198 ADDITIONS — Tools tab
         ============================================================ */
-        #view-tools-inner { max-width:820px; margin:0 auto; padding:2rem 1.5rem; }
+        #view-tools-inner { max-width:100%; padding:2rem 2.5rem; }
         #view-tools-inner .s-section { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.15em; text-transform:uppercase; color:#334155; margin:1.5rem 0 0.75rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem; }
         #view-tools-inner .s-group { margin-bottom:1rem; }
         #view-tools-inner .s-label { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:0.1em; text-transform:uppercase; color:#475569; display:block; margin-bottom:0.4rem; }
@@ -1054,7 +1054,7 @@
         /* ============================================================
            VIVA TAB
         ============================================================ */
-        #view-viva { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem; }
+        #view-viva { max-width: 100%; padding: 2rem 2.5rem; }
         .viva-start-card {
             border: 1px solid rgba(251,191,36,0.25);
             border-left: 3px solid #f59e0b;
@@ -1419,7 +1419,7 @@
            PRESENTATION VIEW
         ============================================================ */
         #view-present {
-            max-width: 900px;
+            max-width: 100%;
             margin: 0 auto;
             padding: 2rem 1.5rem;
         }
@@ -1603,7 +1603,7 @@
         }
 
         /* ── Living Journal ─────────────────────────────────────── */
-        #view-journal-inner { padding: 1.5rem 1.25rem; }
+        #view-journal-inner { padding: 2rem 2.5rem; }
         .journal-stats-bar {
             display: flex; align-items: center; justify-content: space-between;
             flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;
@@ -1770,6 +1770,59 @@
             animation: none !important;
             transition: none !important;
         }
+        /* ── Panel action menus ── */
+        .panel-header {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1.5rem 2.5rem 0; margin-bottom: 1.25rem;
+        }
+        .panel-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 18px; font-weight: 700; color: var(--text-1);
+        }
+        .panel-actions { display: flex; align-items: center; gap: 0.5rem; }
+        .panel-action-primary {
+            background: var(--accent); color: #111; border: none;
+            padding: 7px 16px; border-radius: 8px; cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 600;
+            transition: opacity 0.15s;
+        }
+        .panel-action-primary:hover { opacity: 0.88; }
+        .panel-menu-wrap { position: relative; }
+        .panel-menu-trigger {
+            background: none; border: none; color: var(--text-2); cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 20px; font-weight: 400;
+            padding: 4px 8px; border-radius: 6px; line-height: 1;
+            transition: color 0.15s, background 0.15s;
+        }
+        .panel-menu-trigger:hover { color: var(--text-1); background: var(--surface2); }
+        .panel-menu {
+            display: none; position: absolute; right: 0; top: calc(100% + 6px);
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 12px; padding: 6px; min-width: 200px; z-index: 300;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+        }
+        .panel-menu.open { display: block; }
+        .panel-menu-item {
+            display: block; width: 100%; background: none; border: none;
+            color: var(--text-2); cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 500;
+            padding: 8px 12px; border-radius: 8px; text-align: left; transition: all 0.1s;
+            text-decoration: none;
+        }
+        .panel-menu-item:hover { background: var(--surface2); color: var(--text-1); }
+        .panel-menu-sep { height: 1px; background: var(--border); margin: 4px 0; }
+        /* Flat buttons inside panels — no border, no background */
+        .panel-btn {
+            background: none; border: none; color: var(--text-2); cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 500;
+            padding: 7px 14px; border-radius: 8px; transition: color 0.15s, background 0.15s;
+        }
+        .panel-btn:hover { color: var(--text-1); background: var(--surface2); }
+        .panel-btn.primary { color: var(--accent); }
+        .panel-btn.primary:hover { background: var(--accent-dim); }
+        body.light-mode .panel-menu { background: #f0ebe0; border-color: var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        body.light-mode .panel-menu-item:hover { background: var(--surface2); }
+        body.light-mode .panel-action-primary { color: #fff; }
     </style>
 </head>
 <body>
@@ -1779,7 +1832,9 @@
         <header>
             <div class="logo">
                 <svg id="guru-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:0.45rem;">
-                    <path d="M16 3.5 L18.4 13.6 L28.5 16 L18.4 18.4 L16 28.5 L13.6 18.4 L3.5 16 L13.6 13.6 Z" fill="var(--accent)"/>
+                    <line x1="16" y1="5" x2="16" y2="27" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="6.5" y1="10.5" x2="25.5" y2="21.5" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+                    <line x1="25.5" y1="10.5" x2="6.5" y2="21.5" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
                 </svg>
                 <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
             </div>
@@ -1822,15 +1877,22 @@
 
             <!-- VAULT -->
             <div id="view-vault" class="view">
-                <div class="vault-header">
-                    <div class="vault-title">// Research Library</div>
-                    <div class="vault-header-btns">
-                        <button class="vault-upload-btn" style="background:transparent;color:#34d399;border-color:rgba(52,211,153,0.35);" onclick="runGapAnalysis()" title="AI analysis of your library coverage">📊 Gap Analysis</button>
-                        <button class="vault-upload-btn" style="background:transparent;color:#f59e0b;border-color:rgba(245,158,11,0.35);" onclick="removeGarbledVaultEntries()" title="Remove entries with unreadable binary content">✦ Remove Garbled</button>
-                        <button id="vault-select-btn" class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="toggleVaultSelectMode()" title="Select entries to bulk-delete">Select</button>
-                        <button id="vault-delete-selected-btn" class="vault-upload-btn" style="display:none;background:transparent;color:#ef4444;border-color:rgba(239,68,68,0.35);" onclick="deleteSelectedVaultEntries()">Delete Selected (<span id="vault-sel-count">0</span>)</button>
-                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportVaultAsRTF()" title="Export all vault entries as .rtf">Export .rtf</button>
-                        <button class="vault-upload-btn" onclick="document.getElementById('vault-file-input').click()">+ Load Files</button>
+                <div class="panel-header">
+                    <span class="panel-title">Research Library</span>
+                    <div class="panel-actions">
+                        <button class="panel-action-primary" onclick="document.getElementById('vault-file-input').click()">+ Load Files</button>
+                        <div class="panel-menu-wrap">
+                            <button class="panel-menu-trigger" onclick="togglePanelMenu('vault-panel-menu', event)" title="More actions">···</button>
+                            <div class="panel-menu" id="vault-panel-menu">
+                                <button class="panel-menu-item" onclick="runGapAnalysis();document.getElementById('vault-panel-menu').classList.remove('open')">Gap Analysis</button>
+                                <button class="panel-menu-item" onclick="toggleVaultSelectMode();document.getElementById('vault-panel-menu').classList.remove('open')" id="vault-select-btn">Select entries</button>
+                                <button class="panel-menu-item" id="vault-delete-selected-btn" style="display:none;color:#ef4444;" onclick="deleteSelectedVaultEntries()">Delete Selected (<span id="vault-sel-count">0</span>)</button>
+                                <div class="panel-menu-sep"></div>
+                                <button class="panel-menu-item" onclick="exportVaultAsRTF();document.getElementById('vault-panel-menu').classList.remove('open')">Export as .rtf</button>
+                                <div class="panel-menu-sep"></div>
+                                <button class="panel-menu-item" style="color:#ef4444;" onclick="removeGarbledVaultEntries();document.getElementById('vault-panel-menu').classList.remove('open')">Remove garbled entries</button>
+                            </div>
+                        </div>
                     </div>
                     <input type="file" id="vault-file-input" class="hidden" multiple accept=".txt,.md,.json,.pdf,.odt,.docx,.doc">
                 </div>
@@ -2061,16 +2123,19 @@
             <div id="view-tools" class="view">
                 <div id="view-tools-inner">
 
+                    <div class="panel-header" style="padding:0;margin-bottom:1.75rem;">
+                        <span class="panel-title">Tools</span>
+                    </div>
                     <p class="s-section">Document Paste Bridge</p>
                     <p class="s-note" style="margin-bottom:0.75rem;">Paste text from Word, Google Docs, LibreOffice, or any source. Analyse it, load it into the vault, or diff it against GURU's suggested revision.</p>
                     <div class="s-group">
                         <label class="s-label" for="tool-paste">Document Text</label>
                         <textarea id="tool-paste" class="s-input" style="min-height:130px;resize:vertical;" placeholder="Paste your document, paragraph, draft, or excerpt here..."></textarea>
                     </div>
-                    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-bottom:2rem;">
-                        <button class="btn-save" onclick="toolPasteToChat()">→ Analyse in Chat</button>
-                        <button class="btn-save" style="background:transparent;border:1px solid rgba(37,99,235,0.35);color:#2563eb;" onclick="toolPasteToVault()">→ Add to Vault</button>
-                        <button class="btn-save" style="background:transparent;border:1px solid rgba(167,139,250,0.35);color:#a78bfa;" onclick="toolPasteToDiff()">→ Diff &amp; Edit</button>
+                    <div style="display:flex;gap:0.5rem;flex-wrap:wrap;margin-bottom:2rem;">
+                        <button class="panel-btn primary" onclick="toolPasteToChat()">Analyse in Chat</button>
+                        <button class="panel-btn" onclick="toolPasteToVault()">Add to Library</button>
+                        <button class="panel-btn" onclick="toolPasteToDiff()">Diff &amp; Edit</button>
                     </div>
 
                     <p class="s-section">OSCOLA Citation Formatter</p>
@@ -2078,12 +2143,12 @@
                         <label class="s-label" for="tool-citation">Raw Reference (any format)</label>
                         <textarea id="tool-citation" class="s-input" style="min-height:70px;" placeholder="e.g. Donoghue v Stevenson [1932] AC 562&#10;or paste a bibliography entry, URL, or journal article..."></textarea>
                     </div>
-                    <button class="btn-save" onclick="toolFormatCitation()" style="margin-bottom:0.75rem;">Format as OSCOLA</button>
+                    <button class="panel-btn primary" onclick="toolFormatCitation()" style="margin-bottom:0.75rem;">Format as OSCOLA</button>
                     <div id="tool-citation-out" class="tool-output" style="display:none;"></div>
 
                     <p class="s-section" style="margin-top:1.5rem;">Argument Map</p>
                     <p class="s-note" style="margin-bottom:0.75rem;">Generates a visual argument structure from your current chat session. Requires at least 4 messages.</p>
-                    <button class="btn-save" onclick="toolGenerateMap()">Generate Map</button>
+                    <button class="panel-btn primary" onclick="toolGenerateMap()">Generate Map</button>
                     <div id="tool-map-out" class="tool-output" style="display:none;margin-top:1rem;overflow:auto;"></div>
 
                     <p class="s-section" style="margin-top:1.5rem;">Document Diff</p>
@@ -2098,7 +2163,7 @@
                             <textarea id="tool-diff-rev" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Paste revised text, or leave blank..."></textarea>
                         </div>
                     </div>
-                    <button class="btn-save" onclick="toolRunDiff()" style="margin-bottom:0.75rem;">Show Diff</button>
+                    <button class="panel-btn primary" onclick="toolRunDiff()" style="margin-bottom:0.75rem;">Show Diff</button>
                     <div id="tool-diff-out" class="tool-output" style="display:none;white-space:pre-wrap;"></div>
 
                     <p class="s-section" style="margin-top:1.5rem;">OSCOLA Footnote Formatter</p>
@@ -2107,12 +2172,12 @@
                         <label class="s-label">Sources in citation order (one per line — paste party names, titles, or citation strings)</label>
                         <textarea id="tool-fn-input" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Montgomery v Lanarkshire Health Board&#10;Bolam v Friern Hospital Management Committee&#10;Montgomery v Lanarkshire Health Board&#10;Watson JD and Crick FHC, The Structure of DNA&#10;Bolam v Friern Hospital Management Committee&#10;..."></textarea>
                     </div>
-                    <button class="btn-save" onclick="toolGenerateFootnotes()" style="margin-bottom:0.75rem;">Generate OSCOLA Footnotes</button>
+                    <button class="panel-btn primary" onclick="toolGenerateFootnotes()" style="margin-bottom:0.75rem;">Generate OSCOLA Footnotes</button>
                     <div id="tool-fn-out" class="tool-output" style="display:none;white-space:pre-wrap;"></div>
 
                     <p class="s-section" style="margin-top:1.5rem;">Viva Question Bank</p>
                     <p class="s-note" style="margin-bottom:0.75rem;">Generates 12 predicted viva questions from your vault contents. Click any question to load it into the Viva simulator.</p>
-                    <button class="btn-save" onclick="toolGenerateQBank()">Generate Questions</button>
+                    <button class="panel-btn primary" onclick="toolGenerateQBank()">Generate Questions</button>
                     <div id="tool-qbank-out" style="margin-top:1rem;"></div>
 
                 </div>
@@ -2121,12 +2186,12 @@
             <!-- LIVING JOURNAL -->
             <div id="view-journal" class="view">
                 <div id="view-journal-inner">
-                    <div class="journal-stats-bar">
+                    <div class="panel-header" style="padding:0 0 0 0;margin-bottom:1.25rem;">
                         <div>
-                            <p class="s-section" style="margin:0;">Living Journal</p>
+                            <div class="panel-title">Living Journal</div>
                             <p class="s-note" style="margin:0.2rem 0 0 0;" id="journal-stats-label">Save argument maps from the Tools tab to track your research development.</p>
                         </div>
-                        <button class="btn-save" id="journal-report-btn" onclick="generateSupervisorReport()">Generate Supervisor Report</button>
+                        <button class="panel-action-primary" id="journal-report-btn" onclick="generateSupervisorReport()">Supervisor Report</button>
                     </div>
                     <div id="journal-stage">
                         <div class="empty-state">No journal entries yet. Generate an argument map in Tools and click "Save to Journal".</div>
@@ -2137,12 +2202,17 @@
             <!-- SPREADSHEET DATA -->
             <div id="view-data" class="view">
                 <div id="view-data-inner">
-                    <div class="vault-header">
-                        <div class="vault-title">// Spreadsheet Data</div>
-                        <div class="vault-header-btns">
-                            <button class="vault-upload-btn" id="sheet-btn-csv"  style="display:none;background:transparent;color:#475569;border-color:var(--border);" onclick="exportSheetAsCSV()">Export CSV</button>
-                            <button class="vault-upload-btn" id="sheet-btn-xlsx" style="display:none;background:transparent;color:#475569;border-color:var(--border);" onclick="exportSheetAsXLSX()">Export .xlsx</button>
-                            <button class="vault-upload-btn" onclick="document.getElementById('sheet-file-input').click()">+ Load File</button>
+                    <div class="panel-header">
+                        <span class="panel-title">Spreadsheet Data</span>
+                        <div class="panel-actions">
+                            <button class="panel-action-primary" onclick="document.getElementById('sheet-file-input').click()">+ Load File</button>
+                            <div class="panel-menu-wrap">
+                                <button class="panel-menu-trigger" onclick="togglePanelMenu('data-panel-menu', event)">···</button>
+                                <div class="panel-menu" id="data-panel-menu">
+                                    <button class="panel-menu-item" id="sheet-btn-csv"  style="display:none;" onclick="exportSheetAsCSV();document.getElementById('data-panel-menu').classList.remove('open')">Export as CSV</button>
+                                    <button class="panel-menu-item" id="sheet-btn-xlsx" style="display:none;" onclick="exportSheetAsXLSX();document.getElementById('data-panel-menu').classList.remove('open')">Export as .xlsx</button>
+                                </div>
+                            </div>
                         </div>
                         <input type="file" id="sheet-file-input" class="hidden" accept=".csv,.xlsx,.xls,.ods,.tsv">
                     </div>
@@ -8813,6 +8883,17 @@ Conversation to map:\n${summary}`;
         document.getElementById('cfg-temp').addEventListener('input', function() {
             document.getElementById('cfg-temp-val').textContent = parseFloat(this.value).toFixed(1);
         });
+
+        function togglePanelMenu(id, event) {
+            if (event) event.stopPropagation();
+            const menu = document.getElementById(id);
+            if (!menu) return;
+            const isOpen = menu.classList.toggle('open');
+            if (isOpen) {
+                const close = (e) => { if (!menu.contains(e.target)) { menu.classList.remove('open'); document.removeEventListener('click', close); } };
+                setTimeout(() => document.addEventListener('click', close), 0);
+            }
+        }
 
         // ============================================================
         // BOOT
