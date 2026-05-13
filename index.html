@@ -1650,6 +1650,126 @@
             border: 1px solid var(--border); color: #475569;
         }
         .journal-badge.note { border-color: rgba(0,255,204,0.2); color: var(--pulse); }
+
+        /* ── ONBOARDING OVERLAY ── */
+        #onboarding-overlay {
+            display: none; position: fixed; inset: 0; z-index: 9000;
+            background: rgba(0,0,0,0.72);
+            align-items: center; justify-content: center;
+            padding: 1rem;
+        }
+        #onboarding-overlay.active { display: flex; }
+        #ob-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 520px;
+            max-height: 90vh; overflow-y: auto;
+        }
+        .ob-dots { display: flex; gap: 8px; margin-bottom: 2rem; }
+        .ob-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: var(--border); transition: background 0.2s;
+        }
+        .ob-dot.active { background: var(--accent); }
+        .ob-dot.done { background: var(--accent); opacity: 0.4; }
+        .ob-title {
+            font-family: 'Playfair Display', Georgia, serif;
+            font-size: 22px; font-weight: 700; color: var(--text-1);
+            margin: 0 0 0.4rem;
+        }
+        .ob-sub { font-size: 13px; color: var(--text-2); margin: 0 0 1.75rem; line-height: 1.5; }
+        .ob-step { display: none; }
+        .ob-step.active { display: block; }
+        .ob-prov-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-bottom: 1.25rem;
+        }
+        .ob-prov-btn {
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 10px; padding: 0.75rem 1rem; cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 500;
+            color: var(--text-2); transition: all 0.15s; text-align: left;
+        }
+        .ob-prov-btn:hover { border-color: #3a3a3a; color: var(--text-1); }
+        .ob-prov-btn.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+        .ob-prov-btn .ob-prov-name { display: block; font-weight: 600; margin-bottom: 2px; }
+        .ob-prov-btn .ob-prov-note { display: block; font-size: 11px; opacity: 0.7; }
+        .ob-free-badge {
+            display: inline-block; background: var(--accent-dim); color: var(--accent);
+            font-size: 9px; font-weight: 700; padding: 1px 6px; border-radius: 3px;
+            margin-left: 5px; vertical-align: middle; font-family: 'Inter', system-ui, sans-serif;
+        }
+        #ob-key-input {
+            width: 100%; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 10px; padding: 10px 14px; color: var(--text-1);
+            font-family: 'Inter', system-ui, sans-serif; font-size: 14px;
+            outline: none; margin-bottom: 0.5rem; transition: border-color 0.2s;
+        }
+        #ob-key-input:focus { border-color: #3a3a3a; }
+        #ob-key-link {
+            font-size: 12px; color: var(--accent); text-decoration: none;
+            display: inline-block; margin-bottom: 1.5rem;
+        }
+        #ob-key-link:hover { text-decoration: underline; }
+        #ob-directive-input {
+            width: 100%; background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 10px; padding: 12px 14px; color: var(--text-1);
+            font-family: 'Inter', system-ui, sans-serif; font-size: 14px; line-height: 1.6;
+            outline: none; resize: none; min-height: 90px; transition: border-color 0.2s;
+            margin-bottom: 0.5rem;
+        }
+        #ob-directive-input:focus { border-color: #3a3a3a; }
+        .ob-hint { font-size: 11px; color: var(--text-3); margin-bottom: 1.5rem; }
+        .ob-feature-list { display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.75rem; }
+        .ob-feature {
+            display: flex; align-items: flex-start; gap: 0.75rem;
+            padding: 0.75rem 1rem; background: var(--surface2);
+            border-radius: 10px; border: 1px solid var(--border);
+        }
+        .ob-feature-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+        .ob-feature-body {}
+        .ob-feature-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-bottom: 2px; }
+        .ob-feature-desc { font-size: 12px; color: var(--text-2); line-height: 1.45; }
+        .ob-pro-list { display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 1.75rem; }
+        .ob-pro-item { display: flex; align-items: center; gap: 0.5rem; font-size: 13px; color: var(--text-2); }
+        .ob-pro-item::before { content: '✓'; color: var(--accent); font-weight: 700; flex-shrink: 0; }
+        .ob-footer { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+        .ob-btn-primary {
+            background: var(--accent); color: #111; border: none;
+            padding: 10px 24px; border-radius: 10px; cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 14px; font-weight: 600;
+            transition: opacity 0.15s; white-space: nowrap;
+        }
+        .ob-btn-primary:hover { opacity: 0.88; }
+        .ob-btn-secondary {
+            background: none; border: none; color: var(--text-2); cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 13px; padding: 4px;
+            transition: color 0.15s;
+        }
+        .ob-btn-secondary:hover { color: var(--text-1); }
+        .ob-btn-gumroad {
+            display: inline-block; background: var(--surface2); border: 1px solid var(--border);
+            color: var(--text-1); padding: 10px 20px; border-radius: 10px; text-decoration: none;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 500;
+            transition: border-color 0.15s;
+        }
+        .ob-btn-gumroad:hover { border-color: #3a3a3a; }
+        body.light-mode #ob-card { background: var(--surface); }
+        body.light-mode .ob-prov-btn { background: #ece7db; }
+        body.light-mode .ob-prov-btn.active { background: var(--accent-dim); }
+        body.light-mode #ob-key-input, body.light-mode #ob-directive-input { background: #fff; color: var(--text-1); }
+        body.light-mode .ob-feature { background: #ece7db; }
+
+        /* Respect OS reduced-motion preference */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+        /* Battery saving mode — applied via JS when battery is low */
+        .battery-saving *, .battery-saving *::before, .battery-saving *::after {
+            animation: none !important;
+            transition: none !important;
+        }
     </style>
 </head>
 <body>
@@ -2210,6 +2330,119 @@
                     API key stored in browser localStorage only. No data leaves your device without Cloud Sync.<br>
                     <a href="/privacy.html" target="_blank" style="color:var(--pulse);opacity:0.6;text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms.html" target="_blank" style="color:var(--pulse);opacity:0.6;text-decoration:none;">Terms of Use</a>
                 </p>
+            </div>
+        </div>
+
+        <!-- ONBOARDING OVERLAY -->
+        <div id="onboarding-overlay">
+            <div id="ob-card">
+                <div class="ob-dots">
+                    <div class="ob-dot active"></div>
+                    <div class="ob-dot"></div>
+                    <div class="ob-dot"></div>
+                    <div class="ob-dot"></div>
+                </div>
+
+                <!-- Step 1: Provider -->
+                <div class="ob-step active" id="ob-step-1">
+                    <h2 class="ob-title">Welcome to G.U.R.U.</h2>
+                    <p class="ob-sub">Your AI doctoral research intelligence. Choose a provider to get started — Groq is free, no credit card required.</p>
+                    <div class="ob-prov-grid">
+                        <button class="ob-prov-btn" data-prov="groq" onclick="selectObProvider('groq')">
+                            <span class="ob-prov-name">Groq <span class="ob-free-badge">FREE</span></span>
+                            <span class="ob-prov-note">Llama 3.3 70B · fastest</span>
+                        </button>
+                        <button class="ob-prov-btn" data-prov="gemini" onclick="selectObProvider('gemini')">
+                            <span class="ob-prov-name">Gemini</span>
+                            <span class="ob-prov-note">Google · best quality</span>
+                        </button>
+                        <button class="ob-prov-btn" data-prov="claude" onclick="selectObProvider('claude')">
+                            <span class="ob-prov-name">Claude</span>
+                            <span class="ob-prov-note">Anthropic · best writing</span>
+                        </button>
+                        <button class="ob-prov-btn" data-prov="ollama" onclick="selectObProvider('ollama')">
+                            <span class="ob-prov-name">Ollama</span>
+                            <span class="ob-prov-note">Local · offline capable</span>
+                        </button>
+                    </div>
+                    <input type="password" id="ob-key-input" placeholder="gsk_..." autocomplete="off">
+                    <a id="ob-key-link" href="https://console.groq.com" target="_blank" rel="noopener">Get free key at console.groq.com →</a>
+                    <div class="ob-footer">
+                        <button class="ob-btn-secondary" onclick="closeOnboarding()">Skip setup</button>
+                        <button class="ob-btn-primary" onclick="obNext(1)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Directive -->
+                <div class="ob-step" id="ob-step-2">
+                    <h2 class="ob-title">Your research focus</h2>
+                    <p class="ob-sub">Tell GURU your PhD area so it calibrates supervision, sources, and argument development to your specific field from the start.</p>
+                    <textarea id="ob-directive-input" placeholder="e.g. Genomic negligence in English tort law — specifically whether surgical interference causing adverse epigenetic changes constitutes actionable harm under existing duty of care principles."></textarea>
+                    <p class="ob-hint">Can be updated anytime in Settings. Leave blank to use GURU across all areas of law.</p>
+                    <div class="ob-footer">
+                        <button class="ob-btn-secondary" onclick="goToOnboardingStep(1)">← Back</button>
+                        <button class="ob-btn-primary" onclick="obNext(2)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Feature tour -->
+                <div class="ob-step" id="ob-step-3">
+                    <h2 class="ob-title">Your research suite</h2>
+                    <p class="ob-sub">Everything you need for doctoral-level legal research in one place.</p>
+                    <div class="ob-feature-list">
+                        <div class="ob-feature">
+                            <div class="ob-feature-icon">💬</div>
+                            <div class="ob-feature-body">
+                                <div class="ob-feature-name">Dialectic Chat</div>
+                                <div class="ob-feature-desc">Doctoral supervision — argument development, source critique, Socratic challenge. Six modes including Viva Examiner and Draft Assistant.</div>
+                            </div>
+                        </div>
+                        <div class="ob-feature">
+                            <div class="ob-feature-icon">📚</div>
+                            <div class="ob-feature-body">
+                                <div class="ob-feature-name">Research Library</div>
+                                <div class="ob-feature-desc">Upload PDFs, case law, notes. GURU searches your library and cites from it automatically in every response.</div>
+                            </div>
+                        </div>
+                        <div class="ob-feature">
+                            <div class="ob-feature-icon">⚖️</div>
+                            <div class="ob-feature-body">
+                                <div class="ob-feature-name">Viva Examination</div>
+                                <div class="ob-feature-desc">A simulated viva voce with an external and internal AI examiner under UK doctoral regulations. Practice until you are unshakeable.</div>
+                            </div>
+                        </div>
+                        <div class="ob-feature">
+                            <div class="ob-feature-icon">🗺️</div>
+                            <div class="ob-feature-body">
+                                <div class="ob-feature-name">Tools — Maps, Reports, Analysis</div>
+                                <div class="ob-feature-desc">Argument maps, gap analysis, supervisor progress reports, citation formatting, and spreadsheet analysis.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ob-footer">
+                        <button class="ob-btn-secondary" onclick="goToOnboardingStep(2)">← Back</button>
+                        <button class="ob-btn-primary" onclick="obNext(3)">Continue →</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Pro -->
+                <div class="ob-step" id="ob-step-4">
+                    <h2 class="ob-title">Start free, upgrade when ready</h2>
+                    <p class="ob-sub">GURU is fully functional on the free tier. Pro unlocks features for serious researchers.</p>
+                    <div class="ob-pro-list">
+                        <div class="ob-pro-item">Extended context — up to 50 messages of conversation memory</div>
+                        <div class="ob-pro-item">Cloud sync — journal, library and chat across all your devices</div>
+                        <div class="ob-pro-item">Streaming responses — see GURU's thinking in real time</div>
+                        <div class="ob-pro-item">Temperature control — tune creativity vs precision per session</div>
+                    </div>
+                    <div class="ob-footer">
+                        <button class="ob-btn-secondary" onclick="goToOnboardingStep(3)">← Back</button>
+                        <div style="display:flex;gap:0.75rem;align-items:center;">
+                            <a class="ob-btn-gumroad" href="https://gumroad.com" target="_blank" rel="noopener">Get Pro →</a>
+                            <button class="ob-btn-primary" onclick="closeOnboarding()">Start researching</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -3358,6 +3591,11 @@ ${body}}`;
             }
 
             stage.appendChild(wrap);
+            if (_bubbleObserver && wrap) {
+                wrap.style.opacity = '0';
+                wrap.style.transition = 'opacity 0.2s';
+                _bubbleObserver.observe(wrap);
+            }
             if (doScroll) scrollDown();
         }
 
@@ -8614,6 +8852,7 @@ Conversation to map:\n${summary}`;
             _updateDirectiveStrip();
             await loadJournal();
             loadSettingsUI();  // re-run after IDB data is loaded to repopulate any data-driven fields
+            checkOnboarding();
 
             const s = getSettings();
             if (!s.key) {
@@ -8646,110 +8885,124 @@ Conversation to map:\n${summary}`;
             navigator.serviceWorker.register('/sw.js').catch(() => {});
         }
 
-        // ============================================================
-        // ONBOARDING WIZARD — shows once on first run (no API key)
-        // ============================================================
-        const SK_ONBOARDED = 'guru_onboarded_v1';
+        // ── ONBOARDING ─────────────────────────────────────────────
+        let _obProvider = 'groq';
 
-        function showOnboarding() {
-            if (localStorage.getItem(SK_ONBOARDED)) return;
-            if (getSettings().key) { localStorage.setItem(SK_ONBOARDED, '1'); return; }
-            document.getElementById('onboarding-overlay').style.display = 'flex';
-            showOnboardingStep(1);
-        }
-
-        function showOnboardingStep(n) {
-            [1,2,3].forEach(i => document.getElementById(`ob-step-${i}`).style.display = i === n ? 'block' : 'none');
-            document.querySelectorAll('.ob-dot').forEach((d,i) => d.classList.toggle('active', i+1 === n));
-        }
-
-        function obNext(n) { showOnboardingStep(n); }
-
-        function obFinish() {
-            const key = document.getElementById('ob-api-key').value.trim();
-            const dir = document.getElementById('ob-directive').value.trim();
-            if (key) localStorage.setItem(SK_KEY, key);
-            if (dir) localStorage.setItem(SK_DIR, dir);
-            localStorage.setItem(SK_ONBOARDED, '1');
-            document.getElementById('onboarding-overlay').style.display = 'none';
-            if (key) {
-                setDot('active');
-                addBubble('system', 'G.U.R.U. calibrated. Standing by for doctoral inquiry.');
+        function checkOnboarding() {
+            const hasKey = !!(localStorage.getItem(SK_KEY) || localStorage.getItem(SK_CLAUDE_KEY) || localStorage.getItem(SK_GROQ_KEY) || localStorage.getItem(SK_MODEL_OLLAMA));
+            if (!hasKey && chatHistory.length === 0) {
+                showOnboarding();
             }
         }
 
-        function obSkip() {
-            localStorage.setItem(SK_ONBOARDED, '1');
-            document.getElementById('onboarding-overlay').style.display = 'none';
+        function showOnboarding() {
+            document.getElementById('onboarding-overlay').classList.add('active');
+            goToOnboardingStep(1);
+            selectObProvider('groq');
         }
 
-        // Trigger after page loads
-        setTimeout(showOnboarding, 600);
+        function goToOnboardingStep(n) {
+            document.querySelectorAll('.ob-step').forEach((el, i) => el.classList.toggle('active', i + 1 === n));
+            document.querySelectorAll('.ob-dot').forEach((el, i) => {
+                el.classList.toggle('active', i + 1 === n);
+                el.classList.toggle('done', i + 1 < n);
+            });
+        }
+
+        function selectObProvider(p) {
+            _obProvider = p;
+            document.querySelectorAll('.ob-prov-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.prov === p));
+            const keyInput = document.getElementById('ob-key-input');
+            const keyLink  = document.getElementById('ob-key-link');
+            const cfg = {
+                groq:   { ph: 'gsk_...', href: 'https://console.groq.com', label: 'Get free key at console.groq.com →', disabled: false },
+                gemini: { ph: 'AIza...', href: 'https://aistudio.google.com/apikey', label: 'Get free key at aistudio.google.com →', disabled: false },
+                claude: { ph: 'sk-ant-...', href: 'https://console.anthropic.com', label: 'Get key at console.anthropic.com →', disabled: false },
+                ollama: { ph: 'No key needed — install Ollama locally', href: 'https://ollama.ai', label: 'Download Ollama at ollama.ai →', disabled: true },
+            };
+            if (keyInput && cfg[p]) { keyInput.placeholder = cfg[p].ph; keyInput.disabled = cfg[p].disabled; keyInput.value = ''; }
+            if (keyLink  && cfg[p]) { keyLink.href = cfg[p].href; keyLink.textContent = cfg[p].label; }
+        }
+
+        function obNext(fromStep) {
+            if (fromStep === 1) {
+                const keyVal = document.getElementById('ob-key-input')?.value.trim();
+                if (keyVal && !keyVal.startsWith('•')) {
+                    const keyMap = { gemini: SK_KEY, claude: SK_CLAUDE_KEY, groq: SK_GROQ_KEY };
+                    if (keyMap[_obProvider]) localStorage.setItem(keyMap[_obProvider], keyVal);
+                }
+                localStorage.setItem(SK_PROVIDER, _obProvider);
+                ['chat','viva','tools','report'].forEach(m => localStorage.setItem(`guru_provider_${m}`, _obProvider));
+            }
+            if (fromStep === 2) {
+                const dir = document.getElementById('ob-directive-input')?.value.trim();
+                if (dir) localStorage.setItem(SK_DIR, dir);
+            }
+            goToOnboardingStep(fromStep + 1);
+        }
+
+        function closeOnboarding() {
+            const keyVal = document.getElementById('ob-key-input')?.value.trim();
+            if (keyVal && !keyVal.startsWith('•')) {
+                const keyMap = { gemini: SK_KEY, claude: SK_CLAUDE_KEY, groq: SK_GROQ_KEY };
+                if (keyMap[_obProvider]) localStorage.setItem(keyMap[_obProvider], keyVal);
+            }
+            const dir = document.getElementById('ob-directive-input')?.value.trim();
+            if (dir) localStorage.setItem(SK_DIR, dir);
+            localStorage.setItem(SK_PROVIDER, _obProvider);
+            ['chat','viva','tools','report'].forEach(m => localStorage.setItem(`guru_provider_${m}`, _obProvider));
+            document.getElementById('onboarding-overlay').classList.remove('active');
+            _refreshProviderUI();
+            loadSettingsUI();
+            _updateDirectiveStrip();
+            setDot(localStorage.getItem(SK_KEY) || localStorage.getItem(SK_GROQ_KEY) || localStorage.getItem(SK_CLAUDE_KEY) ? 'active' : 'error');
+        }
+
+        // ── PERFORMANCE & BATTERY ──────────────────────────────────
+
+        document.addEventListener('visibilitychange', () => {
+            if (!_fbDb || !_fbEnabled) return;
+            if (document.hidden) {
+                if (_fbUnsub)        { _fbUnsub();        _fbUnsub        = null; }
+                if (_fbVaultUnsub)   { _fbVaultUnsub();   _fbVaultUnsub   = null; }
+                if (_fbJournalUnsub) { _fbJournalUnsub(); _fbJournalUnsub = null; }
+            } else {
+                startFirebaseSync();
+                startVaultSync();
+                startJournalSync();
+            }
+        });
+
+        (async function initBatteryAware() {
+            if (!navigator.getBattery) return;
+            try {
+                const battery = await navigator.getBattery();
+                const apply = () => {
+                    document.body.classList.toggle('battery-saving', !battery.charging && battery.level < 0.2);
+                };
+                battery.addEventListener('chargingchange', apply);
+                battery.addEventListener('levelchange', apply);
+                apply();
+            } catch(e) {}
+        })();
+
+        function updateVaultStatsDeferred() {
+            if (window.requestIdleCallback) {
+                requestIdleCallback(() => updateVaultStats(), { timeout: 2000 });
+            } else {
+                setTimeout(updateVaultStats, 100);
+            }
+        }
+
+        const _bubbleObserver = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    e.target.style.opacity = '1';
+                    _bubbleObserver.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.1 });
     </script>
-
-<!-- ── ONBOARDING OVERLAY ── -->
-<div id="onboarding-overlay" style="display:none;position:fixed;inset:0;background:rgba(2,4,7,0.92);z-index:9999;align-items:center;justify-content:center;padding:1rem;">
-  <div style="background:#080d14;border:1px solid #1e3050;border-radius:16px;max-width:480px;width:100%;padding:2.5rem 2rem;position:relative;">
-
-    <!-- Logo -->
-    <div style="text-align:center;margin-bottom:1.5rem;">
-      <div style="font-family:'Space Mono',monospace;font-size:26px;font-weight:700;color:#fff;text-shadow:0 0 1px #fff,0 0 8px #fff,0 0 16px rgba(0,201,160,0.9);">G<span style="color:#00ffcc;">.</span>U<span style="color:#00ffcc;">.</span>R<span style="color:#00ffcc;">.</span>U<span style="color:#00ffcc;">.</span></div>
-      <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.25em;text-transform:uppercase;color:#00ffcc;margin-top:0.25rem;">Guided University Research Utility</div>
-    </div>
-
-    <!-- Progress dots -->
-    <div style="display:flex;justify-content:center;gap:0.5rem;margin-bottom:2rem;">
-      <div class="ob-dot active" onclick="showOnboardingStep(1)"></div>
-      <div class="ob-dot" onclick="showOnboardingStep(2)"></div>
-      <div class="ob-dot" onclick="showOnboardingStep(3)"></div>
-    </div>
-
-    <!-- Step 1: Welcome -->
-    <div id="ob-step-1">
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:0.75rem;">Welcome to G.U.R.U.</h2>
-      <p style="font-size:13px;color:#64748b;line-height:1.7;margin-bottom:1.25rem;">Your AI doctoral research supervisor — built for PhD law students. G.U.R.U. supervises your arguments, manages your references in OSCOLA, simulates your viva, and remembers everything you load into it.</p>
-      <p style="font-size:13px;color:#64748b;line-height:1.7;margin-bottom:1.75rem;">You need a free Gemini API key to begin. No credit card required.</p>
-      <button onclick="obNext(2)" style="width:100%;padding:0.75rem;background:#00ffcc;color:#020407;border:none;border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">Get Started →</button>
-      <button onclick="obSkip()" style="width:100%;margin-top:0.6rem;padding:0.6rem;background:transparent;color:#334155;border:none;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;">I'll set this up later</button>
-    </div>
-
-    <!-- Step 2: API Key -->
-    <div id="ob-step-2" style="display:none;">
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;">Get Your Free API Key</h2>
-      <ol style="font-size:12px;color:#64748b;line-height:1.9;margin-bottom:1.25rem;padding-left:1.2rem;">
-        <li>Go to <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#00ffcc;">aistudio.google.com/apikey</a></li>
-        <li>Sign in with your Google account</li>
-        <li>Click <strong style="color:#e2e8f0;">Create API key</strong></li>
-        <li>Copy the key (starts with <code style="font-family:'Space Mono',monospace;background:#0f1829;padding:1px 5px;border-radius:3px;color:#00ffcc;">AIza</code>)</li>
-        <li>Paste it below</li>
-      </ol>
-      <label style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#475569;display:block;margin-bottom:0.4rem;">Gemini API Key</label>
-      <input id="ob-api-key" type="password" placeholder="AIza..." style="width:100%;background:#0f1829;border:1px solid #1e3050;border-radius:8px;padding:0.7rem 0.9rem;color:#e2e8f0;font-family:'Space Mono',monospace;font-size:12px;outline:none;margin-bottom:1.25rem;">
-      <div style="display:flex;gap:0.6rem;">
-        <button onclick="obNext(1)" style="flex:1;padding:0.7rem;background:transparent;border:1px solid #1e3050;color:#475569;border-radius:8px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;">← Back</button>
-        <button onclick="obNext(3)" style="flex:2;padding:0.7rem;background:#00ffcc;color:#020407;border:none;border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">Next →</button>
-      </div>
-    </div>
-
-    <!-- Step 3: Research Focus -->
-    <div id="ob-step-3" style="display:none;">
-      <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#e2e8f0;margin-bottom:0.5rem;">Set Your Research Focus</h2>
-      <p style="font-size:12px;color:#64748b;line-height:1.6;margin-bottom:1rem;">Tell G.U.R.U. about your PhD. The more specific you are, the more calibrated every response will be.</p>
-      <label style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;text-transform:uppercase;color:#475569;display:block;margin-bottom:0.4rem;">PhD Research Focus</label>
-      <textarea id="ob-directive" placeholder="e.g. PhD in Law at University of Brighton. Thesis: Genomic Negligence and AI diagnostic liability under UK tort law. Focus on duty of care, causation, and NHS liability. OSCOLA citations required." style="width:100%;background:#0f1829;border:1px solid #1e3050;border-radius:8px;padding:0.7rem 0.9rem;color:#e2e8f0;font-family:'Space Mono',monospace;font-size:11px;outline:none;min-height:110px;resize:vertical;margin-bottom:1.25rem;line-height:1.6;"></textarea>
-      <div style="display:flex;gap:0.6rem;">
-        <button onclick="obNext(2)" style="flex:1;padding:0.7rem;background:transparent;border:1px solid #1e3050;color:#475569;border-radius:8px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;">← Back</button>
-        <button onclick="obFinish()" style="flex:2;padding:0.7rem;background:#00ffcc;color:#020407;border:none;border-radius:8px;font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;">Launch G.U.R.U. ✓</button>
-      </div>
-    </div>
-
-  </div>
-</div>
-
-<style>
-  .ob-dot { width:8px;height:8px;border-radius:50%;background:#1e3050;cursor:pointer;transition:background 0.2s; }
-  .ob-dot.active { background:#00ffcc; }
-</style>
 
 <!-- HELP MODAL -->
 <div id="help-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9998;align-items:flex-start;justify-content:center;overflow-y:auto;padding:2rem 1rem;" onclick="if(event.target===this)closeHelp()">
