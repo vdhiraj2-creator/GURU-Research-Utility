@@ -24,7 +24,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>G.U.R.U. — Doctoral Research Intelligence</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23020407'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='700' font-size='10' fill='%2300ffcc' letter-spacing='1'>G.U.</text><text x='50%25' y='78%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='700' font-size='10' fill='%2300ffcc' letter-spacing='1'>R.U.</text></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111111'/><path d='M16 3.5 L18.4 13.6 L28.5 16 L18.4 18.4 L16 28.5 L13.6 18.4 L3.5 16 L13.6 13.6 Z' fill='%231fb896'/></svg>">
     <meta name="application-name" content="G.U.R.U.">
     <meta name="apple-mobile-web-app-title" content="G.U.R.U.">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -60,49 +60,78 @@
             --pulse-dim: rgba(31,184,150,0.08);
         }
 
-        /* ── LIGHT MODE ── */
+        /* ── LIGHT MODE — aged parchment ── */
         body.light-mode {
-            --bg:         #f0f4f8;
-            --card:       #ffffff;
-            --border:     #d1dce8;
-            --pulse:      #007a5e;
-            --pulse-dim:  rgba(0,122,94,0.07);
-            --socratic:   #6d28d9;
-            --vault:      #1d4ed8;
-            --vault-dim:  rgba(29,78,216,0.06);
-            --thought:    #f1f5f9;
-            --thought-text: #64748b;
+            --bg:          #f5f0e6;
+            --surface:     #f0ebe0;
+            --surface2:    #e9e3d5;
+            --border:      #cec3ab;
+            --text-1:      #1a1207;
+            --text-2:      #6b5740;
+            --text-3:      #a89272;
+            --accent:      #0e9474;
+            --accent-dim:  rgba(14,148,116,0.1);
+            --socratic:    #6d28d9;
+            --vault:       #1d4ed8;
+            --vault-dim:   rgba(29,78,216,0.07);
+            --thought:     #ede7d9;
+            --thought-text:#7a6a52;
+            --card:        #f0ebe0;
+            --pulse:       #0e9474;
+            --pulse-dim:   rgba(14,148,116,0.1);
         }
-        body.light-mode { color: #1a2535; background-color: var(--bg); }
-        body.light-mode header { background: rgba(255,255,255,0.97); }
-        body.light-mode nav button { color: #475569; }
-        body.light-mode nav button.active { color: var(--pulse); background: var(--pulse-dim); }
-        body.light-mode .bubble.user { background: rgba(59,130,246,0.06); color: #1a2535; border-left-color: #3b82f6; }
-        body.light-mode .bubble-body { color: #1a2535; }
-        body.light-mode .role-tag { opacity: 0.5; }
-        body.light-mode .thought-block { background: var(--thought); color: var(--thought-text); }
-        body.light-mode .s-input, body.light-mode textarea.s-input { background: #f8fafc; color: #1a2535; border-color: var(--border); }
-        body.light-mode .s-input:focus { border-color: rgba(0,122,94,0.4); }
-        body.light-mode .vault-card { background: #fff; }
-        body.light-mode .ref-card { background: #fff; border-color: var(--border); }
-        body.light-mode .ref-title { color: #1a2535; }
-        body.light-mode #query-input { background: #fff; color: #1a2535; border-color: var(--border); }
-        body.light-mode .status-line { color: #475569; }
-        body.light-mode .empty-state { color: #94a3b8; }
-        body.light-mode .bib-empty { color: #94a3b8; }
-        body.light-mode .guru-letter { color: #1a2535; text-shadow: none; }
-        body.light-mode .guru-dot { color: var(--pulse); }
-        body.light-mode #guru-voice-btn { border-color: var(--border); color: #475569; }
-        body.light-mode #guru-voice-btn.active { color: var(--pulse); border-color: var(--pulse); }
-        body.light-mode .mode-pill { background: #f1f5f9; color: #64748b; border-color: #d1dce8; }
-        body.light-mode .mode-pill.active { background: var(--pulse-dim); color: var(--pulse); border-color: var(--pulse); }
-        body.light-mode .btn-save { background: var(--pulse); color: #fff; }
-        body.light-mode .vault-drop-zone { border-color: #c7d8e8; background: #f8fafc; color: #64748b; }
-        body.light-mode .refs-empty { color: #94a3b8; }
-        body.light-mode #theme-toggle { color: #475569; }
-
-        /* Light mode — sharper bubble text */
-        body.light-mode .bubble.guru { background: rgba(0,255,204,0.04); color: #0f172a; border-left-color: #00b894; }
+        body.light-mode { color: var(--text-1); background-color: var(--bg); }
+        body.light-mode header { background: var(--bg); border-color: var(--border); }
+        body.light-mode #toolbar { background: var(--bg); border-color: var(--border); }
+        body.light-mode nav button { color: var(--text-2); }
+        body.light-mode nav button.active { color: var(--accent); background: var(--accent-dim); }
+        body.light-mode nav button:hover:not(.active) { color: var(--text-1); background: var(--surface2); }
+        body.light-mode .bubble.guru { background: transparent; color: var(--text-1); }
+        body.light-mode .bubble.user { background: var(--surface2); color: var(--text-1); }
+        body.light-mode .bubble.system { color: var(--text-3); }
+        body.light-mode .bubble-body { color: var(--text-1); }
+        body.light-mode .bubble.guru .bubble-body strong { color: var(--text-1); }
+        body.light-mode .bubble.guru .bubble-body a { color: #1d4ed8; }
+        body.light-mode .bubble.guru .bubble-body code { color: var(--accent); background: var(--surface2); }
+        body.light-mode .bubble.guru .bubble-body pre { background: var(--surface2); border-color: var(--border); }
+        body.light-mode .bubble.guru .bubble-body blockquote { color: var(--text-2); background: rgba(109,40,217,0.05); }
+        body.light-mode .role-tag { color: var(--text-3) !important; opacity: 1; }
+        body.light-mode .bubble.guru .role-tag { color: var(--accent) !important; }
+        body.light-mode .thought-block { background: var(--thought); border-color: var(--border); color: var(--thought-text); }
+        body.light-mode .thought-block:hover { border-color: #beb0a0; }
+        body.light-mode .s-input, body.light-mode textarea.s-input { background: var(--surface2); color: var(--text-1); border-color: var(--border); }
+        body.light-mode .s-input:focus { border-color: rgba(14,148,116,0.45); }
+        body.light-mode .vault-card { background: var(--surface); border-color: var(--border); }
+        body.light-mode .ref-card { background: var(--surface); border-color: var(--border); }
+        body.light-mode .ref-title { color: var(--text-1); }
+        body.light-mode .input-box { background: var(--surface2); border-color: var(--border); }
+        body.light-mode #query-input { color: var(--text-1); }
+        body.light-mode #query-input::placeholder { color: var(--text-3); }
+        body.light-mode .input-icon-btn { color: var(--text-3); }
+        body.light-mode .input-icon-btn:hover { color: var(--text-2); background: var(--surface); }
+        body.light-mode .clip-btn { color: var(--text-3); }
+        body.light-mode .clip-btn:hover { color: var(--text-2); }
+        body.light-mode #chat-mic-btn { color: var(--text-3); }
+        body.light-mode .status-line { color: var(--text-3); }
+        body.light-mode .empty-state { color: var(--text-3); }
+        body.light-mode .guru-letter { color: var(--text-1); }
+        body.light-mode .guru-dot { color: var(--accent); }
+        body.light-mode #guru-mark path { fill: var(--accent); }
+        body.light-mode #guru-voice-btn { border-color: var(--border); color: var(--text-2); }
+        body.light-mode #guru-voice-btn.active { color: var(--accent); border-color: var(--accent); }
+        body.light-mode .btn-save { background: var(--accent); color: #fff; }
+        body.light-mode .vault-drop-zone { border-color: var(--border); background: var(--surface2); color: var(--text-3); }
+        body.light-mode #theme-toggle { color: var(--text-2); }
+        body.light-mode #workspace-btn { border-color: var(--border); color: var(--text-2); }
+        body.light-mode #workspace-btn:hover { color: var(--text-1); }
+        body.light-mode #app-footer { border-color: var(--border); color: var(--text-3); }
+        body.light-mode #directive-strip { color: var(--text-3); border-color: var(--border); }
+        body.light-mode #mode-btn { background: var(--surface); border-color: var(--border); color: var(--text-2); }
+        body.light-mode #mode-btn:hover { color: var(--text-1); }
+        body.light-mode #mode-popover { background: var(--surface); border-color: var(--border); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+        body.light-mode .mpop-item { color: var(--text-2); }
+        body.light-mode .mpop-item:hover { background: var(--surface2); color: var(--text-1); }
+        body.light-mode .mpop-item.active { color: var(--accent); background: var(--accent-dim); }
         body.light-mode .bubble.user { color: #0f172a; }
         body.light-mode .bubble-body { color: #0f172a !important; }
         body.light-mode .bubble.guru .bubble-body strong  { color: #0f172a; font-weight: 700; }
@@ -1637,6 +1666,9 @@
     <div id="workspace">
         <header>
             <div class="logo">
+                <svg id="guru-mark" width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:0.4rem;">
+                    <path d="M16 3.5 L18.4 13.6 L28.5 16 L18.4 18.4 L16 28.5 L13.6 18.4 L3.5 16 L13.6 13.6 Z" fill="var(--accent)"/>
+                </svg>
                 <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
             </div>
             <div style="display:flex;align-items:center;gap:0.5rem;margin-left:auto;">
