@@ -8228,14 +8228,14 @@ WEB SEARCH IS ACTIVE — before building the map, search for recent cases, statu
 ` : ''}
 IGNORE completely: any requests about bibliography generation, citation formatting, file exports, tool usage, or application settings. Map only the substantive research content.
 
-STRICT RULES for valid Mermaid v10 syntax:
-- Start with exactly: flowchart TD
-- Use short alphanumeric node IDs: A, B, C1, D2 etc.
-- Wrap every node label in double quotes: A["Main claim"]
-- Keep labels under 6 words, no colons, no brackets inside labels
-- Use --> for arrows, -- text --> for labelled arrows
-- No subgraph blocks
-- Output ONLY the fenced mermaid code block, nothing else
+STRICT RULES for valid Mermaid v10 syntax (violations cause parse errors — follow exactly):
+- First line must be: flowchart TD
+- Node IDs: short alphanumeric only — A, B, C1, D2 (no spaces, no special chars)
+- Every node label in double quotes: A["Main claim"] — max 6 words per label
+- No colons, no parentheses, no brackets, no hash signs inside labels
+- Arrows: --> only, or -- text --> for labelled arrows
+- Do NOT add: style, classDef, linkStyle, click, direction, subgraph, or %% comment lines
+- Output ONLY the fenced code block: \`\`\`mermaid ... \`\`\`  — no other text
 
 Conversation to map:\n${summary}`;
             try {
@@ -8279,15 +8279,36 @@ Conversation to map:\n${summary}`;
 
                 out.innerHTML = `<div id="${uid}"></div>` + codeBlock;
 
+                // Attempt render; on failure strip decorator lines and retry once
+                let renderedSvg = null;
                 try {
                     const { svg } = await window.mermaid.render(uid + '-svg', code);
-                    document.getElementById(uid).innerHTML = svg;
+                    renderedSvg = svg;
                 } catch(renderErr) {
-                    // Render failed — show code + live link so user can still use the map
-                    document.getElementById(uid).innerHTML =
-                        `<div style="font-size:10px;color:#ef4444;margin-bottom:0.5rem;">Render error: ${escapeHtml(renderErr.message)}</div>` +
-                        `<div style="font-size:10px;color:#475569;">The Mermaid code is shown below — click "Open in mermaid.live" to view the diagram.</div>`;
+                    // Strip lines that models add gratuitously but which mermaid can't parse:
+                    // style, classDef, linkStyle, click, direction, %% comments, :::class refs
+                    const stripped = code.split('\n')
+                        .filter(l => {
+                            const t = l.trim();
+                            return t &&
+                                   !t.startsWith('%%') &&
+                                   !t.startsWith('style ') &&
+                                   !t.startsWith('classDef ') &&
+                                   !t.startsWith('linkStyle ') &&
+                                   !t.startsWith('click ') &&
+                                   !t.startsWith('direction ');
+                        })
+                        .map(l => l.replace(/:::[\w-]+/g, ''))
+                        .join('\n');
+                    try {
+                        const { svg } = await window.mermaid.render(uid + '-svg2', stripped);
+                        renderedSvg = svg;
+                    } catch(renderErr2) {
+                        document.getElementById(uid).innerHTML =
+                            `<div style="font-size:10px;color:#ef4444;margin-bottom:0.5rem;">Could not render diagram — expand "Mermaid source" below and click "Open in mermaid.live" to view it.</div>`;
+                    }
                 }
+                if (renderedSvg) document.getElementById(uid).innerHTML = renderedSvg;
 
                 const saveBtn = document.createElement('button');
                 saveBtn.className   = 'btn-save';
