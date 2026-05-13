@@ -569,6 +569,22 @@
         .ref-chapter-badge { display:inline-block; font-family:'Space Mono',monospace; font-size:7px; letter-spacing:0.08em; text-transform:uppercase; padding:2px 6px; border-radius:3px; border:1px solid rgba(0,255,204,0.2); color:var(--pulse); opacity:0.6; }
         .chapter-filter-pill { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.07em; text-transform:uppercase; padding:3px 8px; border:1px solid var(--border); border-radius:4px; color:#475569; background:transparent; cursor:pointer; transition:all 0.15s; white-space:nowrap; }
         .chapter-filter-pill.active { border-color:rgba(0,255,204,0.4); color:var(--pulse); background:rgba(0,255,204,0.04); }
+        /* Inline ref editor */
+        .ref-edit-panel { background:rgba(0,0,0,0.25); border-top:1px solid var(--border); border-radius:0 0 8px 8px; padding:0.85rem; margin-top:0.5rem; display:none; }
+        .ref-edit-panel.open { display:block; }
+        .ref-edit-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.4rem 0.6rem; margin-bottom:0.6rem; }
+        .ref-edit-grid .full { grid-column:1/-1; }
+        .ref-edit-label { font-family:'Space Mono',monospace; font-size:8px; letter-spacing:0.08em; text-transform:uppercase; color:#475569; display:block; margin-bottom:2px; }
+        .ref-edit-input { width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:4px; color:#94a3b8; font-family:'Space Mono',monospace; font-size:10px; padding:4px 7px; outline:none; box-sizing:border-box; }
+        .ref-edit-input:focus { border-color:rgba(0,255,204,0.3); color:#e2e8f0; }
+        .ref-edit-select { width:100%; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:4px; color:#94a3b8; font-family:'Space Mono',monospace; font-size:10px; padding:4px 7px; outline:none; }
+        /* Access date warning */
+        .ref-accessed-warn { display:inline-block; font-family:'Space Mono',monospace; font-size:8px; padding:1px 5px; border-radius:3px; background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.3); color:#f59e0b; margin-left:0.4rem; cursor:pointer; }
+        /* Vault select mode */
+        .vault-entry-cb { width:15px; height:15px; accent-color:var(--pulse); cursor:pointer; flex-shrink:0; }
+        .vault-entry.selected { border-color:rgba(0,255,204,0.4); background:rgba(0,255,204,0.03); }
+        /* Jurisdiction heading in bibliography output */
+        .bib-jurisdiction { font-weight:600; margin-top:0.5em; }
         .ref-annotation-row { display:flex; gap:0.5rem; margin-top:0.75rem; align-items:flex-start; }
         .ref-note-input { flex:1; background:rgba(0,0,0,0.3); border:1px solid var(--border); border-radius:6px; padding:0.5rem 0.75rem; color:#94a3b8; font-family:'Space Mono',monospace; font-size:10px; line-height:1.5; resize:vertical; outline:none; transition:border-color 0.2s; }
         .ref-note-input:focus { border-color:rgba(0,255,204,0.3); color:#e2e8f0; }
@@ -1475,6 +1491,7 @@
             display: flex; align-items: center; justify-content: space-between;
             flex-wrap: wrap; gap: 0.75rem; margin-bottom: 1.5rem;
         }
+        .journal-stats-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
         .journal-card {
             background: var(--card); border: 1px solid var(--border);
             border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.25rem;
@@ -1492,6 +1509,30 @@
             border-radius: 6px; padding: 0.5rem; overflow: auto;
             max-height: 300px; margin-bottom: 0.75rem;
         }
+        .journal-compose {
+            background: var(--card); border: 1px solid rgba(0,255,204,0.25);
+            border-radius: 10px; padding: 1rem 1.25rem; margin-bottom: 1.5rem;
+        }
+        .journal-compose-title {
+            font-family: 'Space Mono', monospace; font-size: 9px;
+            letter-spacing: 0.1em; text-transform: uppercase; color: var(--pulse);
+            margin-bottom: 0.75rem;
+        }
+        .journal-compose-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .journal-note-title {
+            font-size: 13px; font-weight: 600; color: #e2e8f0; margin-bottom: 0.4rem;
+        }
+        .journal-note-body { font-size: 13px; color: #94a3b8; line-height: 1.75; }
+        .journal-note-body p { margin: 0 0 0.6rem; }
+        .journal-note-body ul, .journal-note-body ol { margin: 0 0 0.6rem 1.2rem; }
+        .journal-note-body h1,.journal-note-body h2,.journal-note-body h3 { color:#e2e8f0; margin:0.75rem 0 0.3rem; }
+        .journal-note-body strong { color: #cbd5e1; }
+        .journal-badge {
+            font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.08em;
+            text-transform: uppercase; padding: 2px 6px; border-radius: 3px;
+            border: 1px solid var(--border); color: #475569;
+        }
+        .journal-badge.note { border-color: rgba(0,255,204,0.2); color: var(--pulse); }
     </style>
 </head>
 <body>
@@ -1513,6 +1554,7 @@
             <nav>
 <button id="nav-chat"     class="active"  onclick="setTab('chat')">Dialectic</button>
                 <button id="nav-vault"    onclick="setTab('vault')">Library</button>
+                <button id="nav-refs"     onclick="setTab('refs')">Refs</button>
                 <button id="nav-viva"     onclick="setTab('viva')">Viva</button>
                 <button id="nav-present"  onclick="setTab('present')">Present</button>
                 <button id="nav-horizon"  onclick="setTab('horizon')">Archive</button>
@@ -1536,14 +1578,14 @@
                 <div class="vault-header">
                     <div class="vault-title">// Research Library</div>
                     <div class="vault-header-btns">
-                        <button class="vault-upload-btn" style="background:transparent;color:#34d399;border-color:rgba(52,211,153,0.35);" onclick="runGapAnalysis()" title="AI analysis of your library coverage — identifies gaps and recommends sources">📊 Gap Analysis</button>
-                        <button id="zotero-push-btn" class="vault-upload-btn" style="background:transparent;color:#a78bfa;border-color:rgba(167,139,250,0.4);" onclick="pushAllToZotero()" title="Send all references to your Zotero library">⇄ Zotero</button>
-                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportBibliography()" title="Export references as .rtf">Refs .rtf</button>
-                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportRIS()" title="Export as RIS — import into any reference manager">Refs RIS</button>
-                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportVaultAsRTF()" title="Export all vault entries as .rtf">Vault .rtf</button>
+                        <button class="vault-upload-btn" style="background:transparent;color:#34d399;border-color:rgba(52,211,153,0.35);" onclick="runGapAnalysis()" title="AI analysis of your library coverage">📊 Gap Analysis</button>
+                        <button class="vault-upload-btn" style="background:transparent;color:#f59e0b;border-color:rgba(245,158,11,0.35);" onclick="removeGarbledVaultEntries()" title="Remove entries with unreadable binary content">✦ Remove Garbled</button>
+                        <button id="vault-select-btn" class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="toggleVaultSelectMode()" title="Select entries to bulk-delete">Select</button>
+                        <button id="vault-delete-selected-btn" class="vault-upload-btn" style="display:none;background:transparent;color:#ef4444;border-color:rgba(239,68,68,0.35);" onclick="deleteSelectedVaultEntries()">Delete Selected (<span id="vault-sel-count">0</span>)</button>
+                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportVaultAsRTF()" title="Export all vault entries as .rtf">Export .rtf</button>
                         <button class="vault-upload-btn" onclick="document.getElementById('vault-file-input').click()">+ Load Files</button>
                     </div>
-                    <input type="file" id="vault-file-input" class="hidden" multiple accept=".txt,.md,.json,.pdf">
+                    <input type="file" id="vault-file-input" class="hidden" multiple accept=".txt,.md,.json,.pdf,.odt,.docx,.doc">
                 </div>
                 <div class="vault-stats">
                     <div class="vault-stat"><span class="vault-stat-num" id="vault-count">0</span><span class="vault-stat-label">Entries</span></div>
@@ -1566,6 +1608,11 @@
                 <div class="refs-header">
                     <div class="vault-title">// Reference Manager</div>
                     <div class="vault-header-btns">
+                        <button class="vault-upload-btn" style="background:transparent;color:#34d399;border-color:rgba(52,211,153,0.35);" onclick="document.getElementById('refs-json-input').click()" title="Import references from a JSON file">↑ Import JSON</button>
+                        <input type="file" id="refs-json-input" class="hidden" accept=".json">
+                        <button id="zotero-push-btn" class="vault-upload-btn" style="background:transparent;color:#a78bfa;border-color:rgba(167,139,250,0.4);" onclick="pushAllToZotero()" title="Send all references to Zotero">⇄ Zotero</button>
+                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportBibliography()" title="Export as .rtf">Refs .rtf</button>
+                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportRIS()" title="Export as RIS">Refs RIS</button>
                         <button class="vault-upload-btn" onclick="toggleRefsAdd()">+ Add Reference</button>
                     </div>
                 </div>
@@ -1651,6 +1698,15 @@
                     <button class="btn-save" style="background:transparent;border:1px solid var(--border);color:#94a3b8;" onclick="generateBibliography()">Generate Bibliography</button>
                     <button class="btn-save" style="background:transparent;border:1px solid var(--border);color:#94a3b8;" onclick="generateTableOfCases()">Table of Cases</button>
                     <button class="btn-save" style="background:transparent;border:1px solid var(--border);color:#94a3b8;" onclick="generateTableOfLeg()">Table of Legislation</button>
+                    <button class="btn-save" style="background:transparent;border:1px solid rgba(245,158,11,0.45);color:#f59e0b;" onclick="cleanLibrary()" title="Remove duplicates and invalid entries from your saved library">✦ Clean Duplicates</button>
+                    <div style="display:flex;gap:0.35rem;align-items:center;margin-left:auto;">
+                        <select id="bib-export-fmt" class="s-input" style="font-size:11px;padding:3px 7px;height:auto;background:var(--card);color:#94a3b8;border:1px solid var(--border);border-radius:5px;">
+                            <option value="rtf">.rtf — Word / LibreOffice</option>
+                            <option value="html">.html — Word / Browser</option>
+                            <option value="txt">.txt — Plain text</option>
+                        </select>
+                        <button class="btn-save" style="background:transparent;border:1px solid rgba(167,139,250,0.45);color:#a78bfa;white-space:nowrap;" onclick="exportBibliographyAs()">↓ Export</button>
+                    </div>
                 </div>
                 <div id="refs-output" style="display:none;margin-top:1rem;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;font-family:'Space Mono',monospace;font-size:11px;line-height:1.8;color:#94a3b8;white-space:pre-wrap;"></div>
             </div>
@@ -1798,6 +1854,15 @@
                     <button class="btn-save" onclick="toolRunDiff()" style="margin-bottom:0.75rem;">Show Diff</button>
                     <div id="tool-diff-out" class="tool-output" style="display:none;white-space:pre-wrap;"></div>
 
+                    <p class="s-section" style="margin-top:1.5rem;">OSCOLA Footnote Formatter</p>
+                    <p class="s-note" style="margin-bottom:0.75rem;">List the sources you are citing in footnote order — one per line. GURU generates properly formatted OSCOLA footnotes with <em>ibid</em> and <em>above n</em> shortening automatically.</p>
+                    <div class="s-group">
+                        <label class="s-label">Sources in citation order (one per line — paste party names, titles, or citation strings)</label>
+                        <textarea id="tool-fn-input" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Montgomery v Lanarkshire Health Board&#10;Bolam v Friern Hospital Management Committee&#10;Montgomery v Lanarkshire Health Board&#10;Watson JD and Crick FHC, The Structure of DNA&#10;Bolam v Friern Hospital Management Committee&#10;..."></textarea>
+                    </div>
+                    <button class="btn-save" onclick="toolGenerateFootnotes()" style="margin-bottom:0.75rem;">Generate OSCOLA Footnotes</button>
+                    <div id="tool-fn-out" class="tool-output" style="display:none;white-space:pre-wrap;"></div>
+
                     <p class="s-section" style="margin-top:1.5rem;">Viva Question Bank</p>
                     <p class="s-note" style="margin-bottom:0.75rem;">Generates 12 predicted viva questions from your vault contents. Click any question to load it into the Viva simulator.</p>
                     <button class="btn-save" onclick="toolGenerateQBank()">Generate Questions</button>
@@ -1921,8 +1986,8 @@
                 <p class="s-section">Response Behaviour <span style="font-size:8px;color:#334155;font-style:normal;" id="pro-behaviour-note">(Pro)</span></p>
                 <div class="s-group">
                     <label class="s-label">Context Window — <span id="cfg-context-val">6</span> messages</label>
-                    <input type="range" id="cfg-context" class="s-slider" min="6" max="20" step="2" value="6" disabled>
-                    <p class="s-note" style="margin-top:0.6rem;">Messages sent as conversation history. More = smarter, but slower and costlier. Pro: up to 20.</p>
+                    <input type="range" id="cfg-context" class="s-slider" min="6" max="50" step="2" value="6" disabled>
+                    <p class="s-note" style="margin-top:0.6rem;">Messages sent as conversation history. More = smarter, but slower and costlier. Pro: up to 50. Full history stored in IndexedDB.</p>
                 </div>
                 <div class="s-group">
                     <label class="s-label">Response Creativity — <span id="cfg-temp-val">0.7</span></label>
@@ -2110,6 +2175,82 @@
                 s.onerror = reject;
                 document.head.appendChild(s);
             });
+        }
+
+        // ============================================================
+        // INDEXEDDB STORAGE ENGINE
+        // ============================================================
+        const GDB = (() => {
+            const DB_NAME    = 'guru_db_v1';
+            const DB_VERSION = 1;
+            const STORES     = ['chat', 'vault', 'journal', 'refs'];
+            let _db = null;
+
+            function open() {
+                if (_db) return Promise.resolve(_db);
+                return new Promise((resolve, reject) => {
+                    const req = indexedDB.open(DB_NAME, DB_VERSION);
+                    req.onupgradeneeded = e => {
+                        const db = e.target.result;
+                        STORES.forEach(s => { if (!db.objectStoreNames.contains(s)) db.createObjectStore(s); });
+                    };
+                    req.onsuccess  = e => { _db = e.target.result; resolve(_db); };
+                    req.onerror    = e => reject(e.target.error);
+                    req.onblocked  = () => console.warn('[GURU] IndexedDB open blocked');
+                });
+            }
+
+            async function get(store, key) {
+                const db = await open();
+                return new Promise((resolve, reject) => {
+                    const req = db.transaction(store, 'readonly').objectStore(store).get(key);
+                    req.onsuccess = () => resolve(req.result);
+                    req.onerror   = () => reject(req.error);
+                });
+            }
+
+            async function put(store, value, key) {
+                const db = await open();
+                return new Promise((resolve, reject) => {
+                    const req = db.transaction(store, 'readwrite').objectStore(store).put(value, key);
+                    req.onsuccess = () => resolve();
+                    req.onerror   = () => reject(req.error);
+                });
+            }
+
+            async function del(store, key) {
+                const db = await open();
+                return new Promise((resolve, reject) => {
+                    const req = db.transaction(store, 'readwrite').objectStore(store).delete(key);
+                    req.onsuccess = () => resolve();
+                    req.onerror   = () => reject(req.error);
+                });
+            }
+
+            return { open, get, put, del };
+        })();
+
+        // One-time migration from localStorage → IndexedDB
+        async function _migrateLocalStorageToIDB() {
+            const migrations = [
+                { ls: 'guru_chat_v191',  idb: ['chat',    'messages'] },
+                { ls: 'guru_vault_v191', idb: ['vault',   'entries']  },
+                { ls: 'guru_journal_v1', idb: ['journal', 'entries']  },
+                { ls: 'guru_refs_v1',    idb: ['refs',    'entries']  },
+            ];
+            let migrated = false;
+            for (const m of migrations) {
+                const raw = localStorage.getItem(m.ls);
+                if (!raw) continue;
+                const existing = await GDB.get(m.idb[0], m.idb[1]);
+                if (existing && existing.length) continue; // IDB already has data, skip
+                try {
+                    await GDB.put(m.idb[0], JSON.parse(raw), m.idb[1]);
+                    localStorage.removeItem(m.ls);
+                    migrated = true;
+                } catch(e) { console.warn('[GURU] Migration failed for', m.ls, e); }
+            }
+            if (migrated) console.info('[GURU] Data migrated from localStorage to IndexedDB.');
         }
 
         // ============================================================
@@ -2481,12 +2622,12 @@
             // Detect citations in AI response text and save directly to Refs
             const caseRx    = /\*?([A-Z][a-zA-Z'''\-\s]{2,}v\.?\s+[A-Z][a-zA-Z'''\-\s]{2,})\*?\s*[\[\(](\d{4})[\]\)]/g;
             const statuteRx = /\b([A-Z][a-zA-Z\s\(\)&]+(?:Act|Regulations?|Order|Rules?|Directive)\s+\d{4})\b/g;
-            const doiRx     = /\b(10\.\d{4,9}\/[^\s"'<>\]]+)/g;
 
             let added = 0;
+            const _normT = s => (s || '').toLowerCase().replace(/\s+/g, ' ').trim();
             const _add = (type, title, year, extra={}) => {
                 if (!title || title.length < 5) return;
-                if (references.find(r => r.title === title || (extra.doi && r.doi === extra.doi))) return;
+                if (references.find(r => _normT(r.title) === _normT(title) || (extra.doi && r.doi === extra.doi))) return;
                 const oscola_fn = type === 'case'
                     ? `${title}${year ? ' [' + year + ']' : ''}`
                     : type === 'legislation'
@@ -2501,7 +2642,6 @@
             let m;
             while ((m = caseRx.exec(text))    !== null) _add('case',        m[1].trim(), m[2]);
             while ((m = statuteRx.exec(text)) !== null) _add('legislation', m[1].trim(), '');
-            while ((m = doiRx.exec(text))     !== null) _add('article',     `DOI: ${m[1]}`, '', { doi: m[1], url: `https://doi.org/${m[1]}` });
 
             if (added > 0) { saveRefs(); renderRefs(); }
         }
@@ -2568,11 +2708,12 @@ Citation text: "${src.text}"`
                        items.map(item => `\\pard\\sb0\\sa60 ${fn(item)}\\par\n`).join('') + '\n';
             };
 
-            const cases   = references.filter(r => r.type === 'case')
+            const _dedupExp = arr => { const seen = new Set(); return arr.filter(r => { const k=_refDedupKey(r); if(!k||seen.has(k))return false; seen.add(k); return true; }); };
+            const cases   = _dedupExp(references.filter(r => r.type === 'case'))
                 .sort((a,b) => (a.parties||'').localeCompare(b.parties||''));
-            const leg     = references.filter(r => r.type === 'legislation')
+            const leg     = _dedupExp(references.filter(r => r.type === 'legislation'))
                 .sort((a,b) => (a.title||'').localeCompare(b.title||''));
-            const arts    = references.filter(r => !['case','legislation'].includes(r.type))
+            const arts    = _dedupExp(references.filter(r => !['case','legislation'].includes(r.type) && !(r.title||'').startsWith('DOI: ')))
                 .sort((a,b) => (a.oscola_bib||a.title||'').localeCompare(b.oscola_bib||b.title||''));
             const unsaved = biblioSources.filter(s => !s.saved && s.type !== 'url');
 
@@ -2688,27 +2829,22 @@ ${body}}`;
         // ============================================================
         // STORAGE METER
         // ============================================================
-        function updateStorageMeter() {
+        async function updateStorageMeter() {
             try {
-                let total = 0;
-                const breakdown = { chat: 0, vault: 0, other: 0 };
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key   = localStorage.key(i);
-                    const bytes = ((key.length + (localStorage.getItem(key) || '').length) * 2);
-                    total += bytes;
-                    if (key.startsWith('guru_chat'))  breakdown.chat  += bytes;
-                    else if (key.startsWith('guru_vault')) breakdown.vault += bytes;
-                    else                                     breakdown.other += bytes;
-                }
-                const MAX   = 5 * 1024 * 1024;
-                const pct   = Math.min((total / MAX) * 100, 100).toFixed(1);
-                const toKB  = b => b > 1024 ? (b / 1024).toFixed(0) + 'KB' : b + 'B';
-                const bar   = document.getElementById('storage-bar');
-                const lbl   = document.getElementById('storage-label');
+                const bar = document.getElementById('storage-bar');
+                const lbl = document.getElementById('storage-label');
                 if (!bar || !lbl) return;
-                bar.style.width      = pct + '%';
-                bar.style.background = pct > 80 ? '#ef4444' : pct > 60 ? '#f59e0b' : 'var(--pulse)';
-                lbl.textContent      = `${toKB(total)} of ~5MB used (${pct}%) — Chat: ${toKB(breakdown.chat)} · Vault: ${toKB(breakdown.vault)} · Settings: ${toKB(breakdown.other)}`;
+                if ('storage' in navigator && 'estimate' in navigator.storage) {
+                    const { usage, quota } = await navigator.storage.estimate();
+                    const pct   = quota ? Math.min((usage / quota) * 100, 100).toFixed(1) : 0;
+                    const toMB  = b => b >= 1024 * 1024 ? (b / (1024 * 1024)).toFixed(1) + 'MB' : b > 1024 ? (b / 1024).toFixed(0) + 'KB' : (b || 0) + 'B';
+                    bar.style.width      = pct + '%';
+                    bar.style.background = pct > 80 ? '#ef4444' : pct > 60 ? '#f59e0b' : 'var(--pulse)';
+                    lbl.textContent      = `${toMB(usage)} of ${toMB(quota)} used (${pct}%) — IndexedDB · no size cap`;
+                } else {
+                    bar.style.width = '0%';
+                    lbl.textContent = 'IndexedDB storage active — no size cap';
+                }
             } catch(e) {}
         }
 
@@ -2914,22 +3050,14 @@ ${body}}`;
         // ============================================================
         // CHAT STORAGE
         // ============================================================
-        function saveChat() {
-            const payload = chatHistory.slice(-50);
-            try {
-                localStorage.setItem(SK_CHAT, JSON.stringify(payload));
-            } catch(e) {
-                // QuotaExceededError — progressively trim until it fits
-                for (let n = 40; n >= 5; n -= 10) {
-                    try { localStorage.setItem(SK_CHAT, JSON.stringify(chatHistory.slice(-n))); break; } catch(e2) {}
-                }
-            }
+        async function saveChat() {
+            try { await GDB.put('chat', chatHistory, 'messages'); } catch(e) { console.warn('[GURU] saveChat failed:', e); }
         }
-        function loadChat() {
+        async function loadChat() {
             try {
-                const raw = localStorage.getItem(SK_CHAT);
-                if (raw) {
-                    chatHistory = JSON.parse(raw);
+                const data = await GDB.get('chat', 'messages');
+                if (data && data.length) {
+                    chatHistory = data;
                     chatHistory.forEach(m => renderBubble(m.role, m.text, m.thought, m.socratic, false));
                     scrollDown();
                 }
@@ -4334,42 +4462,35 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             }
         }
 
-        function loadVault() {
-            try { const raw = localStorage.getItem(SK_VAULT); if (raw) vaultEntries = JSON.parse(raw); } catch(e) { vaultEntries = []; }
+        async function loadVault() {
+            try {
+                const data = await GDB.get('vault', 'entries');
+                if (data && data.length) vaultEntries = data;
+            } catch(e) { vaultEntries = []; }
             updateVaultStats();
             showDropZone();
         }
 
-        function saveVault() {
-            // Cap individual entry content to prevent any single entry bloating storage
-            const MAX_ENTRY_CHARS = 4000;
-            const capped = vaultEntries.slice(-200).map(e => ({
-                ...e,
-                content: e.content.length > MAX_ENTRY_CHARS ? e.content.slice(0, MAX_ENTRY_CHARS) + '…[truncated]' : e.content
-            }));
-            try {
-                localStorage.setItem(SK_VAULT, JSON.stringify(capped));
-            } catch(e) {
-                // Progressively trim until it fits
-                for (let n = 100; n >= 20; n -= 20) {
-                    try { localStorage.setItem(SK_VAULT, JSON.stringify(capped.slice(-n))); break; } catch(e2) {}
-                }
-            }
+        async function saveVault() {
+            try { await GDB.put('vault', vaultEntries, 'entries'); } catch(e) { console.warn('[GURU] saveVault failed:', e); }
         }
 
         // ============================================================
         // LIVING JOURNAL
         // ============================================================
-        function loadJournal() {
-            try { const raw = localStorage.getItem(SK_JOURNAL); if (raw) journalEntries = JSON.parse(raw); } catch(e) { journalEntries = []; }
+        async function loadJournal() {
+            try {
+                const data = await GDB.get('journal', 'entries');
+                if (data && data.length) journalEntries = data;
+            } catch(e) { journalEntries = []; }
             // Migrate existing SK_MODEL to SK_MODEL_CHAT if not yet set
             if (!localStorage.getItem(SK_MODEL_CHAT) && localStorage.getItem(SK_MODEL)) {
                 localStorage.setItem(SK_MODEL_CHAT, localStorage.getItem(SK_MODEL));
             }
         }
 
-        function saveJournal() {
-            try { localStorage.setItem(SK_JOURNAL, JSON.stringify(journalEntries)); } catch(e) {}
+        async function saveJournal() {
+            try { await GDB.put('journal', journalEntries, 'entries'); } catch(e) { console.warn('[GURU] saveJournal failed:', e); }
         }
 
         function addToJournal(mapCode) {
@@ -4829,13 +4950,57 @@ ${_getSheetAsText(300)}`;
             document.getElementById('vault-words').textContent = words > 999 ? (words / 1000).toFixed(1) + 'k' : words;
         }
 
+        async function _loadJSZip() {
+            if (window.JSZip) return;
+            await new Promise((resolve, reject) => {
+                const s = document.createElement('script');
+                s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+                s.onload = resolve; s.onerror = reject;
+                document.head.appendChild(s);
+            });
+        }
+
+        async function _extractODTText(file) {
+            await _loadJSZip();
+            const zip = await JSZip.loadAsync(await file.arrayBuffer());
+            const xml = await zip.file('content.xml').async('string');
+            return xml
+                .replace(/<text:line-break[^>]*\/?>/g, '\n')
+                .replace(/<\/text:p>/g, '\n')
+                .replace(/<[^>]+>/g, ' ')
+                .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+                .split('\n').map(l => l.replace(/\s+/g,' ').trim()).filter(Boolean).join('\n');
+        }
+
+        async function _extractDOCXText(file) {
+            await _loadJSZip();
+            const zip = await JSZip.loadAsync(await file.arrayBuffer());
+            const xml = await zip.file('word/document.xml').async('string');
+            return xml
+                .replace(/<w:br[^>]*\/?>/g, '\n')
+                .replace(/<\/w:p>/g, '\n')
+                .replace(/<[^>]+>/g, ' ')
+                .replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+                .split('\n').map(l => l.replace(/\s+/g,' ').trim()).filter(Boolean).join('\n');
+        }
+
         async function processVaultFile(file) {
             const filename  = file.name;
             const timestamp = new Date().toISOString();
             const ext       = filename.split('.').pop().toLowerCase();
             let content;
 
-            if (ext === 'pdf') {
+            if (ext === 'odt') {
+                setStatus('Extracting ODT text...');
+                try { content = await _extractODTText(file); }
+                catch(e) { content = `[ODT extraction failed: ${e.message}]`; }
+                setStatus('');
+            } else if (ext === 'docx' || ext === 'doc') {
+                setStatus('Extracting DOCX text...');
+                try { content = await _extractDOCXText(file); }
+                catch(e) { content = `[DOCX extraction failed: ${e.message}]`; }
+                setStatus('');
+            } else if (ext === 'pdf') {
                 if (!isPro()) {
                     setTab('chat');
                     addBubble('system', 'PDF vault support requires GURU Pro. Unlock in the Config tab.');
@@ -4883,6 +5048,28 @@ ${_getSheetAsText(300)}`;
             // Sync new entries to cloud
             vaultEntries.filter(e => e.date === timestamp).forEach(e => writeVaultEntryToFirebase(e));
         }
+
+        document.getElementById('refs-json-input').addEventListener('change', async function(e) {
+            const file = e.target.files[0]; e.target.value = '';
+            if (!file) return;
+            try {
+                const raw = JSON.parse(await file.text());
+                const items = Array.isArray(raw) ? raw : [];
+                if (!items.length) { showRefsOutput('No references found in JSON file.'); return; }
+                let added = 0;
+                items.forEach(r => {
+                    if (!r || typeof r !== 'object') return;
+                    const k = _refDedupKey(r);
+                    if (k && references.some(x => _refDedupKey(x) === k)) return;
+                    references.unshift({ ...r, id: r.id || ('ref-import-' + Math.random().toString(36).slice(2,9)), date: r.date || new Date().toISOString() });
+                    added++;
+                });
+                saveRefs(); renderRefs();
+                showRefsOutput(`✓ Imported ${added} new reference${added!==1?'s':''} from ${file.name}.\n${references.length - added} already existed and were skipped.`);
+            } catch(e) {
+                showRefsOutput('✗ Failed to import JSON: ' + e.message);
+            }
+        });
 
         document.getElementById('vault-file-input').addEventListener('change', async function(e) {
             try {
@@ -5064,9 +5251,24 @@ ${body}}`;
                 delBtn.textContent = '×';
                 delBtn.title       = 'Delete entry';
 
-                // Right column (tag + delete)
+                // Checkbox (select mode)
+                const cb = document.createElement('input');
+                cb.type = 'checkbox'; cb.className = 'vault-entry-cb';
+                cb.style.display = _vaultSelectMode ? 'block' : 'none';
+                cb.checked = _vaultSelectedIds.has(entry.id);
+                cb.addEventListener('change', () => {
+                    if (cb.checked) _vaultSelectedIds.add(entry.id);
+                    else _vaultSelectedIds.delete(entry.id);
+                    div.classList.toggle('selected', cb.checked);
+                    const n = _vaultSelectedIds.size;
+                    document.getElementById('vault-sel-count').textContent = n;
+                    document.getElementById('vault-delete-selected-btn').style.display = n > 0 ? 'inline-block' : 'none';
+                });
+
+                // Right column (tag + delete + checkbox)
                 const rightCol = document.createElement('div');
                 rightCol.style.cssText = 'display:flex;flex-direction:column;align-items:flex-end;gap:0.4rem;flex-shrink:0;';
+                rightCol.appendChild(cb);
                 rightCol.appendChild(wordTag);
                 rightCol.appendChild(delBtn);
 
@@ -5141,15 +5343,9 @@ ${body}}`;
         // TABS
         // ============================================================
         function setTab(tab) {
-            // Refs is now part of Library (vault) — redirect
-            if (tab === 'refs') tab = 'vault';
-
             ['chat', 'vault', 'refs', 'viva', 'present', 'horizon', 'tools', 'journal', 'data', 'settings'].forEach(t => {
                 const viewEl = document.getElementById(`view-${t}`);
-                if (!viewEl) return;
-                // refs view shown whenever vault (Library) is active
-                const show = t === tab || (t === 'refs' && tab === 'vault');
-                viewEl.classList.toggle('active', show);
+                if (viewEl) viewEl.classList.toggle('active', t === tab);
                 const btn = document.getElementById(`nav-${t}`);
                 if (btn) {
                     btn.classList.remove('active', 'vault-active');
@@ -5159,7 +5355,8 @@ ${body}}`;
             document.getElementById('mode-bar').style.display = tab === 'chat' ? 'flex' : 'none';
             if (tab === 'horizon')  renderArchive();
             if (tab === 'settings') loadSettingsUI();
-            if (tab === 'vault')    { renderVault(document.getElementById('vault-search').value); renderRefs(); updateManualFields(); }
+            if (tab === 'vault')    { renderVault(document.getElementById('vault-search').value); updateManualFields(); }
+            if (tab === 'refs')     { renderRefs(); updateManualFields(); }
             if (tab === 'journal')  renderJournal();
         }
 
@@ -5181,7 +5378,7 @@ ${body}}`;
                     clearTimeout(clearTimer);
                     try {
                         chatHistory = [];
-                        localStorage.removeItem(SK_CHAT);
+                        GDB.del('chat', 'messages');
                         document.getElementById('chat-stage').innerHTML = '';
                         await clearFirebaseChat();
                     } catch(e) { console.warn('Archive clear error:', e); }
@@ -5915,16 +6112,15 @@ Respond with valid JSON — no markdown fences:
             book:'Book', chapter:'Book Chapter', website:'Website', report:'Report'
         };
 
-        function loadRefs() {
+        async function loadRefs() {
             try {
-                const raw = localStorage.getItem(SK_REFS);
-                if (raw) references = JSON.parse(raw);
+                const data = await GDB.get('refs', 'entries');
+                if (data && data.length) references = data;
             } catch(e) { references = []; }
         }
 
-        function saveRefs() {
-            try { localStorage.setItem(SK_REFS, JSON.stringify(references)); }
-            catch(e) {}
+        async function saveRefs() {
+            try { await GDB.put('refs', references, 'entries'); } catch(e) { console.warn('[GURU] saveRefs failed:', e); }
             updateRefsStats();
         }
 
@@ -6050,14 +6246,18 @@ Be specific, critical, and actionable. Do not be vague.`;
                 const hasNotes   = !!(ref.notes && ref.notes.trim());
                 const linkLabels = { case:'Case ↗', legislation:'Legislation ↗', article:'DOI ↗', website:'Open ↗', book:'Source ↗', chapter:'Source ↗', report:'Source ↗' };
                 const linkLabel  = linkLabels[ref.type] || 'Open ↗';
+                const needsAccessDate = ['website','report'].includes(ref.type) && ref.url && !ref.accessed;
                 card.innerHTML =
                     `<div class="ref-card-top">` +
                     `<span class="ref-type-badge ${typeClass}">${escapeHtml(label)}</span>` +
                     `<span class="ref-title">${escapeHtml(titleText)}</span>` +
+                    (needsAccessDate ? `<span class="ref-accessed-warn" title="Add an access date for this online source" onclick="editRef('${escapeHtml(ref.id)}')">⚠ Add access date</span>` : '') +
                     `</div>` +
                     (oscolaText ? `<div class="ref-oscola">${escapeHtml(oscolaText)}</div>` : '') +
+                    (ref.accessed ? `<div class="ref-meta-line" style="color:#f59e0b;">accessed ${escapeHtml(ref.accessed)}</div>` : '') +
                     (metaLine   ? `<div class="ref-meta-line">${escapeHtml(metaLine)}</div>` : '') +
                     `<div class="ref-actions">` +
+                    `<button class="ref-act ref-act-edit" data-id="${escapeHtml(ref.id)}" title="Edit this reference">✎ Edit</button>` +
                     `<button class="ref-act ref-act-copy" data-id="${escapeHtml(ref.id)}" data-mode="fn">Copy OSCOLA</button>` +
                     `<button class="ref-act ref-act-copy" data-id="${escapeHtml(ref.id)}" data-mode="bib">Copy Bib</button>` +
                     `<button class="ref-act ref-act-copyfn" data-id="${escapeHtml(ref.id)}" title="Copy as OSCOLA footnote">Copy Fn</button>` +
@@ -6071,6 +6271,23 @@ Be specific, critical, and actionable. Do not be vague.`;
                     `<button class="ref-act ref-act-del" data-id="${escapeHtml(ref.id)}">×</button>` +
                     `</div>` +
                     (hasNotes ? `<div class="ref-notes">${escapeHtml(ref.notes)}</div>` : '') +
+                    `<div class="ref-edit-panel" id="refedit-${escapeHtml(ref.id)}">` +
+                    `<div class="ref-edit-grid">` +
+                    `<div><label class="ref-edit-label">Type</label><select class="ref-edit-select" data-field="type"><option value="case" ${ref.type==='case'?'selected':''}>Case</option><option value="legislation" ${ref.type==='legislation'?'selected':''}>Legislation</option><option value="article" ${ref.type==='article'?'selected':''}>Article</option><option value="book" ${ref.type==='book'?'selected':''}>Book</option><option value="chapter" ${ref.type==='chapter'?'selected':''}>Chapter</option><option value="website" ${ref.type==='website'?'selected':''}>Website</option><option value="report" ${ref.type==='report'?'selected':''}>Report</option></select></div>` +
+                    `<div><label class="ref-edit-label">Year</label><input class="ref-edit-input" data-field="year" value="${escapeHtml(ref.year||'')}"></div>` +
+                    `<div class="full"><label class="ref-edit-label">Title / Party Names</label><input class="ref-edit-input" data-field="title" value="${escapeHtml(ref.title||ref.parties||'')}"></div>` +
+                    `<div class="full"><label class="ref-edit-label">Parties (cases)</label><input class="ref-edit-input" data-field="parties" value="${escapeHtml(ref.parties||'')}"></div>` +
+                    `<div class="full"><label class="ref-edit-label">OSCOLA Footnote</label><input class="ref-edit-input" data-field="oscola_fn" value="${escapeHtml(ref.oscola_fn||'')}"></div>` +
+                    `<div class="full"><label class="ref-edit-label">OSCOLA Bibliography</label><input class="ref-edit-input" data-field="oscola_bib" value="${escapeHtml(ref.oscola_bib||'')}"></div>` +
+                    `<div><label class="ref-edit-label">Authors</label><input class="ref-edit-input" data-field="authors" value="${escapeHtml(ref.authors||'')}"></div>` +
+                    `<div><label class="ref-edit-label">Law Report / Neutral Citation</label><input class="ref-edit-input" data-field="lawReport" value="${escapeHtml(ref.lawReport||'')}"></div>` +
+                    `<div><label class="ref-edit-label">Journal</label><input class="ref-edit-input" data-field="journal" value="${escapeHtml(ref.journal||'')}"></div>` +
+                    `<div><label class="ref-edit-label">DOI</label><input class="ref-edit-input" data-field="doi" value="${escapeHtml(ref.doi||'')}"></div>` +
+                    `<div><label class="ref-edit-label">URL</label><input class="ref-edit-input" data-field="url" value="${escapeHtml(ref.url||'')}"></div>` +
+                    `<div><label class="ref-edit-label">Date Accessed (e.g. 1 May 2025)</label><input class="ref-edit-input" data-field="accessed" placeholder="1 May 2025" value="${escapeHtml(ref.accessed||'')}"></div>` +
+                    `</div>` +
+                    `<div style="display:flex;gap:0.4rem;"><button class="btn-save" style="font-size:9px;padding:4px 10px;" data-saveid="${escapeHtml(ref.id)}">Save Changes</button><button class="ref-act" style="font-size:9px;" data-cancelid="${escapeHtml(ref.id)}">Cancel</button></div>` +
+                    `</div>` +
                     `<div class="ref-annotation-row">` +
                     `<select class="ref-chapter-select" data-id="${escapeHtml(ref.id)}" title="Assign to thesis chapter">` +
                     `<option value="">— Chapter —</option>` +
@@ -6086,11 +6303,19 @@ Be specific, critical, and actionable. Do not be vague.`;
                 const btnChat  = card.querySelector('.ref-act-chat');
                 const btnDel   = card.querySelector('.ref-act-del');
                 const btnNotes = card.querySelector('.ref-act-notes');
+                const btnEdit  = card.querySelector('.ref-act-edit');
                 btnFn.addEventListener('click',   () => copyRefText(ref.id, 'fn'));
                 btnBib.addEventListener('click',  () => copyRefText(ref.id, 'bib'));
                 btnChat.addEventListener('click', () => sendRefToChat(ref.id));
                 btnDel.addEventListener('click',  () => deleteRef(ref.id, btnDel));
                 if (btnNotes) btnNotes.addEventListener('click', () => card.classList.toggle('notes-open'));
+                if (btnEdit)  btnEdit.addEventListener('click',  () => editRef(ref.id));
+                // Edit panel save/cancel
+                const editPanel = card.querySelector(`#refedit-${ref.id}`);
+                if (editPanel) {
+                    editPanel.querySelector('[data-saveid]')?.addEventListener('click', () => saveRefEdit(ref.id, editPanel));
+                    editPanel.querySelector('[data-cancelid]')?.addEventListener('click', () => editPanel.classList.remove('open'));
+                }
                 // Chapter selector
                 const chapterSel = card.querySelector('.ref-chapter-select');
                 if (chapterSel) chapterSel.addEventListener('change', () => {
@@ -6354,13 +6579,19 @@ Be specific, critical, and actionable. Do not be vague.`;
         }
 
         function _splitCitations(text) {
-            // Strip common section headers
-            const headerRe = /^(table of cases|table of legislation|bibliography|references|cases|legislation|statutes?|articles?|books?|journals?|online sources?|reports?|other sources?)\s*$/im;
+            // Strip section headers, jurisdiction labels, separators, and preamble lines
+            const headerRe = /^(table of cases|table of legislation|bibliography|references|cases|legislation|statutes?|articles?|books?|journals?|online sources?|reports?|other sources?|united kingdom|australia|canada|united states|france|germany|south africa|new zealand|european union|international instruments|a\s?[—\-]\s?books|b\s?[—\-]\s?journal|c\s?[—\-]\s?official|pre.?submission checklist|corrections applied|sources drawn|compiled and|master bibliography|genomic negligence|dhiraj varma|[━═─]{3,})\s*$/im;
 
             // Numbered list: "1. ...", "1) ..."
             if (/^\s*\d+[\.\)]\s+\S/m.test(text)) {
                 return text.split(/\n(?=\s*\d+[\.\)]\s)/)
                     .map(s => s.replace(/^\s*\d+[\.\)]\s+/, '').trim())
+                    .filter(s => s.length > 8 && !headerRe.test(s));
+            }
+            // Footnote-style: "1 Author..." or "1 Case name..." (number then space then capital/quote/bracket)
+            if (/^\s*\d+\s+[A-Z'(\[]/m.test(text)) {
+                return text.split(/\n(?=\s*\d+\s+[A-Z'(\[])/)
+                    .map(s => s.replace(/^\s*\d+\s+/, '').trim())
                     .filter(s => s.length > 8 && !headerRe.test(s));
             }
             // Bullet/dash list: "- ...", "• ..."
@@ -6431,6 +6662,9 @@ Each array element:
   "oscola_bib": "complete OSCOLA bibliography entry"
 }
 
+Type guidelines: court judgments/cases → 'case'; Acts/Regulations/Statutory Instruments → 'legislation'; journal/law review articles → 'article'; books (monographs) → 'book'; chapters in edited collections → 'chapter'; NHS documents, government papers, official reports, white papers, consultation documents → 'report'; web pages → 'website'.
+Do NOT create an entry for a bare DOI string or a sentence fragment. Each entry must represent a complete, identifiable source.
+
 Return ONLY valid JSON array. No markdown. No explanation.
 
 Citations:
@@ -6452,15 +6686,23 @@ ${chunkText}`;
                         }
                     }
                     items = (items || []).filter(item => item && typeof item === 'object' && (item.title || item.parties || item.oscola_fn));
+                    const _isFragment = t => !t || t.length < 5 || /^(whilst|however|furthermore|therefore|this |it |in the|as a result|the |a )/i.test(t);
+                    let chunkSaved = 0;
                     items.forEach(result => {
+                        const title = result.title || result.parties || '';
+                        if (_isFragment(title) || title.startsWith('DOI: ')) return;
+                        const newKey = _refDedupKey(result);
+                        const alreadyExists = newKey && references.some(r => _refDedupKey(r) === newKey);
+                        if (alreadyExists) return;
                         const id  = 'ref-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
                         const ref = { id, date: new Date().toISOString(), ...result };
                         references.unshift(ref);
                         vaultEntries.push({ id: 'vault-ref-' + id, title: ref.parties || ref.title || 'Reference',
                             content: ref.oscola_fn || ref.oscola_bib || '', source: 'refs',
                             session: 'refs', sessionId: id, date: ref.date, type: 'reference' });
+                        chunkSaved++;
                     });
-                    totalSaved += items.length;
+                    totalSaved += chunkSaved;
                     if (items.length) { saveRefs(); saveVault(); renderRefs(); }
                 } catch(e) {
                     totalErrors++;
@@ -6598,30 +6840,383 @@ Data: ${JSON.stringify(data)}`
             } catch(e) { setRefStatus('manual', '✗ ' + e.message, false); }
         }
 
+        // ============================================================
+        // BIBLIOGRAPHY QC — AI-powered pass based on bibliography-qc skill
+        // ============================================================
+        async function _runBibQC(rawBiblio) {
+            const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            const s = getSettings();
+            const model = getModelForMode('tools');
+            const prompt =
+`You are an OSCOLA 4th edition citation expert performing a mandatory quality-control pass on a PhD bibliography for a Genomic Negligence thesis. Apply every rule below in order, then output the corrected bibliography followed by a QC report.
+
+━━ STEP 1 — DEDUPLICATION ━━
+Remove duplicate entries. Where the same source appears more than once, keep only the most complete and correctly formatted version. Delete the less complete version entirely.
+
+━━ STEP 2 — KNOWN ERRORS ━━
+Fix these specific recurring errors without exception:
+
+2A — ter Neuzen v Korn
+WRONG: "Neuzen v Korn" in any form
+CORRECT: ter Neuzen v Korn [1995] 3 SCR 674 (SCC)
+The "ter" prefix is part of the case name. Always include it.
+
+2B — Sidaway citation
+WRONG: Sidaway v Board of Governors of the Bethlem Royal Hospital [1985] UKHL 1
+CORRECT: Sidaway v Board of Governors of the Bethlem Royal Hospital [1985] AC 871 (HL)
+No UKHL neutral citation exists for 1985 decisions.
+
+2C — ABC v St George's — two entries required
+The bibliography must contain BOTH:
+• ABC v St George's Healthcare NHS Trust [2017] EWCA Civ 336
+• ABC v St George's Healthcare NHS Trust [2020] EWHC 455 (QB)
+If either is missing, add it.
+
+2D — Israel Genetic Information Act 2000
+WRONG: "Canadian Genetic Information Act 2000" or any non-Israeli label
+CORRECT: Israel Genetic Information Act 2000
+This is Israeli legislation, not Canadian.
+
+2E — Fragment entries
+Remove any entry that is a sentence fragment rather than a citation, e.g. "Whilst the Human Rights Act 1998".
+
+2F — Bare DOI entries
+Remove any entry that is only a DOI string with no author, title, journal or year, e.g. "DOI: 10.1017/erm.2025.10".
+
+2G — Bolitho party name
+Use consistently: Bolitho v City and Hackney Health Authority [1998] AC 232
+
+━━ STEP 3 — SECTION CLASSIFICATION ━━
+Move any of the following source types from Journal Articles into Reports & Other if misplaced:
+• NHS England publications and guidance documents
+• PHG Foundation reports
+• WHO Expert Advisory Committee documents
+• UK Association for Clinical Genetics science alerts
+• Genomics England / NHS England programme documents
+• European Society of Human Genetics recommendations
+• Global Alliance for Genomics and Health frameworks
+• Association of British Insurers codes
+• President's Commission for the Study of Bioethical Issues publications
+• ACMG Secondary Findings Guidelines
+
+Journal Articles must contain only peer-reviewed academic journal articles and law review pieces.
+
+━━ STEP 4 — SELF-REVIEW ━━
+Read through the corrected bibliography once more. For each entry check: (1) does it appear more than once? (2) is it in the correct section? (3) does it contain a known error from Step 2? Fix anything found.
+
+━━ OUTPUT FORMAT ━━
+Output the complete corrected bibliography exactly as it should appear, preserving section headings and formatting. Then append:
+
+QC REPORT
+─────────────────────────────────────────────────
+Duplicates removed: N
+Citation errors corrected: N
+Entries reclassified: N
+[List each specific change on its own line, e.g. "Fixed: ter Neuzen v Korn prefix restored"]
+─────────────────────────────────────────────────
+
+If no changes were needed, write "No errors found — bibliography is clean."
+
+BIBLIOGRAPHY TO QC:
+${rawBiblio}`;
+
+            try {
+                if (provider === 'claude') {
+                    const key = localStorage.getItem(SK_CLAUDE_KEY);
+                    if (!key) return rawBiblio;
+                    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', 'x-api-key': key,
+                            'anthropic-version': '2023-06-01', 'anthropic-dangerous-allow-browser': 'true' },
+                        body: JSON.stringify({ model, max_tokens: 8192, messages: [{ role: 'user', content: prompt }] })
+                    });
+                    const data = await resp.json();
+                    return data?.content?.[0]?.text || rawBiblio;
+                } else {
+                    if (!s.key) return rawBiblio;
+                    const resp = await fetch(
+                        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${s.key}`,
+                        { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ contents: [{ role: 'user', parts: [{ text: prompt }] }],
+                              generationConfig: { maxOutputTokens: 8192 } }) }
+                    );
+                    const data = await resp.json();
+                    return data?.candidates?.[0]?.content?.parts?.[0]?.text || rawBiblio;
+                }
+            } catch(e) {
+                console.warn('Bibliography QC failed:', e.message);
+                return rawBiblio;
+            }
+        }
+
+        // ============================================================
+        // JURISDICTION DETECTION
+        // ============================================================
+        function _detectJurisdiction(r) {
+            const text = [r.oscola_bib, r.oscola_fn, r.parties, r.title, r.lawReport, r.court]
+                .filter(Boolean).join(' ').toLowerCase();
+            if (/\[\d{4}\]\s*(uksc|ewca|ewhc|ukhl|ukpc|ac\b|wlr\b|kb\b|qb\b|ch\b|fam\b|all er|crim lr)/.test(text)) return 'United Kingdom';
+            if (/\bpc\b|\bprivy council\b|\bukhl\b|\buksc\b|\bewca\b|\bewhc\b/.test(text) && !/\bscc\b|\bhca\b/.test(text)) return 'United Kingdom';
+            if (/\[\d{4}\]\s*(ac|wlr|qb|kb|ch)\b/.test(text) && !/\bscc\b|\bhca\b/.test(text)) return 'United Kingdom';
+            if (/\bhca\b|\bclr\b|\bnswlr\b|\bnswca\b|\bsasc\b|\bqca\b|\bfca\b|\bvsr\b/.test(text)) return 'Australia';
+            if (/\bscr\b|\bscc\b|\bdlr\b|\bnbr\b|\bmbca\b|\bontario ca\b/.test(text)) return 'Canada';
+            if (/\bf\s*[23]d\b|\bf\s*supp\b|\b\d+\s+us\s+\d|\bp\s*[23]d\b|\bne\s*[23]d\b|\bso\s*[23]d\b|\bdc cir\b|\bedny\b|\bcal\s*\d|\bnj\b\s+\d|\bfla\b|\bmass\b.*\d|\bwash\b.*\d/.test(text)) return 'United States';
+            if (/cour de cassation|assembl.e pl.ni.re|arr.t perruche/.test(text)) return 'France';
+            if (/\bsa\b\s+\d.*\bcc\b|\bfetal assessment centre\b/.test(text)) return 'South Africa';
+            if (/bundesgerichtshof|\bbgh\b/.test(text)) return 'Germany';
+            if (/new zealand|nzlr/.test(text)) return 'New Zealand';
+            if (/\[\d{4}\]/.test(text)) return 'United Kingdom';
+            return 'Other';
+        }
+        const JURISDICTION_ORDER = ['United Kingdom','Australia','Canada','United States','France','South Africa','Germany','New Zealand','Other'];
+
+        // ============================================================
+        // VAULT — SELECT MODE & BULK DELETE
+        // ============================================================
+        let _vaultSelectMode = false;
+        let _vaultSelectedIds = new Set();
+
+        function toggleVaultSelectMode() {
+            _vaultSelectMode = !_vaultSelectMode;
+            _vaultSelectedIds.clear();
+            const btn = document.getElementById('vault-select-btn');
+            const delBtn = document.getElementById('vault-delete-selected-btn');
+            if (btn) btn.style.color = _vaultSelectMode ? 'var(--pulse)' : '#475569';
+            if (delBtn) delBtn.style.display = 'none';
+            document.getElementById('vault-sel-count').textContent = '0';
+            renderVault(document.getElementById('vault-search')?.value || '');
+        }
+
+        function deleteSelectedVaultEntries() {
+            if (!_vaultSelectedIds.size) return;
+            vaultEntries = vaultEntries.filter(e => !_vaultSelectedIds.has(e.id));
+            _vaultSelectedIds.clear();
+            saveVault(); updateVaultStats();
+            _vaultSelectMode = false;
+            document.getElementById('vault-select-btn').style.color = '#475569';
+            document.getElementById('vault-delete-selected-btn').style.display = 'none';
+            document.getElementById('vault-sel-count').textContent = '0';
+            renderVault(document.getElementById('vault-search')?.value || '');
+        }
+
+        function removeGarbledVaultEntries() {
+            const _isGarbled = content => {
+                if (!content || content.length < 30) return false;
+                const sample = content.slice(0, 400);
+                const bad = (sample.match(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F-\x9F]/g) || []).length;
+                return bad / sample.length > 0.08;
+            };
+            const before = vaultEntries.length;
+            vaultEntries = vaultEntries.filter(e => !_isGarbled(e.content));
+            const removed = before - vaultEntries.length;
+            saveVault(); updateVaultStats();
+            renderVault(document.getElementById('vault-search')?.value || '');
+            if (removed > 0) {
+                addBubble('system', `✓ Removed ${removed} garbled entr${removed!==1?'ies':'y'} from the Library.`);
+                setTab('vault');
+            } else {
+                addBubble('system', '✓ No garbled entries found — Library is clean.');
+                setTab('chat');
+            }
+        }
+
+        // ============================================================
+        // INLINE REFERENCE EDITOR
+        // ============================================================
+        function editRef(id) {
+            const panel = document.getElementById(`refedit-${id}`);
+            if (!panel) return;
+            panel.classList.toggle('open');
+        }
+
+        function saveRefEdit(id, panel) {
+            const ref = references.find(r => r.id === id);
+            if (!ref) return;
+            panel.querySelectorAll('[data-field]').forEach(el => {
+                const field = el.dataset.field;
+                const val = el.value.trim();
+                if (val !== '') ref[field] = val;
+                else if (field !== 'type') delete ref[field];
+            });
+            // Keep parties in sync with title for cases
+            if (ref.type === 'case' && ref.title && !ref.parties) ref.parties = ref.title;
+            saveRefs();
+            renderRefs(document.getElementById('refs-search')?.value || '');
+        }
+
+        // ============================================================
+        // OSCOLA FOOTNOTE FORMATTER
+        // ============================================================
+        function toolGenerateFootnotes() {
+            const raw = document.getElementById('tool-fn-input').value.trim();
+            if (!raw) return;
+            const lines = raw.split('\n').map(s => s.trim()).filter(Boolean);
+            const out = document.getElementById('tool-fn-out');
+            out.style.display = 'block';
+            out.textContent = 'Generating…';
+
+            // Match each line to a reference in the library
+            const _match = query => {
+                const q = query.toLowerCase();
+                return references.find(r =>
+                    (r.parties && r.parties.toLowerCase().includes(q.slice(0,30))) ||
+                    (r.title && r.title.toLowerCase().includes(q.slice(0,30))) ||
+                    (r.oscola_fn && r.oscola_fn.toLowerCase().includes(q.slice(0,30)))
+                );
+            };
+
+            const footnotes = [];
+            const firstUse = {}; // key → footnote number of first use
+
+            lines.forEach((line, i) => {
+                const n = i + 1;
+                const ref = _match(line);
+                const key = ref ? _refDedupKey(ref) : line.toLowerCase().trim();
+                const fullCite = ref ? (ref.oscola_fn || ref.oscola_bib || line) : line;
+
+                if (i > 0 && lines[i - 1].toLowerCase().trim() === line.toLowerCase().trim()) {
+                    footnotes.push(`${n}  ibid.`);
+                } else if (firstUse[key] !== undefined) {
+                    const parties = ref?.parties || ref?.authors || line.split(',')[0].trim();
+                    footnotes.push(`${n}  ${parties} (n ${firstUse[key]}).`);
+                } else {
+                    firstUse[key] = n;
+                    footnotes.push(`${n}  ${fullCite}.`);
+                }
+            });
+
+            const result = footnotes.join('\n');
+            out.textContent = result;
+            navigator.clipboard.writeText(result).catch(()=>{});
+        }
+
+        // Shared dedup key used by cleanLibrary, generateBibliography, exportBibliographyAs, and import
+        function _refDedupKey(r) {
+            const n = s => (s||'').toLowerCase().replace(/\s+/g,' ').trim();
+            if (r.type === 'case') {
+                // Strip citation details ([year], law report refs) to get core "X v Y"
+                const raw = n(r.parties || r.title || '');
+                const core = raw.replace(/\s*[\[\(]\d{4}[\]\)].*$/, '').replace(/\s+\d+\s+\w{1,5}\s+\d+.*$/, '').trim();
+                return 'case:' + (core || raw);
+            }
+            if (r.type === 'legislation') return 'leg:' + n(r.title || '');
+            return r.doi ? 'doi:' + r.doi : n(r.title || r.oscola_fn || '');
+        }
+
+        function cleanLibrary() {
+            try {
+                if (!references.length) { showRefsOutput('Library is empty — nothing to clean.'); return; }
+                const _isFragment = t => !t || t.length < 5 || /^(whilst|however|furthermore|therefore|this |it |in the|as a result|the |a )/i.test(t);
+                const before = references.length;
+                const _score = r => [r.parties, r.oscola_fn, r.oscola_bib, r.lawReport, r.authors, r.journal, r.doi].filter(Boolean).length;
+                const sorted = [...references].sort((a, b) => _score(b) - _score(a));
+                const seen = new Set();
+                const kept = sorted.filter(r => {
+                    const title = r.title || r.parties || '';
+                    if (_isFragment(title) || (r.title||'').startsWith('DOI: ')) return false;
+                    const k = _refDedupKey(r);
+                    if (!k || seen.has(k)) return false;
+                    seen.add(k);
+                    return true;
+                });
+                kept.sort((a, b) => new Date(b.date||0) - new Date(a.date||0));
+                const removed = before - kept.length;
+                references = kept;
+                saveRefs();
+                renderRefs();
+                const msg = removed > 0
+                    ? `✓ Clean complete — removed ${removed} duplicate${removed!==1?'s':''} and invalid entr${removed!==1?'ies':'y'}.\nLibrary now has ${references.length} unique reference${references.length!==1?'s':''}. You can now Generate Bibliography.`
+                    : `✓ Library is already clean — no duplicates or invalid entries found.\n${references.length} reference${references.length!==1?'s':''} in library.`;
+                showRefsOutput(msg);
+            } catch(e) {
+                showRefsOutput('✗ Error cleaning library: ' + e.message);
+            }
+        }
+
         function generateBibliography() {
             if (!references.length) return;
+
+            // Silently clean the stored library before generating
+            const _isFragment = t => !t || t.length < 5 || /^(whilst|however|furthermore|therefore|this |it |in the|as a result|the |a )/i.test(t);
+            const _score = r => [r.parties, r.oscola_fn, r.oscola_bib, r.lawReport, r.authors, r.journal, r.doi].filter(Boolean).length;
+            const _preSorted = [...references]
+                .filter(r => { const t = r.title || r.parties || ''; return !_isFragment(t) && !(r.title||'').startsWith('DOI: '); })
+                .sort((a, b) => _score(b) - _score(a));
+            const _preSeen = new Set();
+            const _cleaned = _preSorted.filter(r => { const k = _refDedupKey(r); if (!k || _preSeen.has(k)) return false; _preSeen.add(k); return true; });
+            if (_cleaned.length < references.length) {
+                _cleaned.sort((a, b) => new Date(b.date||0) - new Date(a.date||0));
+                references = _cleaned;
+                saveRefs();
+                renderRefs();
+            }
+
+            const seenBib = new Set();
+            const uniqueRefs = references.filter(r => {
+                const key = _refDedupKey(r);
+                if (!key || seenBib.has(key)) return false;
+                seenBib.add(key);
+                return true;
+            });
             const groups = { case:[], legislation:[], article:[], book:[], chapter:[], website:[], report:[] };
-            references.forEach(r => { (groups[r.type] = groups[r.type] || []).push(r); });
+            uniqueRefs.forEach(r => { (groups[r.type] = groups[r.type] || []).push(r); });
             let out = 'BIBLIOGRAPHY\n\n';
-            const order = [['case','Table of Cases'],['legislation','Table of Legislation'],
-                           ['article','Journal Articles'],['book','Books'],['chapter','Book Chapters'],
-                           ['website','Online Sources'],['report','Reports & Other']];
-            order.forEach(([type, heading]) => {
+
+            // Table of Cases — grouped by jurisdiction
+            const allCases = (groups['case'] || []).sort((a,b) => (a.parties||a.title||'').localeCompare(b.parties||b.title||''));
+            if (allCases.length) {
+                out += `Table of Cases\n${'─'.repeat(14)}\n`;
+                const byJ = {};
+                allCases.forEach(r => { const j = _detectJurisdiction(r); (byJ[j] = byJ[j]||[]).push(r); });
+                JURISDICTION_ORDER.forEach(j => {
+                    if (!byJ[j]?.length) return;
+                    out += `\n${j}\n`;
+                    byJ[j].forEach(r => { out += `${r.oscola_bib || r.oscola_fn || r.title}\n`; });
+                });
+                out += '\n';
+            }
+
+            // Remaining sections
+            const restOrder = [['legislation','Table of Legislation'],['article','Journal Articles'],
+                               ['book','Books'],['chapter','Book Chapters'],['website','Online Sources'],['report','Reports & Other']];
+            restOrder.forEach(([type, heading]) => {
                 const items = (groups[type] || []).sort((a,b) => (a.oscola_bib||a.title||'').localeCompare(b.oscola_bib||b.title||''));
                 if (!items.length) return;
                 out += `${heading}\n${'─'.repeat(heading.length)}\n`;
-                items.forEach(r => { out += `${r.oscola_bib || r.oscola_fn || r.title}\n`; });
+                items.forEach(r => {
+                    let line = r.oscola_bib || r.oscola_fn || r.title || '';
+                    if (['website','report'].includes(r.type) && r.accessed && !line.includes('accessed')) {
+                        line += ` accessed ${r.accessed}`;
+                    }
+                    out += line + '\n';
+                });
                 out += '\n';
             });
-            showRefsOutput(out);
+
+            // Run bibliography-qc pass automatically before delivering output
+            const s = getSettings();
+            const hasKey = s.key || localStorage.getItem(SK_CLAUDE_KEY);
+            if (hasKey) {
+                showRefsOutput('Generating bibliography — running QC pass…');
+                _runBibQC(out).then(qcResult => showRefsOutput(qcResult))
+                              .catch(() => showRefsOutput(out));
+            } else {
+                showRefsOutput(out);
+            }
         }
 
         function generateTableOfCases() {
             const cases = references.filter(r => r.type === 'case')
                 .sort((a,b) => (a.parties||'').localeCompare(b.parties||''));
             if (!cases.length) { showRefsOutput('No cases saved yet.'); return; }
-            let out = 'TABLE OF CASES\n══════════════\n\n';
-            cases.forEach(r => { out += `${r.parties || r.title}  ${r.lawReport || ''}  ${r.oscola_fn || ''}\n`; });
+            let out = 'TABLE OF CASES\n══════════════\n';
+            const byJ = {};
+            cases.forEach(r => { const j = _detectJurisdiction(r); (byJ[j]=byJ[j]||[]).push(r); });
+            JURISDICTION_ORDER.forEach(j => {
+                if (!byJ[j]?.length) return;
+                out += `\n${j}\n${'─'.repeat(j.length)}\n`;
+                byJ[j].forEach(r => { out += `${r.oscola_bib || r.oscola_fn || r.parties || r.title}\n`; });
+            });
             showRefsOutput(out);
         }
 
@@ -6640,6 +7235,110 @@ Data: ${JSON.stringify(data)}`
             el.style.display = 'block';
             navigator.clipboard.writeText(text).catch(()=>{});
             el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function exportBibliographyAs() {
+            if (!references.length) return;
+            const fmt  = (document.getElementById('bib-export-fmt')?.value) || 'rtf';
+            const date = new Date().toLocaleDateString('en-GB', { year:'numeric', month:'long', day:'numeric' });
+
+            // Build deduplicated, sorted sections
+            const _dedup = arr => { const s = new Set(); return arr.filter(r => { const k=_refDedupKey(r); if(!k||s.has(k))return false; s.add(k); return true; }); };
+
+            const allCasesExp = _dedup(references.filter(r => r.type === 'case'))
+                .sort((a,b) => (a.parties||'').localeCompare(b.parties||''));
+            const leg   = _dedup(references.filter(r => r.type === 'legislation'))
+                .sort((a,b) => (a.title||'').localeCompare(b.title||''));
+            const other = _dedup(references.filter(r => !['case','legislation'].includes(r.type) && !(r.title||'').startsWith('DOI: ')))
+                .sort((a,b) => (a.oscola_bib||a.title||'').localeCompare(b.oscola_bib||b.title||''));
+
+            // Build jurisdiction-grouped cases as a flat list with sub-headings
+            const _casesByJ = {};
+            allCasesExp.forEach(r => { const j = _detectJurisdiction(r); (_casesByJ[j]=_casesByJ[j]||[]).push(r); });
+            const _casesFlat = [];
+            JURISDICTION_ORDER.forEach(j => {
+                if (!_casesByJ[j]?.length) return;
+                _casesFlat.push({ _heading: j }); // sub-heading marker
+                _casesByJ[j].forEach(r => _casesFlat.push(r));
+            });
+
+            const _accessedSuffix = r => (['website','report'].includes(r.type) && r.accessed && !(r.oscola_bib||r.oscola_fn||'').includes('accessed')) ? ` accessed ${r.accessed}` : '';
+            const sections = [
+                { heading: 'Table of Cases',       items: _casesFlat,  fn: r => r._heading ? r._heading : (r.oscola_bib || r.oscola_fn || r.parties || r.title || ''), isHeading: r => !!r._heading },
+                { heading: 'Table of Legislation', items: leg,    fn: r => r.oscola_bib || r.oscola_fn || r.title || '' },
+                { heading: 'Journal Articles',     items: other.filter(r => r.type === 'article'),  fn: r => r.oscola_bib || r.oscola_fn || r.title || '' },
+                { heading: 'Books',                items: other.filter(r => r.type === 'book'),     fn: r => r.oscola_bib || r.oscola_fn || r.title || '' },
+                { heading: 'Book Chapters',        items: other.filter(r => r.type === 'chapter'),  fn: r => r.oscola_bib || r.oscola_fn || r.title || '' },
+                { heading: 'Reports & Other',      items: other.filter(r => ['report','website'].includes(r.type) || !['article','book','chapter'].includes(r.type)), fn: r => (r.oscola_bib || r.oscola_fn || r.title || '') + _accessedSuffix(r) },
+            ].filter(s => s.items.length > 0);
+
+            const _dl = (blob, name) => {
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = name;
+                a.click();
+                setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+            };
+
+            if (fmt === 'txt') {
+                let txt = `BIBLIOGRAPHY\nGenerated by G.U.R.U. — ${date}\n${'═'.repeat(60)}\n\n`;
+                sections.forEach(s => {
+                    txt += `${s.heading}\n${'─'.repeat(s.heading.length)}\n`;
+                    s.items.forEach(r => {
+                        const line = s.fn(r);
+                        if (s.isHeading?.(r)) txt += `\n${line}\n`;
+                        else txt += line + '\n';
+                    });
+                    txt += '\n';
+                });
+                _dl(new Blob([txt], { type: 'text/plain;charset=utf-8' }), `GURU_Bibliography_${new Date().toISOString().slice(0,10)}.txt`);
+
+            } else if (fmt === 'html') {
+                const _esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+                let body = '';
+                sections.forEach(s => {
+                    body += `<h2>${_esc(s.heading)}</h2>\n`;
+                    s.items.forEach(r => {
+                        const line = s.fn(r);
+                        if (s.isHeading?.(r)) body += `<h3>${_esc(line)}</h3>\n`;
+                        else body += `<p>${_esc(line)}</p>\n`;
+                    });
+                });
+                const html = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>Bibliography — G.U.R.U.</title>
+<style>
+  body{font-family:"Times New Roman",Times,serif;margin:2.5cm;font-size:12pt;line-height:1.6;color:#000;}
+  h1{font-size:16pt;margin-bottom:0.2em;}
+  h2{font-size:13pt;margin-top:1.4em;margin-bottom:0.3em;border-bottom:1px solid #000;padding-bottom:2px;}
+  h3{font-size:11pt;margin-top:1em;margin-bottom:0.2em;font-style:italic;}
+  p{margin:0.25em 0 0.25em 1.5em;text-indent:-1.5em;}
+  .date{font-size:10pt;color:#555;margin-bottom:1.5em;}
+</style></head>
+<body>
+<h1>Bibliography</h1>
+<p class="date">Generated by G.U.R.U. &mdash; ${_esc(date)}</p>
+${body}
+</body></html>`;
+                _dl(new Blob([html], { type: 'text/html;charset=utf-8' }), `GURU_Bibliography_${new Date().toISOString().slice(0,10)}.html`);
+
+            } else {
+                // RTF
+                const _r = s => (s||'').replace(/\\/g,'\\\\').replace(/\{/g,'\\{').replace(/\}/g,'\\}')
+                    .replace(/[^\x00-\x7F]/g, c => `\\u${c.charCodeAt(0)}?`);
+                let body = `\\pard\\sb0\\sa120{\\b\\fs36 G.U.R.U. \\u8212? Bibliography}\\par\n\\pard\\sb0\\sa60{\\fs20\\cf1 ${_r(date)}}\\par\n\n`;
+                sections.forEach(s => {
+                    body += `\\pard\\sb360\\sa80{\\b\\fs26 ${_r(s.heading)}}\\par\n`;
+                    s.items.forEach(r => {
+                        const line = s.fn(r);
+                        if (s.isHeading?.(r)) body += `\\pard\\sb200\\sa40{\\i\\fs22 ${_r(line)}}\\par\n`;
+                        else body += `\\pard\\sb0\\sa60 ${_r(line)}\\par\n`;
+                    });
+                    body += '\n';
+                });
+                const rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang2057\n{\\fonttbl{\\f0\\froman\\fcharset0 Times New Roman;}}\n{\\colortbl ;\\red102\\green102\\blue102;}\n\\widowctrl\\hyphauto\\f0\\fs24\n\\margl1800\\margr1800\\margt1440\\margb1440\n${body}}`;
+                _dl(new Blob([rtf], { type: 'application/rtf' }), `GURU_Bibliography_${new Date().toISOString().slice(0,10)}.rtf`);
+            }
         }
 
         // ============================================================
@@ -7482,7 +8181,7 @@ Conversation to map:\n${summary}`;
         // Global initialisations — must precede window.onload
         window._vivaSlideRef = null; // set when user loads a presentation slide
 
-        window.onload = () => {
+        window.onload = async () => {
             // Session ID — regenerate daily
             (function() {
                 const today  = new Date().toISOString().slice(0, 10);
@@ -7504,13 +8203,16 @@ Conversation to map:\n${summary}`;
 
             initTheme();
             GuruVoice.init();
-            loadChat();
-            loadVault();
-            loadRefs();
-            _updateDirectiveStrip();
-            loadJournal();
-            loadSettingsUI();
+            loadSettingsUI();  // apply Pro gate before any async work so slider is correct on first paint
             showProBadge();
+            await GDB.open();
+            await _migrateLocalStorageToIDB();
+            await loadChat();
+            await loadVault();
+            await loadRefs();
+            _updateDirectiveStrip();
+            await loadJournal();
+            loadSettingsUI();  // re-run after IDB data is loaded to repopulate any data-driven fields
 
             const s = getSettings();
             if (!s.key) {
@@ -7773,11 +8475,11 @@ function submitRelay() {
     let refsAdded = 0;
     const caseRx    = /\*?([A-Z][a-zA-Z'\-\s]{2,}v\s+[A-Z][a-zA-Z'\-\s]{2,})\*?\s*[\[\(](\d{4})[\]\)]/g;
     const statuteRx = /\b([A-Z][a-zA-Z\s\(\)]+(?:Act|Regulations?|Order|Rules?)\s+\d{4})\b/g;
-    const doiRx     = /\b(10\.\d{4,}\/[^\s"'<>]+)/g;
     const articleRx = /['''']([^'''']{10,120})['''']\s*[\(\[]\d{4}[\)\]]/g;
 
+    const _normRelay = s => (s || '').toLowerCase().replace(/\s+/g, ' ').trim();
     const addRef = (type, title, year, extra={}) => {
-        if (references.find(r => r.title === title)) return;
+        if (references.find(r => _normRelay(r.title) === _normRelay(title) || (extra.doi && r.doi === extra.doi))) return;
         const oscola_fn = type === 'case'
             ? `${title}${year ? ' [' + year + ']' : ''}`
             : type === 'legislation'
@@ -7792,7 +8494,6 @@ function submitRelay() {
     let m;
     while ((m = caseRx.exec(text))    !== null) addRef('case',        m[1].trim(), m[2]);
     while ((m = statuteRx.exec(text)) !== null) addRef('legislation', m[1].trim(), '');
-    while ((m = doiRx.exec(text))     !== null) addRef('article',     m[1].trim(), '', { doi: m[1], url: 'https://doi.org/' + m[1] });
     while ((m = articleRx.exec(text)) !== null) addRef('article',     m[1].trim(), '');
 
     if (refsAdded > 0) { saveRefs(); renderRefs(); }
