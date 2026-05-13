@@ -3154,184 +3154,226 @@ ${body}}`;
         }
 
         // ============================================================
-        // BRAIN
+        // AGENTIC BRAIN — shared helpers
+        // ============================================================
+
+        // Tool schemas
+        const _TOOLS_GEMINI = [{ function_declarations: [
+            { name: 'search_vault',
+              description: 'Retrieve content from the student\'s saved research vault. Use when the query references their saved work, asks about sources on file, or would benefit from their research library.',
+              parameters: { type: 'OBJECT', properties: { query: { type: 'STRING', description: 'Search terms' } }, required: ['query'] } },
+            { name: 'search_web',
+              description: 'Search academic databases (OpenAlex, CrossRef, PubMed, Semantic Scholar) for cases, statutes, and peer-reviewed literature. Use for current developments or when training knowledge may be stale.',
+              parameters: { type: 'OBJECT', properties: { query: { type: 'STRING', description: 'Academic search query' } }, required: ['query'] } }
+        ]}];
+
+        const _TOOLS_CLAUDE = [
+            { name: 'search_vault',
+              description: 'Retrieve content from the student\'s saved research vault.',
+              input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+            { name: 'search_web',
+              description: 'Search academic databases for cases, statutes, and peer-reviewed literature.',
+              input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } }
+        ];
+
+        // Cached history summary (reset when older portion grows)
+        const _histCache = { summary: '', age: 0 };
+
+        // Compress history: keep last 8 messages verbatim, summarise the rest
+        function _buildCompressedHistory(history, contextLimit) {
+            const KEEP = Math.min(8, contextLimit);
+            if (history.length <= KEEP) return history.slice(-contextLimit);
+            const recent = history.slice(-KEEP);
+            const older  = history.slice(0, -KEEP);
+            if (_histCache.age !== older.length) {
+                const snippets = older.map(m =>
+                    `${m.role === 'guru' ? 'GURU' : 'Student'}: ${m.text.replace(/[#*`]/g, '').slice(0, 120)}`
+                ).join('\n');
+                _histCache.summary = `[Earlier conversation summary — do not repeat these topics unless asked:\n${snippets}]`;
+                _histCache.age = older.length;
+            }
+            return [{ role: 'user', text: _histCache.summary }, { role: 'guru', text: 'Understood, continuing.' }, ...recent];
+        }
+
+        // Classify query → drives max_tokens budget
+        function _classifyQuery(msg) {
+            if (!msg || msg.length < 15) return 'simple';
+            const lower = msg.toLowerCase().trim();
+            if (/^(hi|hello|hey|thanks|thank you|ok|yes|no|sure|got it|understood|great|perfect)\b/.test(lower)) return 'simple';
+            if (msg.length > 150 || /\b(analys[ei]|critically|evaluate|compare|argue|examine|discuss|explain.*detail|how does|what is the significance)\b/.test(lower)) return 'complex';
+            return 'medium';
+        }
+        const _MAX_TOKENS = { simple: 512, medium: 2048, complex: 8192 };
+
+        // Execute a tool call from the model
+        async function _executeAgentTool(name, args) {
+            if (name === 'search_vault') {
+                if (!vaultEntries.length) return 'No entries in the research vault.';
+                const q = (args.query || '').toLowerCase();
+                const STOP = new Set(['the','a','an','is','it','in','on','at','to','of','and','or','but','for','with','as','by','from','that','this','are','was','be','have','has']);
+                const qw = [...new Set((q.match(/\b\w{3,}\b/g) || []))].filter(w => !STOP.has(w));
+                const scored = vaultEntries.map(e => {
+                    const body  = (e.title + ' ' + e.content).toLowerCase();
+                    const score = qw.reduce((acc, w) => acc + (body.match(new RegExp(`\\b${w}\\b`, 'g')) || []).length, 0);
+                    return { e, score };
+                }).filter(x => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 5);
+                if (!scored.length) return 'No matching vault entries found.';
+                return scored.map(({ e }) => `--- ${e.title} [${(e.type||'doc').toUpperCase()}] ---\n${e.content.slice(0, 1800)}`).join('\n\n');
+            }
+            if (name === 'search_web') {
+                try {
+                    const results = await _searchAcademic(args.query || '');
+                    return _buildAcademicContext(results) || 'No academic results found.';
+                } catch(e) { return 'Web search failed: ' + e.message; }
+            }
+            return 'Unknown tool.';
+        }
+
+        // Build shared system prompt (lean — no vault content injected)
+        function _buildSystemPrompt(s, toolResultsText) {
+            const directiveLine = s.directive
+                ? `\nPhD Research Directive: "${s.directive}"`
+                : '\nNo specific research directive set — apply general doctoral-level legal supervision.';
+            const extContext  = localStorage.getItem(SK_EXT_CONTEXT) || '';
+            const relayCtx    = (typeof _relayContext !== 'undefined' && _relayContext) ? _relayContext : '';
+            const extSection  = (extContext || relayCtx)
+                ? `\n\nEXTERNAL RESEARCH CONTEXT (from student's Gemini Gem / Claude Project):\n${extContext}${relayCtx ? '\n\n--- RELAYED ---\n' + relayCtx : ''}`
+                : '';
+            const modeInstruction = MODES[currentMode]?.instruction || MODES.supervise.instruction;
+            const vaultManifest = vaultEntries.length
+                ? `\n\nRESEARCH VAULT (${vaultEntries.length} entr${vaultEntries.length !== 1 ? 'ies' : 'y'} on file — use search_vault tool to retrieve content):\n${vaultEntries.map((e, i) => `  ${i+1}. [${(e.type||'doc').toUpperCase()}] ${e.title}`).join('\n')}`
+                : '';
+            const refsSection = references.length > 0
+                ? `\n\nSTUDENT'S REFERENCE LIBRARY (${references.length} saved — cite precisely when relevant):\n${references.map(r => {
+                    const p = [`[${(r.type||'ref').toUpperCase()}]`];
+                    if (r.parties || r.title) p.push(r.parties || r.title);
+                    if (r.authors)            p.push('by ' + r.authors);
+                    if (r.year)               p.push('(' + r.year + ')');
+                    if (r.court)              p.push('— ' + r.court);
+                    if (r.oscola_fn)          p.push('| fn: ' + r.oscola_fn);
+                    return p.join(' ');
+                }).join('\n')}`
+                : '';
+            const toolSection = toolResultsText
+                ? `\n\nTOOL RESULTS — incorporate these directly into your response:\n${toolResultsText}`
+                : '';
+
+            return `You are GURU, an AI PhD supervisor specialising in law at doctoral level.${directiveLine}${extSection}${vaultManifest}${refsSection}${toolSection}
+
+Current supervision mode: ${(MODES[currentMode]?.label || 'Supervise').toUpperCase()}
+Mode instruction: ${modeInstruction}
+
+Style: Write as a QC or senior solicitor drafting a legal opinion — precise, authoritative, formally structured. Cite OSCOLA 4th ed inline. Challenge unsupported propositions. Never hedge or use filler phrases.
+
+AVAILABLE TOOLS: search_vault · search_web
+Use tools when the question requires current sources, case law, or vault content. For greetings or simple clarifications, respond directly without tools.
+
+Always respond with valid JSON:
+{"thought":"private reasoning","text":"supervision response in markdown","socratic":"Socratic probe or null"}
+Return ONLY the JSON. No markdown fences. No preamble.`;
+        }
+
+        // Merge consecutive same-role Claude messages
+        function _mergeClaudeMessages(msgs) {
+            const merged = [];
+            for (const msg of msgs) {
+                if (merged.length && merged[merged.length-1].role === msg.role) {
+                    const prev = merged[merged.length-1];
+                    const prevArr = typeof prev.content === 'string' ? [{ type:'text', text:prev.content }] : prev.content;
+                    const currArr = typeof msg.content  === 'string' ? [{ type:'text', text:msg.content  }] : msg.content;
+                    prev.content  = [...prevArr, ...currArr];
+                } else {
+                    merged.push({ role: msg.role, content: msg.content });
+                }
+            }
+            if (!merged.length || merged[0].role !== 'user') merged.unshift({ role:'user', content:'Begin.' });
+            return merged;
+        }
+
+        // ============================================================
+        // BRAIN — Gemini agentic loop
         // ============================================================
         async function callBrain(userMessage, files = []) {
             if ((localStorage.getItem(SK_PROVIDER) || 'gemini') === 'claude') return callBrainClaude(userMessage, files);
             const s = getSettings();
             if (!s.key) return { text: 'No API key. Go to Config tab.', thought: null, socratic: null };
 
-            const useSearch    = _searchMode;
-            const useNativeSearch = false; // Always use academic search (OpenAlex/CrossRef), never native grounding
-            const chatModel = getModelForMode('chat');
-            const streaming = isPro(); // streaming always enabled — academic results injected as text
-            const endpoint  = streaming
+            const chatModel  = getModelForMode('chat');
+            const streaming  = isPro();
+            const complexity = _classifyQuery(userMessage);
+            const maxTokens  = _MAX_TOKENS[complexity];
+            const baseUrl    = `https://generativelanguage.googleapis.com/v1beta/models/${chatModel}`;
+
+            // Compressed history
+            const compressed = _buildCompressedHistory(chatHistory, s.context);
+            const histParts  = compressed.map(m => ({ role: m.role === 'guru' ? 'model' : 'user', parts: [{ text: m.text }] }));
+
+            // User parts (files + message)
+            const userParts = [];
+            if (userMessage) userParts.push({ text: userMessage });
+            files.forEach(f => {
+                if (f.sheetText) userParts.push({ text: f.sheetText });
+                else if (f.base64) userParts.push({ inlineData: { mimeType: f.mimeType, data: f.base64 } });
+            });
+            if (!userParts.length) userParts.push({ text: 'Analyse the attached document.' });
+
+            // ── Phase 1: tool dispatch (skip for simple queries) ──────────
+            let toolResultsText = '';
+            const canUseTool = complexity !== 'simple' && (vaultEntries.length > 0 || _searchMode);
+            if (canUseTool) {
+                try {
+                    setStatus('Planning…');
+                    const dispatchResp = await fetch(`${baseUrl}:generateContent?key=${s.key}`, {
+                        method:  'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            system_instruction: { parts: [{ text: _buildSystemPrompt(s, '') }] },
+                            contents: [...histParts, { role: 'user', parts: userParts }],
+                            tools: _TOOLS_GEMINI,
+                            generationConfig: { temperature: s.temp, maxOutputTokens: 512 }
+                        })
+                    });
+                    if (dispatchResp.ok) {
+                        const dispatchData  = await dispatchResp.json();
+                        const dispatchParts = dispatchData?.candidates?.[0]?.content?.parts || [];
+                        const funcCalls     = dispatchParts.filter(p => p.functionCall);
+                        if (funcCalls.length) {
+                            setStatus(`Running ${funcCalls.length} tool${funcCalls.length > 1 ? 's' : ''}…`);
+                            const results = await Promise.all(
+                                funcCalls.map(p => _executeAgentTool(p.functionCall.name, p.functionCall.args)
+                                    .then(r => `[${p.functionCall.name}: "${p.functionCall.args.query || ''}"]\n${r}`))
+                            );
+                            toolResultsText = results.join('\n\n');
+                        }
+                    }
+                } catch(e) { /* tool dispatch failure — proceed to synthesis without tools */ }
+            }
+
+            // ── Phase 2: synthesis ────────────────────────────────────────
+            const synthEndpoint = streaming
                 ? `:streamGenerateContent?alt=sse&key=${s.key}`
                 : `:generateContent?key=${s.key}`;
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/${chatModel}${endpoint}`;
-
-            // Vault context — scored by word-frequency relevance
-            let vaultContext = '';
-            if (vaultEntries.length > 0) {
-                // Library manifest — always list every source so GURU knows the full library
-                const manifest = vaultEntries.map((e, i) =>
-                    `  ${i + 1}. [${(e.type || 'doc').toUpperCase()}] ${e.title}`
-                ).join('\n');
-
-                // Relevance scoring — keyword + bigram matching against current query
-                const STOP = new Set(['the','a','an','is','it','in','on','at','to','of','and','or','but',
-                    'for','with','as','by','from','that','this','are','was','be','have','has','had',
-                    'will','would','can','could','should','do','did','not','no','i','my','me','we',
-                    'our','you','your','what','how','why','when','where','who']);
-                const qWords = userMessage
-                    ? [...new Set((userMessage.toLowerCase().match(/\b\w{3,}\b/g) || []))].filter(w => !STOP.has(w))
-                    : [];
-
-                const scored = vaultEntries.map(e => {
-                    const body     = (e.title + ' ' + e.content).toLowerCase();
-                    const uniScore = qWords.reduce((acc, w) => acc + (body.match(new RegExp(`\\b${w}\\b`, 'g')) || []).length, 0);
-                    const bigrams  = qWords.flatMap((w, i) => i < qWords.length - 1 ? [`${w} ${qWords[i+1]}`] : []);
-                    const biScore  = bigrams.reduce((acc, b) => acc + (body.includes(b) ? 3 : 0), 0);
-                    return { e, score: uniScore + biScore };
-                }).sort((a, b) => b.score - a.score);
-
-                // If library fits in budget include all; otherwise top 8 most relevant at 2000 chars
-                const CHAR_BUDGET = 24000;
-                const totalChars  = vaultEntries.reduce((s, e) => s + e.content.length, 0);
-                const toInclude   = totalChars <= CHAR_BUDGET
-                    ? vaultEntries
-                    : scored.filter(({ score }) => score > 0).slice(0, 8).map(({ e }) => e);
-
-                const entryBlocks = toInclude.map(e => {
-                    const raw   = e.content.slice(0, 2000);
-                    const cut   = raw.length < e.content.length;
-                    const snip  = cut ? (raw.lastIndexOf('. ') > 500 ? raw.slice(0, raw.lastIndexOf('. ') + 1) : raw) + '…' : raw;
-                    return `--- SOURCE: ${e.title} [${(e.type||'doc').toUpperCase()}] ---\n${snip}`;
-                }).join('\n\n');
-
-                vaultContext = `\n\nRESEARCH LIBRARY (${vaultEntries.length} source${vaultEntries.length !== 1 ? 's' : ''} on file):\n${manifest}\n\nSOURCE CONTENT FOR THIS QUERY:\n${entryBlocks}`;
-            }
-
-            // Search OpenAlex + CrossRef for academic literature
-            let webSearchContext = '';
-            if (useSearch && userMessage) {
-                setStatus('Searching academic & legal databases…');
-                const searchResults = await _searchAcademic(userMessage);
-                webSearchContext = _buildAcademicContext(searchResults);
-                if (!webSearchContext) setStatus('');
-            }
-
-            const directiveLine = s.directive
-                ? `\nPhD Research Directive: "${s.directive}"`
-                : '\nNo specific research directive set — apply general doctoral-level legal supervision across all areas of law.';
-
-            const extContext = localStorage.getItem(SK_EXT_CONTEXT) || '';
-            const relayCtx = (typeof _relayContext !== 'undefined' && _relayContext) ? _relayContext : '';
-            const extContextSection = (extContext || relayCtx)
-                ? `\n\nEXTERNAL RESEARCH CONTEXT (from student's Gemini Gem / Claude Project):\n${extContext}${relayCtx ? '\n\n--- RELAYED FROM EXTERNAL AI ---\n' + relayCtx : ''}`
-                : '';
-
-            const modeInstruction = MODES[currentMode]?.instruction || MODES.supervise.instruction;
-
-            const systemPrompt = `You are GURU, an AI PhD supervisor specialising in law at doctoral level.
-${directiveLine}
-${extContextSection}
-${vaultContext}
-${useSearch ? 'IMPORTANT: When the user message contains a section marked PRE-FETCHED WEB SEARCH RESULTS, those are real current web results retrieved by an automated tool. Use them directly in your response and cite with OSCOLA URLs. Never say you cannot access the internet.' : ''}
-
-Current supervision mode: ${(MODES[currentMode]?.label || 'Supervise').toUpperCase()}
-Mode instruction: ${modeInstruction}
-
-Your supervision and communication style:
-- Write as a senior legal practitioner and academic: precise, authoritative, formally structured
-- Use the register of a QC or senior solicitor drafting an opinion or a High Court judgment — not a chatbot
-- Structure responses with clear headings, numbered points where appropriate, and explicit signposting ("It is submitted that...", "On the authorities...", "The position at common law is...")
-- Cite all sources in OSCOLA 4th Edition inline; never summarise a case without giving its citation
-- Rigorous and analytically demanding — challenge unsupported propositions, identify gaps in reasoning
-- Apply the Socratic method selectively for theoretical questions; give direct answers when the student needs clarity
-- Actively draw on the student's Research Library and Reference Library — quote directly, cite by title, cross-reference sources
-- When a source in the library is directly relevant, name it explicitly and extract the specific passage that applies
-- When analysing PDFs or images, focus on legal argument, footnotes, and doctrinal structure
-- Never use informal language, hedging filler phrases ("I think", "it seems like"), or bullet-point padding
-${references.length > 0 ? `\nSTUDENT'S REFERENCE LIBRARY (${references.length} saved — cite these precisely when relevant):\n${references.map(r => {
-    const parts = [`[${(r.type||'ref').toUpperCase()}]`];
-    if (r.parties || r.title) parts.push(r.parties || r.title);
-    if (r.authors)            parts.push('by ' + r.authors);
-    if (r.year)               parts.push('(' + r.year + ')');
-    if (r.court)              parts.push('— ' + r.court);
-    if (r.lawReport)          parts.push(r.lawReport);
-    if (r.journal)            parts.push(r.journal);
-    if (r.oscola_fn)          parts.push('| fn: ' + r.oscola_fn);
-    if (r.oscola_bib)         parts.push('| bib: ' + r.oscola_bib);
-    return parts.join(' ');
-}).join('\n')}` : ''}
-
-${useSearch ? `WEB SEARCH IS ACTIVE — YOU MUST search the web before answering. Do not rely on training knowledge for current information.
-- Search for recent cases, statutes, and academic papers directly relevant to the student's query.
-- Prioritise sources from 2022 onwards.
-- Cite every found source with full URL and OSCOLA formatting.
-- If you cannot find something via search, say so explicitly rather than using training data.` : ''}
-
-${useNativeSearch
-    ? `Respond in clear academic markdown prose. Include a brief reasoning note at the start prefixed with "**Reasoning:**". Do not use JSON format.`
-    : `Always respond with valid JSON using exactly this structure:
-{
-  "thought": "Your private reasoning process — how you are approaching this, what you notice, what angle you will take. Be candid. This is shown to the student as collapsible reasoning.",
-  "text": "Your main doctoral supervision response here. Use markdown formatting — headers, bold, lists — as appropriate for clarity.",
-  "socratic": "A Socratic probe ONLY when the student made a challengeable claim, left a key premise unexamined, or has a significant reasoning gap. Return null for factual questions, file analysis, greetings, or clarifications."
-}
-
-Return ONLY the JSON. No markdown fences. No preamble.`}`;
-
-            const context = chatHistory.slice(-s.context).map(m => ({
-                role:  m.role === 'guru' ? 'model' : 'user',
-                parts: [{ text: m.text }]
-            }));
-
-            const userParts = [];
-            // Inject search results into the USER turn — models use conversation context
-            // far more reliably than system prompt for RAG. Frame it so the model
-            // cannot claim it "cannot search" — the results are already in front of it.
-            const userText = webSearchContext
-                ? `${userMessage || ''}\n\n--- PRE-FETCHED WEB SEARCH RESULTS ---\nThe following results were automatically retrieved from the live web before this response. They are real, current sources. Incorporate them directly into your answer — do NOT say you cannot access the internet:\n${webSearchContext}\n--- END OF WEB SEARCH RESULTS ---`
-                : (userMessage || '');
-            if (userText) userParts.push({ text: userText });
-            files.forEach(f => {
-                if (f.sheetText) {
-                    userParts.push({ text: f.sheetText });
-                } else if (f.base64) {
-                    userParts.push({ inlineData: { mimeType: f.mimeType, data: f.base64 } });
-                }
-            });
-            if (userParts.length === 0) userParts.push({ text: 'Analyse the attached document.' });
-
-            const genConfig = { temperature: s.temp, maxOutputTokens: 8192 };
-            // Only remove JSON constraint when using native Google grounding (Tavily injects plain text context, JSON stays)
-            if (!useNativeSearch) genConfig.responseMimeType = 'application/json';
             const payload = {
-                system_instruction: { parts: [{ text: systemPrompt }] },
-                contents: [...context, { role: 'user', parts: userParts }],
-                generationConfig: genConfig,
-                ...(useNativeSearch ? { tools: [{ googleSearch: {} }] } : {})
+                system_instruction: { parts: [{ text: _buildSystemPrompt(s, toolResultsText) }] },
+                contents: [...histParts, { role: 'user', parts: userParts }],
+                generationConfig: { temperature: s.temp, maxOutputTokens: maxTokens, responseMimeType: 'application/json' }
             };
 
             let delay = 1000;
             for (let attempt = 0; attempt < 5; attempt++) {
                 try {
-                    setStatus(attempt === 0 ? (useSearch ? 'Searching the web…' : 'Consulting Gemini...') : `Retry ${attempt}...`);
-                    const _ctrl = new AbortController();
-                    const _timer = setTimeout(() => _ctrl.abort(), 90000); // 90s hard timeout
+                    setStatus(attempt === 0 ? (toolResultsText ? 'Synthesising…' : 'Consulting Gemini...') : `Retry ${attempt}...`);
+                    const _ctrl  = new AbortController();
+                    const _timer = setTimeout(() => _ctrl.abort(), 90000);
                     let resp;
                     try {
-                        resp = await fetch(url, {
+                        resp = await fetch(`${baseUrl}${synthEndpoint}`, {
                             method:  'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body:    JSON.stringify(payload),
                             signal:  _ctrl.signal
                         });
-                    } finally {
-                        clearTimeout(_timer);
-                    }
+                    } finally { clearTimeout(_timer); }
 
                     if (!resp.ok) {
                         const err = await resp.json().catch(() => ({}));
@@ -3343,34 +3385,22 @@ Return ONLY the JSON. No markdown fences. No preamble.`}`;
                     }
 
                     let rawText;
-
                     if (streaming) {
-                        // Stream the response and accumulate
                         const reader  = resp.body.getReader();
                         const decoder = new TextDecoder();
-                        let accumulated       = '';
-                        let charCount         = 0;
-                        let sseBuffer         = '';
-                        let _lastStreamStatus = 0;
-
+                        let accumulated = '', charCount = 0, sseBuffer = '', _lastSS = 0;
                         while (true) {
                             const { done, value } = await reader.read();
                             if (done) break;
                             sseBuffer += decoder.decode(value, { stream: true });
-                            const lines = sseBuffer.split('\n');
-                            sseBuffer   = lines.pop(); // keep incomplete last line
+                            const lines = sseBuffer.split('\n'); sseBuffer = lines.pop();
                             for (const line of lines) {
                                 if (!line.startsWith('data: ')) continue;
-                                const jsonStr = line.slice(6).trim();
-                                if (!jsonStr || jsonStr === '[DONE]') continue;
-                                try {
-                                    const parsed  = JSON.parse(jsonStr);
-                                    const partText = parsed?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-                                    accumulated += partText;
-                                    charCount   += partText.length;
-                                } catch(e) { /* partial SSE chunk, skip */ }
+                                const js = line.slice(6).trim();
+                                if (!js || js === '[DONE]') continue;
+                                try { const p = JSON.parse(js); const t = p?.candidates?.[0]?.content?.parts?.[0]?.text || ''; accumulated += t; charCount += t.length; } catch(e) {}
                             }
-                            if (Date.now() - _lastStreamStatus > 150) { _lastStreamStatus = Date.now(); setStatus(`GURU IS COMPOSING... [${charCount} chars]`); }
+                            if (Date.now() - _lastSS > 150) { _lastSS = Date.now(); setStatus(`GURU IS COMPOSING... [${charCount} chars]`); }
                         }
                         if (!accumulated) throw new Error('Empty stream response');
                         rawText = accumulated;
@@ -3378,34 +3408,14 @@ Return ONLY the JSON. No markdown fences. No preamble.`}`;
                         const data = await resp.json();
                         rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
                         if (!rawText) throw new Error('Empty response');
-
-                        // Extract Google Search grounding sources → bibliography sidebar
-                        if (useNativeSearch) {
-                            const gMeta = data?.candidates?.[0]?.groundingMetadata;
-                            if (gMeta?.groundingChunks?.length) {
-                                gMeta.groundingChunks.forEach(chunk => {
-                                    const uri   = chunk.web?.uri;
-                                    const title = chunk.web?.title || uri;
-                                    if (uri && !biblioSources.find(s => s.key === uri)) {
-                                        biblioSources.push({ type: 'url', key: uri, url: uri, text: title, saved: false, fromSearch: true });
-                                    }
-                                });
-                            }
-                            if (gMeta?.webSearchQueries?.length) {
-                                setStatus(`Searched: "${gMeta.webSearchQueries.slice(0,2).join('", "')}"`);
-                                setTimeout(() => setStatus(''), 5000);
-                            }
-                        }
                     }
 
                     const clean = rawText.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
                     let parsed;
-                    try {
-                        parsed = JSON.parse(clean);
-                    } catch(e) {
-                        const textMatch = clean.match(/"text"\s*:\s*"([\s\S]*?)(?:"|$)/);
-                        const extracted = textMatch ? textMatch[1].replace(/\\n/g, '\n').replace(/\\"/g, '"') : rawText;
-                        parsed = { text: extracted, thought: null, socratic: null };
+                    try { parsed = JSON.parse(clean); }
+                    catch(e) {
+                        const m = clean.match(/"text"\s*:\s*"([\s\S]*?)(?:"|$)/);
+                        parsed = { text: m ? m[1].replace(/\\n/g,'\n').replace(/\\"/g,'"') : rawText, thought: null, socratic: null };
                     }
                     return { text: parsed.text || rawText, thought: parsed.thought || null, socratic: parsed.socratic || null };
 
@@ -3416,189 +3426,101 @@ Return ONLY the JSON. No markdown fences. No preamble.`}`;
             }
         }
 
+        // ============================================================
+        // BRAIN — Claude agentic loop (with prompt caching)
+        // ============================================================
         async function callBrainClaude(userMessage, files = []) {
             const claudeKey = localStorage.getItem(SK_CLAUDE_KEY);
             if (!claudeKey) return { text: 'No Claude API key configured. Go to Config tab and add your Anthropic key.', thought: null, socratic: null };
 
             const s              = getSettings();
             const model          = getModelForMode('chat');
-            const useClaudeSearch = _searchMode;
             const streaming      = isPro();
+            const complexity     = _classifyQuery(userMessage);
+            const maxTokens      = _MAX_TOKENS[complexity];
+            const useClaudeSearch = false; // native Claude search disabled — tool loop handles web search
 
-            // Build the same vault context as callBrain
-            let vaultContext = '';
-            if (vaultEntries.length > 0) {
-                const manifest = vaultEntries.map((e, i) =>
-                    `  ${i + 1}. [${(e.type || 'doc').toUpperCase()}] ${e.title}`
-                ).join('\n');
-                const STOP = new Set(['the','a','an','is','it','in','on','at','to','of','and','or','but',
-                    'for','with','as','by','from','that','this','are','was','be','have','has','had',
-                    'will','would','can','could','should','do','did','not','no','i','my','me','we',
-                    'our','you','your','what','how','why','when','where','who']);
-                const qWords = userMessage
-                    ? [...new Set((userMessage.toLowerCase().match(/\b\w{3,}\b/g) || []))].filter(w => !STOP.has(w))
-                    : [];
-                const scored = vaultEntries.map(e => {
-                    const body     = (e.title + ' ' + e.content).toLowerCase();
-                    const uniScore = qWords.reduce((acc, w) => acc + (body.match(new RegExp(`\\b${w}\\b`, 'g')) || []).length, 0);
-                    const bigrams  = qWords.flatMap((w, i) => i < qWords.length - 1 ? [`${w} ${qWords[i+1]}`] : []);
-                    const biScore  = bigrams.reduce((acc, b) => acc + (body.includes(b) ? 3 : 0), 0);
-                    return { e, score: uniScore + biScore };
-                }).sort((a, b) => b.score - a.score);
-                const CHAR_BUDGET = 24000;
-                const totalChars  = vaultEntries.reduce((s, e) => s + e.content.length, 0);
-                const toInclude   = totalChars <= CHAR_BUDGET
-                    ? vaultEntries
-                    : scored.filter(({ score }) => score > 0).slice(0, 8).map(({ e }) => e);
-                const entryBlocks = toInclude.map(e => {
-                    const raw  = e.content.slice(0, 2000);
-                    const cut  = raw.length < e.content.length;
-                    const snip = cut ? (raw.lastIndexOf('. ') > 500 ? raw.slice(0, raw.lastIndexOf('. ') + 1) : raw) + '…' : raw;
-                    return `--- SOURCE: ${e.title} [${(e.type||'doc').toUpperCase()}] ---\n${snip}`;
-                }).join('\n\n');
-                vaultContext = `\n\nRESEARCH LIBRARY (${vaultEntries.length} source${vaultEntries.length !== 1 ? 's' : ''} on file):\n${manifest}\n\nSOURCE CONTENT FOR THIS QUERY:\n${entryBlocks}`;
-            }
+            const CLAUDE_HEADERS = {
+                'Content-Type': 'application/json',
+                'x-api-key': claudeKey,
+                'anthropic-version': '2023-06-01',
+                'anthropic-beta': 'prompt-caching-2024-07-31',
+                'anthropic-dangerous-allow-browser': 'true'
+            };
 
-            // Search OpenAlex + CrossRef for academic literature
-            let webSearchContext = '';
-            const useNativeClaudeSearch = false; // always use academic search
-            if (useClaudeSearch && userMessage) {
-                setStatus('Searching academic & legal databases…');
-                const searchResults = await _searchAcademic(userMessage);
-                webSearchContext = _buildAcademicContext(searchResults);
-                if (!webSearchContext) setStatus('');
-            }
+            // Compressed history in Claude format
+            const compressed     = _buildCompressedHistory(chatHistory, s.context);
+            let claudeMessages   = compressed.map(m => ({ role: m.role === 'guru' ? 'assistant' : 'user', content: m.text }));
 
-            const directiveLine = s.directive
-                ? `\nPhD Research Directive: "${s.directive}"`
-                : '\nNo specific research directive set — apply general doctoral-level legal supervision across all areas of law.';
-            const extContext = localStorage.getItem(SK_EXT_CONTEXT) || '';
-            const relayCtx = (typeof _relayContext !== 'undefined' && _relayContext) ? _relayContext : '';
-            const extContextSection = (extContext || relayCtx)
-                ? `\n\nEXTERNAL RESEARCH CONTEXT (from student's Gemini Gem / Claude Project):\n${extContext}${relayCtx ? '\n\n--- RELAYED FROM EXTERNAL AI ---\n' + relayCtx : ''}`
-                : '';
-            const modeInstruction = MODES[currentMode]?.instruction || MODES.supervise.instruction;
-
-            const systemPrompt = `You are GURU, an AI PhD supervisor specialising in law at doctoral level.
-${directiveLine}
-${extContextSection}
-${vaultContext}
-${useClaudeSearch ? 'IMPORTANT: When the user message contains a section marked PRE-FETCHED WEB SEARCH RESULTS, those are real current web results retrieved by an automated tool. Use them directly and cite with OSCOLA URLs. Never say you cannot access the internet.' : ''}
-
-Current supervision mode: ${(MODES[currentMode]?.label || 'Supervise').toUpperCase()}
-Mode instruction: ${modeInstruction}
-
-Your supervision and communication style:
-- Write as a senior legal practitioner and academic: precise, authoritative, formally structured
-- Use the register of a QC or senior solicitor drafting an opinion or a High Court judgment — not a chatbot
-- Structure responses with clear headings, numbered points where appropriate, and explicit signposting ("It is submitted that...", "On the authorities...", "The position at common law is...")
-- Cite all sources in OSCOLA 4th Edition inline; never summarise a case without giving its citation
-- Rigorous and analytically demanding — challenge unsupported propositions, identify gaps in reasoning
-- Apply the Socratic method selectively for theoretical questions; give direct answers when the student needs clarity
-- Actively draw on the student's Research Library and Reference Library — quote directly, cite by title, cross-reference sources
-- When a source in the library is directly relevant, name it explicitly and extract the specific passage that applies
-- When analysing PDFs or images, focus on legal argument, footnotes, and doctrinal structure
-- Never use informal language, hedging filler phrases ("I think", "it seems like"), or bullet-point padding
-${references.length > 0 ? `\nSTUDENT'S REFERENCE LIBRARY (${references.length} saved — cite these precisely when relevant):\n${references.map(r => {
-    const parts = [`[${(r.type||'ref').toUpperCase()}]`];
-    if (r.parties || r.title) parts.push(r.parties || r.title);
-    if (r.authors)            parts.push('by ' + r.authors);
-    if (r.year)               parts.push('(' + r.year + ')');
-    if (r.court)              parts.push('— ' + r.court);
-    if (r.lawReport)          parts.push(r.lawReport);
-    if (r.journal)            parts.push(r.journal);
-    if (r.oscola_fn)          parts.push('| fn: ' + r.oscola_fn);
-    if (r.oscola_bib)         parts.push('| bib: ' + r.oscola_bib);
-    return parts.join(' ');
-}).join('\n')}` : ''}
-
-Always respond with valid JSON using exactly this structure:
-{
-  "thought": "Your private reasoning process — how you are approaching this, what you notice, what angle you will take. Be candid. This is shown to the student as collapsible reasoning.",
-  "text": "Your main doctoral supervision response here. Use markdown formatting — headers, bold, lists — as appropriate for clarity.",
-  "socratic": "A Socratic probe ONLY when the student made a challengeable claim, left a key premise unexamined, or has a significant reasoning gap. Return null for factual questions, file analysis, greetings, or clarifications."
-}
-
-Return ONLY the JSON. No markdown fences. No preamble.`;
-
-            // Build message history in Claude format
-            let claudeMessages = chatHistory.slice(-s.context).map(m => ({
-                role:    m.role === 'guru' ? 'assistant' : 'user',
-                content: m.text
-            }));
-
-            // Build the new user message content array — inject search into user turn
+            // User content (files + message)
             const userContent = [];
-            const claudeUserText = webSearchContext
-                ? `${userMessage || ''}\n\n--- PRE-FETCHED WEB SEARCH RESULTS ---\nThe following results were automatically retrieved from the live web. They are real, current sources. Incorporate them directly — do NOT say you cannot access the internet:\n${webSearchContext}\n--- END OF WEB SEARCH RESULTS ---`
-                : (userMessage || '');
-            if (claudeUserText) userContent.push({ type: 'text', text: claudeUserText });
+            if (userMessage) userContent.push({ type: 'text', text: userMessage });
             files.forEach(f => {
-                if (f.sheetText) {
-                    userContent.push({ type: 'text', text: f.sheetText });
-                } else if (f.mimeType && f.mimeType.startsWith('image/')) {
-                    userContent.push({ type: 'image', source: { type: 'base64', media_type: f.mimeType, data: f.base64 } });
-                } else if (f.base64) {
-                    userContent.push({ type: 'text', text: `[Attached file: ${f.mimeType || 'document'} — binary content omitted]` });
-                }
+                if (f.sheetText) userContent.push({ type: 'text', text: f.sheetText });
+                else if (f.mimeType?.startsWith('image/')) userContent.push({ type: 'image', source: { type: 'base64', media_type: f.mimeType, data: f.base64 } });
+                else if (f.base64) userContent.push({ type: 'text', text: `[Attached file: ${f.mimeType || 'document'} — binary content omitted]` });
             });
-            if (userContent.length === 0) userContent.push({ type: 'text', text: 'Analyse the attached document.' });
+            if (!userContent.length) userContent.push({ type: 'text', text: 'Analyse the attached document.' });
 
             claudeMessages.push({ role: 'user', content: userContent });
+            claudeMessages = _mergeClaudeMessages(claudeMessages);
 
-            // Ensure no consecutive same-role messages (merge if needed)
-            const merged = [];
-            for (const msg of claudeMessages) {
-                if (merged.length > 0 && merged[merged.length - 1].role === msg.role) {
-                    const prev = merged[merged.length - 1];
-                    if (typeof prev.content === 'string' && typeof msg.content === 'string') {
-                        prev.content += '\n\n' + msg.content;
-                    } else {
-                        const prevArr = typeof prev.content === 'string' ? [{ type: 'text', text: prev.content }] : prev.content;
-                        const currArr = typeof msg.content === 'string'  ? [{ type: 'text', text: msg.content  }] : msg.content;
-                        prev.content  = [...prevArr, ...currArr];
+            // ── Phase 1: tool dispatch ────────────────────────────────────
+            let toolResultsText = '';
+            const canUseTool = complexity !== 'simple' && (vaultEntries.length > 0 || _searchMode);
+            if (canUseTool) {
+                try {
+                    setStatus('Planning…');
+                    const dispatchResp = await fetch('https://api.anthropic.com/v1/messages', {
+                        method: 'POST',
+                        headers: CLAUDE_HEADERS,
+                        body: JSON.stringify({
+                            model,
+                            max_tokens: 512,
+                            system: [{ type: 'text', text: _buildSystemPrompt(s, ''), cache_control: { type: 'ephemeral' } }],
+                            tools: _TOOLS_CLAUDE,
+                            messages: claudeMessages
+                        })
+                    });
+                    if (dispatchResp.ok) {
+                        const dispatchData = await dispatchResp.json();
+                        const toolUses     = (dispatchData.content || []).filter(b => b.type === 'tool_use');
+                        if (toolUses.length) {
+                            setStatus(`Running ${toolUses.length} tool${toolUses.length > 1 ? 's' : ''}…`);
+                            const results = await Promise.all(
+                                toolUses.map(b => _executeAgentTool(b.name, b.input)
+                                    .then(r => `[${b.name}: "${b.input.query || ''}"]\n${r}`))
+                            );
+                            toolResultsText = results.join('\n\n');
+                        }
                     }
-                } else {
-                    merged.push({ role: msg.role, content: msg.content });
-                }
+                } catch(e) { /* tool dispatch failure — continue without tools */ }
             }
 
-            // Claude requires the first message to be from 'user'
-            if (merged.length === 0 || merged[0].role !== 'user') {
-                merged.unshift({ role: 'user', content: 'Begin.' });
-            }
-
+            // ── Phase 2: synthesis ────────────────────────────────────────
             const payload = {
                 model,
-                max_tokens: 8192,
-                system:   systemPrompt,
-                messages: merged,
-                ...(streaming       ? { stream: true } : {}),
-                ...(useNativeClaudeSearch ? { tools: [{ type: 'web_search_20250305', name: 'web_search', max_uses: 3 }] } : {})
+                max_tokens: maxTokens,
+                system: [{ type: 'text', text: _buildSystemPrompt(s, toolResultsText), cache_control: { type: 'ephemeral' } }],
+                messages: claudeMessages,
+                ...(streaming ? { stream: true } : {})
             };
 
             let delay = 1000;
             for (let attempt = 0; attempt < 5; attempt++) {
                 try {
-                    setStatus(attempt === 0 ? (useClaudeSearch ? 'Searching the web…' : 'Consulting Claude...') : `Retry ${attempt}...`);
+                    setStatus(attempt === 0 ? (toolResultsText ? 'Synthesising…' : 'Consulting Claude...') : `Retry ${attempt}...`);
                     const _ctrl  = new AbortController();
                     const _timer = setTimeout(() => _ctrl.abort(), 90000);
                     let resp;
                     try {
                         resp = await fetch('https://api.anthropic.com/v1/messages', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'x-api-key': claudeKey,
-                                'anthropic-version': '2023-06-01',
-                                'anthropic-dangerous-allow-browser': 'true'
-                            },
+                            headers: CLAUDE_HEADERS,
                             body:   JSON.stringify(payload),
                             signal: _ctrl.signal
                         });
-                    } finally {
-                        clearTimeout(_timer);
-                    }
+                    } finally { clearTimeout(_timer); }
 
                     if (!resp.ok) {
                         const err = await resp.json().catch(() => ({}));
@@ -3613,9 +3535,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                     if (streaming) {
                         const reader  = resp.body.getReader();
                         const decoder = new TextDecoder();
-                        let accumulated       = '';
-                        let charCount         = 0;
-                        let sseBuffer         = '';
+                        let accumulated = '', charCount = 0, sseBuffer = '';
                         let _lastStreamStatus = 0;
 
                         while (true) {
