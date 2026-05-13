@@ -2470,6 +2470,13 @@
             const btn = document.getElementById('mode-btn');
             const isOpen = pop.classList.toggle('open');
             btn.classList.toggle('open', isOpen);
+            if (isOpen) {
+                // Flip upward if not enough space below
+                const rect = btn.getBoundingClientRect();
+                const spaceBelow = window.innerHeight - rect.bottom;
+                pop.style.top    = spaceBelow < 260 ? 'auto' : 'calc(100% + 8px)';
+                pop.style.bottom = spaceBelow < 260 ? 'calc(100% + 8px)' : 'auto';
+            }
         }
 
         function selectMode(mode, el) {
