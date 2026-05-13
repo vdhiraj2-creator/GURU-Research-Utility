@@ -38,29 +38,26 @@
     <!-- FIREBASE CLOUD SYNC (Pro — hash-routed, no auth) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg:          #111111;
-            --surface:     #181818;
-            --surface2:    #202020;
-            --border:      #2a2a2a;
-            --text-1:      #edeae5;
-            --text-2:      #88837d;
-            --text-3:      #48453f;
-            --accent:      #1fb896;
-            --accent-dim:  rgba(31,184,150,0.08);
-            --socratic:    #a78bfa;
-            --vault:       #3b82f6;
-            --vault-dim:   rgba(59,130,246,0.08);
-            --thought:     #171717;
-            --thought-text:#6b6760;
-            /* legacy aliases */
-            --bg:          #111111;
-            --card:        #181818;
-            --pulse:       #1fb896;
-            --pulse-dim:   rgba(31,184,150,0.08);
-            --border:      #2a2a2a;
+            --bg:       #111111;
+            --surface:  #181818;
+            --surface2: #202020;
+            --border:   #2a2a2a;
+            --text-1:   #edeae5;
+            --text-2:   #88837d;
+            --text-3:   #48453f;
+            --accent:   #1fb896;
+            --accent-dim: rgba(31,184,150,0.08);
+            --socratic: #a78bfa;
+            --vault:    #3b82f6;
+            --vault-dim: rgba(59,130,246,0.08);
+            --thought:  #171717;
+            --thought-text: #6b6760;
+            --card:     #181818;
+            --pulse:    #1fb896;
+            --pulse-dim: rgba(31,184,150,0.08);
         }
 
         /* ── LIGHT MODE ── */
@@ -93,7 +90,7 @@
         body.light-mode .status-line { color: #475569; }
         body.light-mode .empty-state { color: #94a3b8; }
         body.light-mode .bib-empty { color: #94a3b8; }
-        body.light-mode .guru-letter { color: #1a2535; text-shadow: 0 0 1px rgba(0,122,94,0.3), 0 0 6px rgba(0,122,94,0.2); }
+        body.light-mode .guru-letter { color: #1a2535; text-shadow: none; }
         body.light-mode .guru-dot { color: var(--pulse); }
         body.light-mode #guru-voice-btn { border-color: var(--border); color: #475569; }
         body.light-mode #guru-voice-btn.active { color: var(--pulse); border-color: var(--pulse); }
@@ -132,7 +129,7 @@
         #theme-toggle:hover { border-color: var(--pulse); color: var(--pulse); }
         * { box-sizing: border-box; }
         body {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             background-color: var(--bg);
             color: var(--text-1);
             margin: 0;
@@ -158,8 +155,8 @@
         header {
             background: var(--bg);
             border-bottom: 1px solid var(--border);
-            padding: 0 1.75rem;
-            height: 54px;
+            padding: 0 2rem;
+            height: 52px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -178,32 +175,32 @@
             line-height: 1;
         }
         .guru-letter {
-            font-family: 'Syne', sans-serif;
-            font-size: 17px;
-            font-weight: 800;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
             color: var(--text-1);
-            letter-spacing: -0.01em;
+            letter-spacing: -0.02em;
             -webkit-font-smoothing: antialiased;
         }
         .guru-dot {
-            font-family: 'Syne', sans-serif;
-            font-size: 17px;
-            font-weight: 800;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 15px;
+            font-weight: 700;
             color: var(--accent);
             display: inline-block;
             line-height: 1;
-            opacity: 0.9;
+            opacity: 1;
         }
         nav { display: flex; align-items: center; gap: 0.15rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 1; min-width: 0; }
         nav::-webkit-scrollbar { display: none; }
         nav button {
-            font-family: 'Syne', sans-serif;
-            font-size: 12px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
             font-weight: 500;
             letter-spacing: 0;
             text-transform: none;
-            padding: 0.35rem 0.85rem;
-            border-radius: 6px;
+            padding: 0.4rem 1rem;
+            border-radius: 7px;
             background: transparent;
             color: var(--text-2);
             border: none;
@@ -211,7 +208,7 @@
             transition: all 0.15s;
             white-space: nowrap;
         }
-        nav button.active { color: var(--text-1); background: var(--surface2); }
+        nav button.active { color: var(--text-1); background: var(--surface2); border: none; }
         nav button.vault-active { color: var(--vault); background: var(--vault-dim); }
         nav button:hover:not(.active):not(.vault-active) { color: var(--text-1); background: var(--surface); }
         #sync-dot {
@@ -222,8 +219,8 @@
             transition: background 0.3s;
             flex-shrink: 0;
         }
-        #sync-dot.active { background: var(--accent); }
-        #sync-dot.error  { background: #ef4444; }
+        #sync-dot.active { background: var(--accent); box-shadow: none; }
+        #sync-dot.error  { background: #ef4444; box-shadow: none; }
 
         /* ============================================================
            SCROLL + VIEWS
@@ -239,7 +236,7 @@
         ============================================================ */
         .chat-wrap { max-width: 100%; margin: 0; padding: 2rem 2.5rem 1rem; }
         .bubble {
-            padding: 1.75rem 2.25rem;
+            padding: 1.75rem 2.5rem;
             line-height: 1.85;
             font-size: 15px;
             border: none;
@@ -258,20 +255,20 @@
         }
         .bubble.system {
             background: transparent;
-            font-family: 'Space Mono', monospace;
-            font-size: 9px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 10px;
             color: var(--text-3);
             text-align: center;
-            padding: 0.5rem 2.25rem;
-            letter-spacing: 0.04em;
+            padding: 0.5rem 2.5rem;
+            letter-spacing: 0;
         }
         .role-tag {
-            font-family: 'Syne', sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 500;
             letter-spacing: 0;
             text-transform: none;
-            margin-bottom: 0.7rem;
+            margin-bottom: 0.6rem;
         }
         .bubble.guru .role-tag  { color: var(--accent); }
         .bubble.user .role-tag  { color: var(--text-2); }
@@ -292,10 +289,10 @@
         }
         .thought-block:hover { border-color: #3a3a3a; }
         .thought-block::before {
-            content: 'Reasoning · click to expand';
+            content: 'Reasoning';
             display: block;
-            font-family: 'Syne', sans-serif;
-            font-size: 10px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 11px;
             font-weight: 500;
             letter-spacing: 0;
             color: var(--text-3);
@@ -318,20 +315,21 @@
             font-size: 13px;
         }
         .socratic-panel::before {
-            content: 'SUPERVISOR PROBE';
+            content: 'Supervisor probe';
             display: block;
-            font-family: 'Space Mono', monospace;
-            font-size: 7px;
-            letter-spacing: 0.15em;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0;
             font-style: normal;
-            opacity: 0.5;
+            opacity: 0.6;
             margin-bottom: 0.4rem;
         }
 
         .thinking {
             display: flex; align-items: center; gap: 6px;
             padding: 1rem 1.5rem;
-            font-family: 'Space Mono', monospace; font-size: 10px;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 10px;
             color: var(--pulse); opacity: 0.5;
         }
         .thinking span { width: 4px; height: 4px; background: var(--pulse); border-radius: 50%; animation: blink 1.2s infinite; }
@@ -349,8 +347,8 @@
             flex-shrink: 0;
         }
         #directive-strip {
-            padding: 0.3rem 2.25rem;
-            font-family: 'Syne', sans-serif;
+            padding: 0.3rem 2rem;
+            font-family: 'Inter', system-ui, sans-serif;
             font-size: 11px;
             font-weight: 500;
             color: var(--text-3);
@@ -360,7 +358,7 @@
             text-overflow: ellipsis;
         }
         #directive-strip span { color: var(--text-3); margin-right: 0.5rem; }
-        #input-inner-pad { padding: 1rem 2.5rem 1.25rem; }
+        #input-inner-pad { padding: 1.25rem 2rem 1.5rem; }
         body.light-mode #input-area {
             background: rgba(240,244,248,0.98);
             border-top-color: var(--border);
@@ -388,22 +386,22 @@
         .chip .chip-label { font-size: 7px; padding: 2px; text-align: center; word-break: break-all; }
         .input-box {
             display: flex; align-items: center; gap: 8px;
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: 14px; padding: 6px 10px 6px 14px;
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 16px; padding: 8px 12px;
             transition: border-color 0.2s;
         }
-        .input-box:focus-within { border-color: #3a3a3a; }
+        .input-box:focus-within { border-color: #3d3d3d; }
         .clip-btn { background: none; border: none; color: var(--text-3); cursor: pointer; padding: 6px; font-size: 16px; transition: color 0.15s; flex-shrink: 0; }
         .clip-btn:hover { color: var(--text-2); }
         #query-input {
             flex: 1; background: transparent; border: none; outline: none;
-            color: var(--text-1); font-family: 'Syne', sans-serif; font-size: 15px; padding: 11px 4px;
+            color: var(--text-1); font-family: 'Inter', system-ui, sans-serif; font-size: 15px; padding: 10px 6px;
         }
         #query-input::placeholder { color: var(--text-3); }
         #exec-btn {
             background: var(--accent); color: #111; border: none;
-            padding: 9px 20px; border-radius: 10px;
-            font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+            padding: 10px 22px; border-radius: 11px;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 13px; font-weight: 600;
             letter-spacing: 0; cursor: pointer;
             white-space: nowrap; transition: opacity 0.15s;
             flex-shrink: 0;
@@ -414,8 +412,8 @@
         #exec-btn:disabled { background: #0a2018; color: #0f3020; cursor: not-allowed; transform: none; }
         .status-line {
             display: flex; align-items: center; gap: 8px; margin-top: 8px;
-            font-family: 'Space Mono', monospace; font-size: 8px; color: #334155;
-            text-transform: uppercase; letter-spacing: 0.08em; min-height: 18px; transition: color 0.3s;
+            font-family: 'Inter', system-ui, sans-serif; font-size: 11px; color: var(--text-3);
+            letter-spacing: 0; min-height: 18px; transition: color 0.3s;
         }
         .status-line.active { color: var(--pulse); }
         .heartbeat {
@@ -663,40 +661,42 @@
         .bubble.guru .bubble-body {
             font-family: 'EB Garamond', Georgia, serif;
             font-size: 17px;
-            line-height: 1.9;
-            color: var(--text-pri);
+            line-height: 1.95;
+            color: var(--text-1);
         }
         .bubble.guru .bubble-body h1 {
-            font-family: 'Syne', sans-serif;
-            font-size: 19px;
-            font-weight: 700;
-            color: var(--text-pri);
-            letter-spacing: -0.01em;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-1);
+            letter-spacing: 0;
             margin: 1.75rem 0 0.6rem;
             padding-bottom: 0.4rem;
             border-bottom: 1px solid var(--border);
             text-transform: none;
+            text-shadow: none;
             opacity: 1;
         }
         .bubble.guru .bubble-body h2 {
-            font-family: 'Syne', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-pri);
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-2);
             margin: 1.4rem 0 0.5rem;
             text-transform: none;
-            opacity: 1;
             letter-spacing: 0;
+            opacity: 1;
             border-bottom: none;
             padding-bottom: 0;
         }
         .bubble.guru .bubble-body h3 {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            letter-spacing: 0.13em;
-            text-transform: uppercase;
-            color: var(--pulse);
-            opacity: 0.8;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 12px;
+            font-weight: 500;
+            letter-spacing: 0;
+            text-transform: none;
+            color: var(--accent);
+            opacity: 0.85;
             margin: 1.25rem 0 0.45rem;
             border-bottom: none;
             padding-bottom: 0;
@@ -768,38 +768,13 @@
         /* logo-breathe removed — guru-dot-glow carries the animation */
 
 
-        /* Workspace ambient — very subtle radial sweep from top-left */
-        @keyframes ambient-sweep {
-            0%   { opacity: 0; transform: scale(0.9) translate(-5%, -5%); }
-            50%  { opacity: 1; transform: scale(1.05) translate(0%, 0%); }
-            100% { opacity: 0; transform: scale(0.9) translate(-5%, -5%); }
-        }
-        #workspace::after {
-            content: '';
-            position: fixed;
-            top: -200px; left: -200px;
-            width: 600px; height: 600px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(0,255,204,0.028) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            animation: ambient-sweep 8s ease-in-out infinite;
-        }
+        /* Workspace ambient — removed for clean academic aesthetic */
+        #workspace::after { display: none; }
 
-        /* Sync dot — stronger pulse when Firebase sync is active */
-        @keyframes sync-live {
-            0%, 100% { transform: scale(1);   opacity: 0.6; box-shadow: 0 0 4px var(--pulse); }
-            50%       { transform: scale(1.5); opacity: 1;   box-shadow: 0 0 10px var(--pulse), 0 0 20px rgba(0,255,204,0.3); }
-        }
-        #sync-dot.active { animation: sync-live 2s ease-in-out infinite; }
+        /* Sync dot — simple indicator, no glow effects */
 
-        /* GURU bubble — brief glow on entry */
-        @keyframes bubble-arrive {
-            0%   { box-shadow: 0 0 0 0 rgba(0,255,204,0); }
-            30%  { box-shadow: 0 0 16px 2px rgba(0,255,204,0.2); }
-            100% { box-shadow: 0 0 0 0 rgba(0,255,204,0); }
-        }
-        .bubble.guru { animation: fadeUp 0.2s ease-out, bubble-arrive 1.2s ease-out; }
+        /* GURU bubble — simple fade on entry */
+        .bubble.guru { animation: fadeUp 0.2s ease-out; }
 
         /* Thinking indicator — upgraded to a neural cascade */
         @keyframes neural-cascade {
@@ -814,10 +789,9 @@
         .thinking span:nth-child(2) { animation-delay: 0.15s; }
         .thinking span:nth-child(3) { animation-delay: 0.3s;  }
 
-        /* Input box — subtle glow when focused */
+        /* Input box — simple border change on focus */
         .input-box:focus-within {
-            border-color: rgba(0,255,204,0.3);
-            box-shadow: 0 0 12px rgba(0,255,204,0.06);
+            border-color: #3d3d3d;
         }
 
         /* Viva examiner bubble entrance — amber glow */
@@ -1560,7 +1534,7 @@
         <header>
             <div class="logo">
                 <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
-                <span style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.14em;color:var(--pulse);opacity:0.35;margin-left:0.75rem;white-space:nowrap;">// Doctoral Research Intelligence</span>
+                <span style="font-family:'Inter',system-ui,sans-serif;font-size:10px;letter-spacing:0;color:var(--text-3);margin-left:0.75rem;white-space:nowrap;">Doctoral Research Intelligence</span>
                 <span style="font-family:'Space Mono',monospace;font-size:7px;letter-spacing:0.08em;color:#1e293b;margin-left:0.5rem;">v2.0</span>
                 <span id="pro-badge">PRO</span>
                 <button id="guru-voice-btn" onclick="GuruVoice.toggle()" title="Toggle voice output">
@@ -3946,13 +3920,12 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             }
         }
 
-        // Search-augmented tool caller — uses Tavily for real web search, falls back to native AI tools
+        // Search-augmented tool caller — augments prompt with academic search results then calls appropriate provider
         async function _callToolAIWithSearch(prompt, mode = 'tools', searchQuery = '') {
             const provider = getProviderForMode(mode);
             const model    = getModelForMode(mode);
             const s        = getSettings();
 
-            // Academic search via OpenAlex + CrossRef (free, no key)
             let searchContext = '';
             if (searchQuery) {
                 const results = await _searchAcademic(searchQuery);
@@ -3960,6 +3933,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             }
             const augmentedPrompt = searchContext ? prompt + searchContext : prompt;
 
+            // Route to the correct provider — note: NO JSON mode constraint here, tools may return Mermaid/plain text
             if (provider === 'claude') {
                 const key = localStorage.getItem(SK_CLAUDE_KEY);
                 if (!key) throw new Error('No Claude API key configured in Config.');
@@ -3972,6 +3946,13 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                 const data = await resp.json();
                 if (!resp.ok) throw new Error(data?.error?.message || `HTTP ${resp.status}`);
                 return (data?.content || []).filter(b => b.type === 'text').map(b => b.text).join('\n\n');
+            } else if (provider === 'groq') {
+                const key = localStorage.getItem(SK_GROQ_KEY);
+                if (!key) throw new Error('No Groq API key configured in Config.');
+                return _callOAISimple('https://api.groq.com/openai/v1', { Authorization: `Bearer ${key}` }, model, augmentedPrompt, 6000);
+            } else if (provider === 'ollama') {
+                const base = (localStorage.getItem(SK_OLLAMA_URL) || 'http://localhost:11434').replace(/\/$/, '');
+                return _callOAISimple(`${base}/v1`, {}, model, augmentedPrompt, 6000);
             } else {
                 if (!s.key) throw new Error('No Gemini API key configured in Config.');
                 const resp = await fetch(
@@ -3979,7 +3960,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                     { method: 'POST', headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
                           contents: [{ role: 'user', parts: [{ text: augmentedPrompt }] }],
-                          generationConfig: { temperature: 0.3, maxOutputTokens: 6000, responseMimeType: 'application/json' }
+                          generationConfig: { temperature: 0.3, maxOutputTokens: 6000 }
                       }) }
                 );
                 const data = await resp.json();
