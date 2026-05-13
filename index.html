@@ -1940,15 +1940,31 @@
                 </div>
                 <div class="s-group">
                     <label class="s-label">AI Provider</label>
-                    <div style="display:flex;gap:0.5rem;margin-bottom:0.75rem;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
                         <button id="btn-provider-gemini" class="btn-save" style="flex:1;" onclick="setProvider('gemini')">Gemini</button>
                         <button id="btn-provider-claude" class="btn-save" style="flex:1;background:transparent;border:1px solid rgba(167,139,250,0.4);color:#a78bfa;" onclick="setProvider('claude')">Claude</button>
+                        <button id="btn-provider-groq"   class="btn-save" style="flex:1;background:transparent;border:1px solid rgba(251,146,60,0.4);color:#fb923c;" onclick="setProvider('groq')">Groq <span style="font-size:8px;opacity:0.8;">FREE</span></button>
+                        <button id="btn-provider-ollama" class="btn-save" style="flex:1;background:transparent;border:1px solid rgba(148,163,184,0.3);color:#94a3b8;" onclick="setProvider('ollama')">Ollama <span style="font-size:8px;opacity:0.8;">LOCAL</span></button>
                     </div>
                 </div>
                 <div class="s-group" id="cfg-claude-key-group" style="display:none;">
                     <label class="s-label" for="cfg-claude-key">Anthropic API Key</label>
                     <input type="password" id="cfg-claude-key" class="s-input" placeholder="sk-ant-..." autocomplete="off">
                     <p class="s-note" style="margin-top:0.4rem;">Get a key at console.anthropic.com. Stored locally, never transmitted to our servers.</p>
+                </div>
+                <div class="s-group" id="cfg-groq-key-group" style="display:none;">
+                    <label class="s-label" for="cfg-groq-key">Groq API Key &nbsp;<span style="background:rgba(251,146,60,0.15);color:#fb923c;font-size:8px;padding:2px 6px;border-radius:3px;font-family:'Space Mono',monospace;letter-spacing:0.08em;">FREE TIER</span></label>
+                    <input type="password" id="cfg-groq-key" class="s-input" placeholder="gsk_..." autocomplete="off">
+                    <p class="s-note" style="margin-top:0.4rem;">Free at <strong>console.groq.com</strong> — runs Llama 3.3 70B at ~300 tok/s. No credit card required. Stored locally only.</p>
+                </div>
+                <div class="s-group" id="cfg-ollama-group" style="display:none;">
+                    <label class="s-label">Ollama — Local / Offline</label>
+                    <input type="text" id="cfg-ollama-url" class="s-input" placeholder="http://localhost:11434" autocomplete="off" style="margin-bottom:0.4rem;">
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <select id="cfg-ollama-model" class="s-input" style="font-size:10px;padding:4px 8px;flex:1;"></select>
+                        <button onclick="fetchOllamaModels()" class="btn-save" style="font-size:9px;padding:4px 10px;white-space:nowrap;">Detect Models</button>
+                    </div>
+                    <p class="s-note" style="margin-top:0.5rem;">Runs models locally — no internet needed after setup. Requires <strong>Ollama</strong> installed. Best models for this hardware: <code>phi4-mini</code> (fast), <code>llama3.2:8b</code> (balanced).<br>From the web app set <code style="word-break:break-all;">OLLAMA_ORIGINS=https://jarvisphd-80ecb.web.app</code> — or use the desktop build for seamless offline access.</p>
                 </div>
                 <div class="s-group">
                     <label class="s-label">Model per Mode</label>
@@ -2290,8 +2306,11 @@
         const SK_SUP_EMAIL  = 'guru_supervisor_email';
         const SK_SEARCH_KEY  = 'guru_search_key';   // Tavily API key for real web search
         const SK_EXT_CONTEXT = 'guru_ext_context';  // Gemini Gem / Claude Project instructions
-        const SK_PROVIDER    = 'guru_provider';    // 'gemini' | 'claude'
+        const SK_PROVIDER    = 'guru_provider';    // 'gemini' | 'claude' | 'groq' | 'ollama'
         const SK_CLAUDE_KEY  = 'guru_claude_key';
+        const SK_GROQ_KEY    = 'guru_groq_key';
+        const SK_OLLAMA_URL  = 'guru_ollama_url';
+        const SK_MODEL_OLLAMA = 'guru_model_ollama';
         const SK_MODEL_CHAT  = 'guru_model_chat';
         const SK_MODEL_VIVA  = 'guru_model_viva';
         const SK_MODEL_TOOLS = 'guru_model_tools';
@@ -2861,8 +2880,9 @@ ${body}}`;
 
         function getModelForMode(mode) {
             const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            if (provider === 'ollama') return localStorage.getItem(SK_MODEL_OLLAMA) || 'phi4-mini';
             const keyMap   = { chat: SK_MODEL_CHAT, viva: SK_MODEL_VIVA, tools: SK_MODEL_TOOLS, report: SK_MODEL_REPORT };
-            const defaults  = { gemini: 'gemini-2.5-flash', claude: 'claude-sonnet-4-6' };
+            const defaults  = { gemini: 'gemini-2.5-flash', claude: 'claude-sonnet-4-6', groq: 'llama-3.3-70b-versatile' };
             return localStorage.getItem(keyMap[mode] || SK_MODEL_CHAT) || defaults[provider] || 'gemini-2.5-flash';
         }
 
@@ -2889,12 +2909,15 @@ ${body}}`;
             // Keep SK_MODEL in sync with chat model for backward compatibility
             if (chatSel) localStorage.setItem(SK_MODEL, chatSel.value);
 
-            // Save Claude API key if entered (not masked)
+            // Save provider API keys if entered (not masked)
             const claudeKeyEl = document.getElementById('cfg-claude-key');
-            if (claudeKeyEl) {
-                const claudeKeyVal = claudeKeyEl.value.trim();
-                if (claudeKeyVal && !claudeKeyVal.startsWith('•')) localStorage.setItem(SK_CLAUDE_KEY, claudeKeyVal);
-            }
+            if (claudeKeyEl) { const v = claudeKeyEl.value.trim(); if (v && !v.startsWith('•')) localStorage.setItem(SK_CLAUDE_KEY, v); }
+            const groqKeyEl = document.getElementById('cfg-groq-key');
+            if (groqKeyEl) { const v = groqKeyEl.value.trim(); if (v && !v.startsWith('•')) localStorage.setItem(SK_GROQ_KEY, v); }
+            const ollamaUrlEl = document.getElementById('cfg-ollama-url');
+            if (ollamaUrlEl) { const v = ollamaUrlEl.value.trim(); if (v) localStorage.setItem(SK_OLLAMA_URL, v); }
+            const ollamaModelEl = document.getElementById('cfg-ollama-model');
+            if (ollamaModelEl && ollamaModelEl.value) localStorage.setItem(SK_MODEL_OLLAMA, ollamaModelEl.value);
 
             localStorage.setItem(SK_DIR, dir);
             localStorage.setItem(SK_VOICE_NAME, voiceName);
@@ -2990,21 +3013,36 @@ ${body}}`;
 
         function _refreshProviderUI() {
             const p = localStorage.getItem(SK_PROVIDER) || 'gemini';
-            const isGemini = p === 'gemini';
-            const geminiBtn  = document.getElementById('btn-provider-gemini');
-            const claudeBtn  = document.getElementById('btn-provider-claude');
-            const claudeGroup = document.getElementById('cfg-claude-key-group');
-            if (geminiBtn) {
-                geminiBtn.style.background = isGemini ? '' : 'transparent';
-                geminiBtn.style.border     = isGemini ? '' : '1px solid rgba(0,255,204,0.3)';
-                geminiBtn.style.color      = isGemini ? '' : 'var(--pulse)';
-            }
-            if (claudeBtn) {
-                claudeBtn.style.background = !isGemini ? '#7c3aed' : 'transparent';
-                claudeBtn.style.border     = !isGemini ? 'none' : '1px solid rgba(167,139,250,0.4)';
-                claudeBtn.style.color      = !isGemini ? '#fff' : '#a78bfa';
-            }
-            if (claudeGroup) claudeGroup.style.display = isGemini ? 'none' : '';
+            const PROVIDERS = ['gemini', 'claude', 'groq', 'ollama'];
+            const activeStyles = {
+                gemini: { bg: '#00ffcc22', border: '1px solid var(--pulse)', color: 'var(--pulse)' },
+                claude: { bg: '#7c3aed',   border: 'none',                   color: '#fff' },
+                groq:   { bg: '#fb923c22', border: '1px solid #fb923c',       color: '#fb923c' },
+                ollama: { bg: '#334155',   border: '1px solid #94a3b8',       color: '#e2e8f0' },
+            };
+            const inactiveStyles = {
+                gemini: { bg: 'transparent', border: '1px solid rgba(0,255,204,0.3)',   color: 'var(--pulse)' },
+                claude: { bg: 'transparent', border: '1px solid rgba(167,139,250,0.4)', color: '#a78bfa' },
+                groq:   { bg: 'transparent', border: '1px solid rgba(251,146,60,0.4)',  color: '#fb923c' },
+                ollama: { bg: 'transparent', border: '1px solid rgba(148,163,184,0.3)', color: '#94a3b8' },
+            };
+            PROVIDERS.forEach(id => {
+                const btn = document.getElementById(`btn-provider-${id}`);
+                if (!btn) return;
+                const s = id === p ? activeStyles[id] : inactiveStyles[id];
+                btn.style.background = s.bg; btn.style.border = s.border; btn.style.color = s.color;
+            });
+
+            // Show/hide key groups
+            const groups = { claude: 'cfg-claude-key-group', groq: 'cfg-groq-key-group', ollama: 'cfg-ollama-group' };
+            Object.entries(groups).forEach(([id, elId]) => {
+                const el = document.getElementById(elId);
+                if (el) el.style.display = p === id ? '' : 'none';
+            });
+
+            // Model dropdowns — hide for Ollama (uses its own picker)
+            const modelSection = document.querySelector('.s-group:has(#cfg-model-chat)') || document.getElementById('cfg-model-chat')?.closest('.s-group');
+            if (modelSection) modelSection.style.display = p === 'ollama' ? 'none' : '';
 
             const geminiModels = [
                 { value: 'gemini-2.5-flash', label: 'gemini-2.5-flash — Fast' },
@@ -3012,28 +3050,45 @@ ${body}}`;
                 { value: 'gemini-2.0-flash', label: 'gemini-2.0-flash — Light' },
             ];
             const claudeModels = [
-                { value: 'claude-opus-4-7',            label: 'Claude Opus 4.7 — Most capable' },
-                { value: 'claude-sonnet-4-6',           label: 'Claude Sonnet 4.6 — Balanced' },
-                { value: 'claude-haiku-4-5-20251001',   label: 'Claude Haiku 4.5 — Fast' },
+                { value: 'claude-opus-4-7',          label: 'Claude Opus 4.7 — Most capable' },
+                { value: 'claude-sonnet-4-6',         label: 'Claude Sonnet 4.6 — Balanced' },
+                { value: 'claude-haiku-4-5-20251001', label: 'Claude Haiku 4.5 — Fast' },
             ];
-            const models = isGemini ? geminiModels : claudeModels;
-            const modeKeys = [
-                { id: 'cfg-model-chat',   sk: SK_MODEL_CHAT,   def: models[0].value },
-                { id: 'cfg-model-viva',   sk: SK_MODEL_VIVA,   def: models[0].value },
-                { id: 'cfg-model-tools',  sk: SK_MODEL_TOOLS,  def: models[0].value },
-                { id: 'cfg-model-report', sk: SK_MODEL_REPORT, def: models[0].value },
+            const groqModels = [
+                { value: 'llama-3.3-70b-versatile', label: 'Llama 3.3 70B — Best quality' },
+                { value: 'llama-3.1-8b-instant',    label: 'Llama 3.1 8B — Fastest' },
+                { value: 'gemma2-9b-it',             label: 'Gemma 2 9B — Balanced' },
             ];
-            modeKeys.forEach(({ id, sk, def }) => {
-                const sel = document.getElementById(id);
-                if (!sel) return;
-                sel.innerHTML = models.map(m => `<option value="${m.value}">${m.label}</option>`).join('');
-                sel.value = localStorage.getItem(sk) || def;
-            });
+            const modelMap = { gemini: geminiModels, claude: claudeModels, groq: groqModels };
+            const models = modelMap[p] || geminiModels;
 
-            // Restore Claude key field
+            if (p !== 'ollama') {
+                [
+                    { id: 'cfg-model-chat',   sk: SK_MODEL_CHAT   },
+                    { id: 'cfg-model-viva',   sk: SK_MODEL_VIVA   },
+                    { id: 'cfg-model-tools',  sk: SK_MODEL_TOOLS  },
+                    { id: 'cfg-model-report', sk: SK_MODEL_REPORT },
+                ].forEach(({ id, sk }) => {
+                    const sel = document.getElementById(id);
+                    if (!sel) return;
+                    sel.innerHTML = models.map(m => `<option value="${m.value}">${m.label}</option>`).join('');
+                    sel.value = localStorage.getItem(sk) || models[0].value;
+                });
+            }
+
+            // Restore key fields
             const claudeKeyEl = document.getElementById('cfg-claude-key');
-            if (claudeKeyEl) {
-                claudeKeyEl.value = localStorage.getItem(SK_CLAUDE_KEY) ? '••••••••••••••••' : '';
+            if (claudeKeyEl) claudeKeyEl.value = localStorage.getItem(SK_CLAUDE_KEY) ? '••••••••••••••••' : '';
+            const groqKeyEl = document.getElementById('cfg-groq-key');
+            if (groqKeyEl) groqKeyEl.value = localStorage.getItem(SK_GROQ_KEY) ? '••••••••••••••••' : '';
+            const ollamaUrlEl = document.getElementById('cfg-ollama-url');
+            if (ollamaUrlEl && !ollamaUrlEl.value) ollamaUrlEl.value = localStorage.getItem(SK_OLLAMA_URL) || 'http://localhost:11434';
+            const ollamaModelEl = document.getElementById('cfg-ollama-model');
+            if (ollamaModelEl && !ollamaModelEl.options.length) {
+                const stored = localStorage.getItem(SK_MODEL_OLLAMA) || '';
+                ollamaModelEl.innerHTML = stored
+                    ? `<option value="${stored}">${stored}</option>`
+                    : '<option value="">Click "Detect Models" to load</option>';
             }
         }
 
@@ -3176,6 +3231,12 @@ ${body}}`;
               input_schema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } }
         ];
 
+        // OpenAI-compatible tool schema (Groq + Ollama)
+        const _TOOLS_OPENAI = [
+            { type: 'function', function: { name: 'search_vault', description: 'Retrieve content from the student\'s saved research vault. Use when the query references their saved work or research library.', parameters: { type: 'object', properties: { query: { type: 'string', description: 'Search terms' } }, required: ['query'] } } },
+            { type: 'function', function: { name: 'search_web',   description: 'Search academic databases (OpenAlex, CrossRef, PubMed) for cases, statutes, and literature. Use for current developments.', parameters: { type: 'object', properties: { query: { type: 'string', description: 'Academic search query' } }, required: ['query'] } } }
+        ];
+
         // Cached history summary (reset when older portion grows)
         const _histCache = { summary: '', age: 0 };
 
@@ -3294,7 +3355,10 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
         // BRAIN — Gemini agentic loop
         // ============================================================
         async function callBrain(userMessage, files = []) {
-            if ((localStorage.getItem(SK_PROVIDER) || 'gemini') === 'claude') return callBrainClaude(userMessage, files);
+            const _p = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            if (_p === 'claude')  return callBrainClaude(userMessage, files);
+            if (_p === 'groq')    return callBrainGroq(userMessage, files);
+            if (_p === 'ollama')  return callBrainOllama(userMessage, files);
             const s = getSettings();
             if (!s.key) return { text: 'No API key. Go to Config tab.', thought: null, socratic: null };
 
@@ -3603,6 +3667,176 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                     if (attempt === 4) return { text: `Error: ${e.message}`, thought: null, socratic: null };
                     await sleep(delay); delay *= 2;
                 }
+            }
+        }
+
+        // ============================================================
+        // BRAIN — shared OpenAI-compatible engine (Groq + Ollama)
+        // ============================================================
+        async function _callBrainOpenAI(baseUrl, authHeaders, model, userMessage, files = []) {
+            const s          = getSettings();
+            const isOllama   = baseUrl.includes('localhost') || baseUrl.includes('127.0.0.1');
+            const streaming  = isPro() && !isOllama; // Ollama streaming can be unreliable over CORS
+            const complexity = _classifyQuery(userMessage);
+            const maxTokens  = _MAX_TOKENS[complexity];
+            const providerName = isOllama ? 'Ollama' : 'Groq';
+
+            const compressed = _buildCompressedHistory(chatHistory, s.context);
+            const histMsgs   = compressed.map(m => ({ role: m.role === 'guru' ? 'assistant' : 'user', content: m.text }));
+
+            // User content — text + files
+            const userParts = [];
+            if (userMessage) userParts.push({ type: 'text', text: userMessage });
+            files.forEach(f => {
+                if (f.sheetText) userParts.push({ type: 'text', text: f.sheetText });
+                else if (f.base64 && f.mimeType?.startsWith('image/')) userParts.push({ type: 'image_url', image_url: { url: `data:${f.mimeType};base64,${f.base64}` } });
+                else if (f.base64) userParts.push({ type: 'text', text: `[Attached file: ${f.mimeType || 'document'}]` });
+            });
+            const userMsg = !userParts.length
+                ? { role: 'user', content: 'The student has attached a document with no accompanying message. If the content appears to already be saved in their research vault or reference library, acknowledge this clearly and ask what they would like to do with it. Otherwise, summarise the key legal arguments, sources, and doctrinal points.' }
+                : { role: 'user', content: userParts.length === 1 && userParts[0].type === 'text' ? userParts[0].text : userParts };
+
+            const fetchOAI = (body) => fetch(`${baseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', ...authHeaders },
+                body: JSON.stringify(body)
+            });
+
+            // ── Phase 1: tool dispatch ────────────────────────────────
+            let toolResultsText = '';
+            const canUseTool = complexity !== 'simple' && (vaultEntries.length > 0 || _searchMode);
+            if (canUseTool) {
+                try {
+                    setStatus('Planning…');
+                    const dr = await fetchOAI({
+                        model, temperature: s.temp, max_tokens: 512,
+                        messages: [{ role: 'system', content: _buildSystemPrompt(s, '') }, ...histMsgs, userMsg],
+                        tools: _TOOLS_OPENAI, tool_choice: 'auto'
+                    });
+                    if (dr.ok) {
+                        const dd  = await dr.json();
+                        const tcs = dd.choices?.[0]?.message?.tool_calls || [];
+                        if (tcs.length) {
+                            setStatus(`Running ${tcs.length} tool${tcs.length > 1 ? 's' : ''}…`);
+                            const results = await Promise.all(tcs.map(tc => {
+                                let args = {};
+                                try { args = JSON.parse(tc.function.arguments || '{}'); } catch(e) {}
+                                return _executeAgentTool(tc.function.name, args)
+                                    .then(r => `[${tc.function.name}: "${args.query || ''}"]\n${r}`);
+                            }));
+                            toolResultsText = results.join('\n\n');
+                        }
+                    }
+                } catch(e) { /* tool dispatch failed — proceed without tools */ }
+            }
+
+            // ── Phase 2: synthesis ────────────────────────────────────
+            const synthPayload = {
+                model, temperature: s.temp, max_tokens: maxTokens,
+                messages: [{ role: 'system', content: _buildSystemPrompt(s, toolResultsText) }, ...histMsgs, userMsg],
+                response_format: { type: 'json_object' },
+                ...(streaming ? { stream: true } : {})
+            };
+
+            let delay = 1000;
+            for (let attempt = 0; attempt < 4; attempt++) {
+                try {
+                    setStatus(attempt === 0 ? (toolResultsText ? 'Synthesising…' : `Consulting ${providerName}...`) : `Retry ${attempt}...`);
+                    const _ctrl = new AbortController();
+                    const _timer = setTimeout(() => _ctrl.abort(), 180000); // Ollama can be slow
+                    let resp;
+                    try {
+                        resp = await fetch(`${baseUrl}/chat/completions`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json', ...authHeaders },
+                            body: JSON.stringify(synthPayload),
+                            signal: _ctrl.signal
+                        });
+                    } finally { clearTimeout(_timer); }
+
+                    if (!resp.ok) {
+                        const err = await resp.json().catch(() => ({}));
+                        const msg = err?.error?.message || `HTTP ${resp.status}`;
+                        if (resp.status === 401) return { text: `Invalid ${providerName} API key. Check Config tab.`, thought: null, socratic: null };
+                        if (resp.status === 429) { if (attempt < 3) { await sleep(delay); delay *= 2; continue; } return { text: 'Rate limit reached. Wait a moment.', thought: null, socratic: null }; }
+                        throw new Error(msg);
+                    }
+
+                    let rawText;
+                    if (streaming) {
+                        const reader = resp.body.getReader(), decoder = new TextDecoder();
+                        let accumulated = '', charCount = 0, sseBuffer = '', _lastSS = 0;
+                        while (true) {
+                            const { done, value } = await reader.read();
+                            if (done) break;
+                            sseBuffer += decoder.decode(value, { stream: true });
+                            const lines = sseBuffer.split('\n'); sseBuffer = lines.pop();
+                            for (const line of lines) {
+                                if (!line.startsWith('data: ')) continue;
+                                const js = line.slice(6).trim();
+                                if (!js || js === '[DONE]') continue;
+                                try { const p = JSON.parse(js); const t = p?.choices?.[0]?.delta?.content || ''; accumulated += t; charCount += t.length; } catch(e) {}
+                            }
+                            if (Date.now() - _lastSS > 150) { _lastSS = Date.now(); setStatus(`GURU IS COMPOSING... [${charCount} chars]`); }
+                        }
+                        if (!accumulated) throw new Error('Empty stream response');
+                        rawText = accumulated;
+                    } else {
+                        const data = await resp.json();
+                        rawText = data?.choices?.[0]?.message?.content;
+                        if (!rawText) throw new Error('Empty response');
+                    }
+
+                    const clean = rawText.replace(/^```json\s*/, '').replace(/\s*```$/, '').trim();
+                    let parsed;
+                    try { parsed = JSON.parse(clean); }
+                    catch(e) {
+                        const m = clean.match(/"text"\s*:\s*"([\s\S]*?)(?:"|$)/);
+                        parsed = { text: m ? m[1].replace(/\\n/g,'\n').replace(/\\"/g,'"') : rawText, thought: null, socratic: null };
+                    }
+                    return { text: parsed.text || rawText, thought: parsed.thought || null, socratic: parsed.socratic || null };
+
+                } catch(e) {
+                    if (attempt === 3) return { text: `Error: ${e.message}`, thought: null, socratic: null };
+                    await sleep(delay); delay *= 2;
+                }
+            }
+        }
+
+        async function callBrainGroq(userMessage, files = []) {
+            const key = localStorage.getItem(SK_GROQ_KEY);
+            if (!key) return { text: 'No Groq API key configured. Get one free at console.groq.com then add it in the Config tab.', thought: null, socratic: null };
+            return _callBrainOpenAI('https://api.groq.com/openai/v1', { Authorization: `Bearer ${key}` }, getModelForMode('chat'), userMessage, files);
+        }
+
+        async function callBrainOllama(userMessage, files = []) {
+            const base  = (localStorage.getItem(SK_OLLAMA_URL) || 'http://localhost:11434').replace(/\/$/, '');
+            const model = localStorage.getItem(SK_MODEL_OLLAMA) || 'phi4-mini';
+            return _callBrainOpenAI(`${base}/v1`, {}, model, userMessage, files);
+        }
+
+        async function fetchOllamaModels() {
+            const urlEl = document.getElementById('cfg-ollama-url');
+            const base  = (urlEl?.value.trim() || localStorage.getItem(SK_OLLAMA_URL) || 'http://localhost:11434').replace(/\/$/, '');
+            const sel   = document.getElementById('cfg-ollama-model');
+            if (!sel) return;
+            try {
+                setStatus('Detecting Ollama models…');
+                const resp = await fetch(`${base}/api/tags`);
+                if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+                const data   = await resp.json();
+                const models = data.models || [];
+                if (!models.length) {
+                    sel.innerHTML = '<option value="">No models found — run: ollama pull phi4-mini</option>';
+                    setStatus(''); return;
+                }
+                const stored = localStorage.getItem(SK_MODEL_OLLAMA) || '';
+                sel.innerHTML = models.map(m => `<option value="${m.name}"${m.name === stored ? ' selected' : ''}>${m.name}</option>`).join('');
+                setStatus('');
+                addBubble('system', `Ollama: found ${models.length} model${models.length !== 1 ? 's' : ''} — ${models.map(m => m.name).join(', ')}`);
+            } catch(e) {
+                setStatus('');
+                addBubble('system', `Could not reach Ollama at ${base}. Ensure Ollama is running and OLLAMA_ORIGINS is set, or use the desktop build for offline access.`);
             }
         }
 
@@ -4546,8 +4780,10 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
         async function generateSupervisorReport() {
             const s        = getSettings();
             const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
-            if (provider !== 'claude' && !s.key) { addBubble('system', 'Add your Gemini API key in Config first.'); setTab('chat'); return; }
-            if (provider === 'claude' && !localStorage.getItem(SK_CLAUDE_KEY)) { addBubble('system', 'Add your Claude API key in Config first.'); setTab('chat'); return; }
+            if (provider === 'gemini'  && !s.key)                                   { addBubble('system', 'Add your Gemini API key in Config first.');   setTab('settings'); return; }
+            if (provider === 'claude'  && !localStorage.getItem(SK_CLAUDE_KEY))     { addBubble('system', 'Add your Claude API key in Config first.');   setTab('settings'); return; }
+            if (provider === 'groq'    && !localStorage.getItem(SK_GROQ_KEY))        { addBubble('system', 'Add your Groq API key in Config first. Get one free at console.groq.com.'); setTab('settings'); return; }
+            if (provider === 'ollama'  && !localStorage.getItem(SK_MODEL_OLLAMA))    { addBubble('system', 'Select an Ollama model in Config first — click "Detect Models" with Ollama running.'); setTab('settings'); return; }
             if (journalEntries.length === 0) {
                 addBubble('system', 'Add at least one journal entry before generating a report.'); return;
             }
@@ -7380,8 +7616,10 @@ ${body}
             }
             const s = getSettings();
             const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
-            if (provider !== 'claude' && !s.key) { addBubble('system', 'Add your Gemini API key in Config first.'); setTab('chat'); return; }
-            if (provider === 'claude' && !localStorage.getItem(SK_CLAUDE_KEY)) { addBubble('system', 'Add your Claude API key in Config first.'); setTab('chat'); return; }
+            if (provider === 'gemini'  && !s.key)                                   { addBubble('system', 'Add your Gemini API key in Config first.');   setTab('settings'); return; }
+            if (provider === 'claude'  && !localStorage.getItem(SK_CLAUDE_KEY))     { addBubble('system', 'Add your Claude API key in Config first.');   setTab('settings'); return; }
+            if (provider === 'groq'    && !localStorage.getItem(SK_GROQ_KEY))        { addBubble('system', 'Add your Groq API key in Config first. Get one free at console.groq.com.'); setTab('settings'); return; }
+            if (provider === 'ollama'  && !localStorage.getItem(SK_MODEL_OLLAMA))    { addBubble('system', 'Select an Ollama model in Config first — click "Detect Models" with Ollama running.'); setTab('settings'); return; }
             const out = document.getElementById('tool-map-out');
             out.style.display = 'block';
             out.textContent = 'Generating argument map…';
