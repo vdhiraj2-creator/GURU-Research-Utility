@@ -5279,10 +5279,34 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                 reflArea.value       = entry.reflection || '';
                 card.appendChild(reflArea);
 
+                const reflBtnRow = document.createElement('div');
+                reflBtnRow.style.cssText = 'display:flex;gap:0.5rem;margin-top:0.5rem;align-items:center;';
+
                 const saveReflBtn = document.createElement('button');
                 saveReflBtn.className   = 'btn-save';
-                saveReflBtn.style.marginTop = '0.5rem';
-                saveReflBtn.textContent = 'Save Reflection';
+                saveReflBtn.textContent = entry.reflection ? 'Update Reflection' : 'Save Reflection';
+
+                const editReflBtn = document.createElement('button');
+                editReflBtn.className   = 'btn-clear';
+                editReflBtn.textContent = 'Edit';
+                editReflBtn.style.cssText = 'font-size:11px;padding:4px 10px;display:none;';
+
+                if (entry.reflection) {
+                    reflArea.disabled = true;
+                    reflArea.style.opacity = '0.6';
+                    editReflBtn.style.display = '';
+                    saveReflBtn.style.display = 'none';
+                }
+
+                editReflBtn.onclick = () => {
+                    reflArea.disabled = false;
+                    reflArea.style.opacity = '';
+                    reflArea.focus();
+                    editReflBtn.style.display = 'none';
+                    saveReflBtn.style.display = '';
+                    saveReflBtn.textContent = 'Save Reflection';
+                };
+
                 saveReflBtn.onclick = () => {
                     const idx = journalEntries.findIndex(e => e.id === entry.id);
                     if (idx !== -1) {
@@ -5290,10 +5314,18 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                         saveJournal();
                         updateJournalEntryInFirebase(journalEntries[idx]);
                         saveReflBtn.textContent = 'Saved ✓';
-                        setTimeout(() => { saveReflBtn.textContent = 'Save Reflection'; }, 1800);
+                        setTimeout(() => {
+                            reflArea.disabled = true;
+                            reflArea.style.opacity = '0.6';
+                            saveReflBtn.style.display = 'none';
+                            editReflBtn.style.display = '';
+                        }, 900);
                     }
                 };
-                card.appendChild(saveReflBtn);
+
+                reflBtnRow.appendChild(saveReflBtn);
+                reflBtnRow.appendChild(editReflBtn);
+                card.appendChild(reflBtnRow);
 
                 stage.appendChild(card);
                 _renderJournalMap(entry, mapDiv);
@@ -8260,6 +8292,16 @@ Conversation to map:\n${summary}`;
                     saveBtn.textContent = 'Saved to Journal ✓';
                     saveBtn.disabled    = true;
                     addBubble('system', 'Argument map saved to your Living Journal. Add a critical reflection in the Journal tab.');
+                    setTimeout(() => {
+                        out.style.opacity = '0';
+                        out.style.transition = 'opacity 0.4s';
+                        setTimeout(() => {
+                            out.innerHTML   = '';
+                            out.style.display  = 'none';
+                            out.style.opacity  = '';
+                            out.style.transition = '';
+                        }, 420);
+                    }, 1600);
                 };
                 out.appendChild(saveBtn);
 
