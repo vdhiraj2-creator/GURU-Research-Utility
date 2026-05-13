@@ -81,8 +81,8 @@
             --pulse-dim:   rgba(14,148,116,0.1);
         }
         body.light-mode { color: var(--text-1); background-color: var(--bg); }
-        body.light-mode header { background: var(--bg); border-color: var(--border); }
-        body.light-mode #toolbar { background: var(--bg); border-color: var(--border); }
+        body.light-mode header { background: #ddd4c0; border-color: #c8bfab; }
+        body.light-mode #toolbar { background: #ddd4c0; border-color: #c8bfab; }
         body.light-mode nav button { color: var(--text-2); }
         body.light-mode nav button.active { color: var(--accent); background: var(--accent-dim); }
         body.light-mode nav button:hover:not(.active) { color: var(--text-1); background: var(--surface2); }
@@ -104,9 +104,9 @@
         body.light-mode .vault-card { background: var(--surface); border-color: var(--border); }
         body.light-mode .ref-card { background: var(--surface); border-color: var(--border); }
         body.light-mode .ref-title { color: var(--text-1); }
-        body.light-mode #input-area { background: var(--surface2); border-color: var(--border); }
-        body.light-mode #directive-strip { background: var(--bg); border-color: var(--border); }
-        body.light-mode #app-footer { background: var(--bg); border-color: var(--border); }
+        body.light-mode #input-area { background: #ddd4c0; border-color: #c8bfab; }
+        body.light-mode #directive-strip { background: #ddd4c0; border-color: #c8bfab; }
+        body.light-mode #app-footer { background: #ddd4c0; border-color: #c8bfab; }
         body.light-mode #scroll-frame { background: var(--bg); }
         body.light-mode .input-box { background: #ffffff; border-color: #d8d0c0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
         body.light-mode .input-box:focus-within { border-color: #beb0a0; }
@@ -393,10 +393,7 @@
         }
         #directive-strip span { color: var(--text-3); margin-right: 0.5rem; }
         #input-inner-pad { padding: 1.25rem 2rem 1.5rem; }
-        body.light-mode #input-area {
-            background: rgba(240,244,248,0.98);
-            border-top-color: var(--border);
-        }
+        /* stale rule removed — see light mode block above */
         body.light-mode .input-box {
             background: #fff;
             border-color: var(--border);
