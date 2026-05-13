@@ -8159,14 +8159,16 @@ ${body}
         }
 
         function _sanitizeMermaid(code) {
-            // Ensure flowchart TD header
-            let c = code.replace(/^graph\s+TD/i, 'flowchart TD').trim();
-            if (!/^flowchart\s+TD/i.test(c)) c = 'flowchart TD\n' + c;
-            // Fix node labels: replace unquoted labels containing special chars with quoted versions
-            // Pattern: ID[label] ID(label) ID{label} — wrap label in quotes if not already
-            c = c.replace(/(\w+)\[([^\]"]+)\]/g, (_, id, lbl) => `${id}["${lbl.replace(/"/g, "'").replace(/[()]/g, '')}"]`);
-            c = c.replace(/(\w+)\(([^)"]+)\)/g, (_, id, lbl) => `${id}("${lbl.replace(/"/g, "'").replace(/[()]/g, '')}")`);
-            c = c.replace(/(\w+)\{([^}"]+)\}/g, (_, id, lbl) => `${id}{"${lbl.replace(/"/g, "'")}"}`);
+            // Strip any leading prose the model may have included before the diagram
+            const firstDiagram = code.match(/((?:flowchart|graph)\s+(?:TD|LR|RL|BT|TB)[\s\S]+)/i);
+            let c = firstDiagram ? firstDiagram[1].trim() : code.trim();
+            // Normalise graph TD → flowchart TD
+            c = c.replace(/^graph\s+(TD|LR|RL|BT|TB)/im, 'flowchart $1');
+            if (!/^flowchart\s+/i.test(c)) c = 'flowchart TD\n' + c;
+            // Quote unquoted node labels (skip already-quoted ones)
+            c = c.replace(/(\b\w+)\[([^\]"<>]+)\]/g, (_, id, lbl) => `${id}["${lbl.replace(/"/g, "'").replace(/[()]/g, '')}"]`);
+            c = c.replace(/(\b\w+)\(([^)"]+)\)/g,    (_, id, lbl) => `${id}("${lbl.replace(/"/g, "'").replace(/[()]/g, '')}")`);
+            c = c.replace(/(\b\w+)\{([^}"]+)\}/g,    (_, id, lbl) => `${id}{"${lbl.replace(/"/g, "'")}"}`);
             return c;
         }
 
@@ -8241,16 +8243,20 @@ Conversation to map:\n${summary}`;
                 const mapQuery = summary.slice(0, 200).replace(/\n/g, ' ');
                 const result   = await callFn(mapPrompt, 'tools', mapQuery);
                 if (_searchMode) updateBiblio(result);
-                const mermaidMatch = result.match(/```(?:mermaid)?\s*([\s\S]+?)```/);
-                let rawCode = mermaidMatch ? mermaidMatch[1].trim() : result.trim();
-                // AI sometimes returns JSON wrapper — extract mermaid_map field if present
-                if (!mermaidMatch) {
+                // Extract mermaid code — match any fenced block regardless of language tag
+                const mermaidMatch = result.match(/```[a-zA-Z]*\s*\n?([\s\S]+?)```/);
+                let rawCode = mermaidMatch ? mermaidMatch[1].trim() : null;
+                if (!rawCode) {
+                    // Try JSON wrapper
                     try {
-                        const j = JSON.parse(rawCode);
-                        if (j.mermaid_map) rawCode = j.mermaid_map;
-                        else if (j.diagram) rawCode = j.diagram;
-                        else if (j.code)    rawCode = j.code;
+                        const j = JSON.parse(result.trim());
+                        rawCode = j.mermaid_map || j.diagram || j.code || null;
                     } catch(e) {}
+                }
+                if (!rawCode) {
+                    // Try to find a raw flowchart/graph directive in the response
+                    const flowMatch = result.match(/((?:flowchart|graph)\s+(?:TD|LR|RL|BT|TB)[^\n][\s\S]+?)(?:\n\n|$)/i);
+                    rawCode = flowMatch ? flowMatch[1].trim() : result.trim();
                 }
                 const code = _sanitizeMermaid(rawCode);
 
