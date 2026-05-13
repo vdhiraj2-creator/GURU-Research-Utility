@@ -2878,12 +2878,20 @@ ${body}}`;
             };
         }
 
+        // Returns the localStorage key for a given provider+mode combination.
+        // Gemini uses the legacy keys so existing user preferences are preserved.
+        function _modelKey(provider, mode) {
+            if (provider === 'gemini') {
+                return { chat: SK_MODEL_CHAT, viva: SK_MODEL_VIVA, tools: SK_MODEL_TOOLS, report: SK_MODEL_REPORT }[mode] || SK_MODEL_CHAT;
+            }
+            return `guru_model_${provider}_${mode}`;
+        }
+
         function getModelForMode(mode) {
             const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
             if (provider === 'ollama') return localStorage.getItem(SK_MODEL_OLLAMA) || 'phi4-mini';
-            const keyMap   = { chat: SK_MODEL_CHAT, viva: SK_MODEL_VIVA, tools: SK_MODEL_TOOLS, report: SK_MODEL_REPORT };
-            const defaults  = { gemini: 'gemini-2.5-flash', claude: 'claude-sonnet-4-6', groq: 'llama-3.3-70b-versatile' };
-            return localStorage.getItem(keyMap[mode] || SK_MODEL_CHAT) || defaults[provider] || 'gemini-2.5-flash';
+            const defaults = { gemini: 'gemini-2.5-flash', claude: 'claude-sonnet-4-6', groq: 'llama-3.3-70b-versatile' };
+            return localStorage.getItem(_modelKey(provider, mode)) || defaults[provider] || 'gemini-2.5-flash';
         }
 
         function saveSettings() {
@@ -2897,17 +2905,15 @@ ${body}}`;
             const extCtx = (document.getElementById('cfg-ext-context')?.value || '').trim();
             localStorage.setItem(SK_EXT_CONTEXT, extCtx);
 
-            // Save per-mode model selections
-            const chatSel   = document.getElementById('cfg-model-chat');
-            const vivaSel   = document.getElementById('cfg-model-viva');
-            const toolsSel  = document.getElementById('cfg-model-tools');
-            const reportSel = document.getElementById('cfg-model-report');
-            if (chatSel)   localStorage.setItem(SK_MODEL_CHAT,   chatSel.value);
-            if (vivaSel)   localStorage.setItem(SK_MODEL_VIVA,   vivaSel.value);
-            if (toolsSel)  localStorage.setItem(SK_MODEL_TOOLS,  toolsSel.value);
-            if (reportSel) localStorage.setItem(SK_MODEL_REPORT, reportSel.value);
+            // Save per-mode model selections (provider-scoped keys)
+            const _saveProv = localStorage.getItem(SK_PROVIDER) || 'gemini';
+            [['cfg-model-chat','chat'],['cfg-model-viva','viva'],['cfg-model-tools','tools'],['cfg-model-report','report']].forEach(([id, mode]) => {
+                const sel = document.getElementById(id);
+                if (sel && sel.value) localStorage.setItem(_modelKey(_saveProv, mode), sel.value);
+            });
             // Keep SK_MODEL in sync with chat model for backward compatibility
-            if (chatSel) localStorage.setItem(SK_MODEL, chatSel.value);
+            const chatSel = document.getElementById('cfg-model-chat');
+            if (chatSel && chatSel.value) localStorage.setItem(SK_MODEL, chatSel.value);
 
             // Save provider API keys if entered (not masked)
             const claudeKeyEl = document.getElementById('cfg-claude-key');
@@ -3063,16 +3069,11 @@ ${body}}`;
             const models = modelMap[p] || geminiModels;
 
             if (p !== 'ollama') {
-                [
-                    { id: 'cfg-model-chat',   sk: SK_MODEL_CHAT   },
-                    { id: 'cfg-model-viva',   sk: SK_MODEL_VIVA   },
-                    { id: 'cfg-model-tools',  sk: SK_MODEL_TOOLS  },
-                    { id: 'cfg-model-report', sk: SK_MODEL_REPORT },
-                ].forEach(({ id, sk }) => {
+                [['cfg-model-chat','chat'],['cfg-model-viva','viva'],['cfg-model-tools','tools'],['cfg-model-report','report']].forEach(([id, mode]) => {
                     const sel = document.getElementById(id);
                     if (!sel) return;
                     sel.innerHTML = models.map(m => `<option value="${m.value}">${m.label}</option>`).join('');
-                    sel.value = localStorage.getItem(sk) || models[0].value;
+                    sel.value = localStorage.getItem(_modelKey(p, mode)) || models[0].value;
                 });
             }
 
