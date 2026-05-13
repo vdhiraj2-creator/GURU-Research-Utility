@@ -38,7 +38,7 @@
     <!-- FIREBASE CLOUD SYNC (Pro — hash-routed, no auth) -->
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700;800&family=Space+Mono:wght@400;700&family=Syne:wght@400;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg:       #111111;
@@ -209,21 +209,22 @@
             line-height: 1;
         }
         .guru-letter {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Playfair Display', Georgia, serif;
             font-size: 20px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--text-1);
-            letter-spacing: -0.03em;
+            letter-spacing: 0.01em;
             -webkit-font-smoothing: antialiased;
         }
         .guru-dot {
-            font-family: 'Inter', system-ui, sans-serif;
+            font-family: 'Playfair Display', Georgia, serif;
             font-size: 20px;
-            font-weight: 800;
+            font-weight: 700;
             color: var(--accent);
             display: inline-block;
             line-height: 1;
             opacity: 1;
+            letter-spacing: 0;
         }
         nav { display: flex; align-items: center; gap: 0.15rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 1; min-width: 0; }
         nav::-webkit-scrollbar { display: none; }
@@ -1663,7 +1664,7 @@
                 <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
             </div>
             <div style="display:flex;align-items:center;gap:0.6rem;margin-left:auto;">
-                <button id="workspace-btn" onclick="toggleToolbar()" title="Open workspace console">Console</button>
+                <button id="workspace-btn" onclick="toggleToolbar()" title="Open navigation">Navigate</button>
                 <button id="guru-voice-btn" onclick="GuruVoice.toggle()" title="Toggle voice output">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>

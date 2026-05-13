@@ -79,7 +79,16 @@ function createWindow() {
     });
 
     // ── LOAD APP ───────────────────────────────────────────────────
-    win.loadURL('https://jarvisphd-80ecb.web.app');
+    // Load local build first (works offline); fall back to hosted version
+    const localIndex = path.join(__dirname, 'public', 'index.html');
+    const fs = require('fs');
+    if (fs.existsSync(localIndex)) {
+        win.loadFile(localIndex).catch(() => {
+            win.loadURL('https://jarvisphd-80ecb.web.app');
+        });
+    } else {
+        win.loadURL('https://jarvisphd-80ecb.web.app');
+    }
     win.setMenuBarVisibility(false);
 
     // DevTools — closed for production
