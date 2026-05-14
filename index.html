@@ -214,31 +214,6 @@
             transition: opacity 0.15s;
         }
         #guru-icon-btn:hover { opacity: 0.8; }
-        #guru-settings-pop {
-            display: none;
-            position: absolute;
-            top: calc(100% + 12px);
-            left: 0;
-            width: 292px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 1.1rem 1.1rem 0.9rem;
-            z-index: 9999;
-            box-shadow: 0 16px 48px rgba(0,0,0,0.38);
-            animation: fadeInDown 0.14s ease;
-            text-align: left;
-        }
-        #guru-settings-pop.open { display: block; }
-        .gsp-title { font-family: 'Playfair Display', serif; font-size: 14px; font-weight: 600; color: var(--text-1); margin-bottom: 0.8rem; }
-        .gsp-label { font-family: 'Space Mono', monospace; font-size: 8px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-3); margin: 0.65rem 0 0.35rem; }
-        .gsp-providers { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem; }
-        .gsp-prov-btn { font-family: 'Inter', system-ui, sans-serif; font-size: 11px; font-weight: 500; padding: 0.4rem 0.6rem; border-radius: 7px; border: 1px solid var(--border); background: transparent; color: var(--text-2); cursor: pointer; transition: all 0.15s; }
-        .gsp-prov-btn:hover:not(.gsp-prov-active) { background: var(--surface2); color: var(--text-1); }
-        .gsp-key-input { width: 100%; box-sizing: border-box; font-family: 'Space Mono', monospace; font-size: 10px; padding: 0.45rem 0.65rem; border-radius: 8px; background: var(--card); border: 1px solid var(--border); color: var(--text-1); outline: none; margin-top: 0.1rem; }
-        .gsp-key-input:focus { border-color: var(--accent); }
-        .gsp-all-link { display: block; margin-top: 0.9rem; padding-top: 0.7rem; border-top: 1px solid var(--border); font-family: 'Inter', system-ui, sans-serif; font-size: 11px; color: var(--text-3); text-align: right; cursor: pointer; background: none; border-bottom: none; border-left: none; border-right: none; width: 100%; transition: color 0.15s; }
-        .gsp-all-link:hover { color: var(--text-1); }
         .guru-name {
             display: inline-flex;
             align-items: center;
@@ -549,7 +524,7 @@
         /* ============================================================
            SETTINGS VIEW
         ============================================================ */
-        #view-settings { max-width: 700px; margin: 0 auto; padding: 2rem 2.5rem; }
+        #view-settings { padding: 2rem 2.5rem; }
         .s-section {
             font-family: 'Space Mono', monospace; font-size: 9px; letter-spacing: 0.15em;
             text-transform: uppercase; color: #1e293b; padding-bottom: 0.5rem;
@@ -1310,7 +1285,7 @@
             .vault-entry-body { max-height: 280px; }
 
             /* Settings */
-            #view-settings { padding: 1.25rem 0.75rem; max-width: 100%; }
+            #view-settings { padding: 1.25rem 0.75rem; }
             .s-input { font-size: 11px; padding: 0.6rem 0.85rem; }
             select.s-input { font-size: 11px; }
             textarea.s-input { min-height: 90px; }
@@ -1868,14 +1843,13 @@
     <div id="workspace">
         <header>
             <div class="logo">
-                <button id="guru-icon-btn" onclick="toggleGuruSettings(event)" title="Configure GURU">
+                <button id="guru-icon-btn" onclick="setTab('settings')" title="Settings">
                     <svg id="guru-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
                         <path d="M16.5 4.5 C15.8 10 17.2 19 16 27.5" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
                         <path d="M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round"/>
                         <path d="M6.5 10 C12 14 19.5 17.5 25.5 21.5" stroke="var(--accent)" stroke-width="2.9" stroke-linecap="round"/>
                     </svg>
                     <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
-                    <div id="guru-settings-pop"></div>
                 </button>
             </div>
             <div style="display:flex;align-items:center;gap:0.6rem;margin-left:auto;">
@@ -6127,66 +6101,6 @@ ${body}}`;
             if (tab === 'vault')    { renderVault(document.getElementById('vault-search').value); updateManualFields(); }
             if (tab === 'refs')     { renderRefs(); updateManualFields(); }
             if (tab === 'journal')  renderJournal();
-        }
-
-        function toggleGuruSettings(event) {
-            event.stopPropagation();
-            const pop = document.getElementById('guru-settings-pop');
-            const isOpen = pop.classList.toggle('open');
-            if (isOpen) {
-                renderGuruSettingsPop();
-                setTimeout(() => {
-                    document.addEventListener('click', function _close() {
-                        pop.classList.remove('open');
-                        document.removeEventListener('click', _close);
-                    });
-                }, 0);
-            }
-        }
-
-        function renderGuruSettingsPop() {
-            const provider = localStorage.getItem(SK_PROVIDER) || 'gemini';
-            const pop = document.getElementById('guru-settings-pop');
-            const provDefs = [
-                { id: 'gemini', label: 'Gemini',  color: '#1fb896', skKey: 'guru_api_key',    ph: 'AIza…'      },
-                { id: 'claude', label: 'Claude',   color: '#a78bfa', skKey: 'guru_claude_key', ph: 'sk-ant-…'   },
-                { id: 'groq',   label: 'Groq',     color: '#fb923c', skKey: 'guru_groq_key',   ph: 'gsk_…', badge: 'FREE'  },
-                { id: 'ollama', label: 'Ollama',   color: '#94a3b8', skKey: null,              ph: null,    badge: 'LOCAL' },
-            ];
-            const cur = provDefs.find(p => p.id === provider) || provDefs[0];
-
-            const provBtns = provDefs.map(p => {
-                const active = p.id === provider;
-                const st = active ? `background:${p.color}1a;color:${p.color};border-color:${p.color}55;` : '';
-                const badge = p.badge ? `<span style="font-size:7px;opacity:0.7;margin-left:3px;">${p.badge}</span>` : '';
-                return `<button class="gsp-prov-btn${active ? ' gsp-prov-active' : ''}" style="${st}" onclick="event.stopPropagation();setProvider('${p.id}');renderGuruSettingsPop()">${p.label}${badge}</button>`;
-            }).join('');
-
-            let keyHtml = '';
-            if (provider === 'ollama') {
-                const url   = localStorage.getItem(SK_OLLAMA_URL) || 'http://localhost:11434';
-                const model = localStorage.getItem(SK_MODEL_OLLAMA) || '';
-                keyHtml = `<div class="gsp-label">Ollama URL</div>
-                    <input class="gsp-key-input" type="text" value="${escapeHtml(url)}" placeholder="http://localhost:11434"
-                        oninput="localStorage.setItem('guru_ollama_url',this.value)">
-                    <div class="gsp-label">Model name</div>
-                    <input class="gsp-key-input" type="text" value="${escapeHtml(model)}" placeholder="llama3.2, phi4-mini…"
-                        oninput="localStorage.setItem('guru_model_ollama',this.value)">`;
-            } else {
-                const saved = localStorage.getItem(cur.skKey) || '';
-                keyHtml = `<div class="gsp-label">API Key</div>
-                    <input class="gsp-key-input" type="password" value="${saved ? '••••••••••••••' : ''}" placeholder="${cur.ph}"
-                        onfocus="if(this.value.startsWith('•'))this.value=''"
-                        onchange="if(this.value)localStorage.setItem('${cur.skKey}',this.value)">`;
-            }
-
-            pop.innerHTML = `
-                <div class="gsp-title">Configure</div>
-                <div class="gsp-label">Provider</div>
-                <div class="gsp-providers">${provBtns}</div>
-                ${keyHtml}
-                <button class="gsp-all-link" onclick="event.stopPropagation();document.getElementById('guru-settings-pop').classList.remove('open');setTab('settings')">All settings →</button>
-            `;
         }
 
         function toggleToolbar() {
