@@ -1241,8 +1241,7 @@
         @media (max-width: 767px) {
             body { height: 100dvh; }
 
-
-            /* Header: logo row + nav row */
+            /* Header */
             header {
                 height: auto;
                 min-height: 52px;
@@ -1251,22 +1250,24 @@
                 row-gap: 0.35rem;
             }
             .logo { font-size: 9px; letter-spacing: 0.05em; }
-            .guru-letter, .guru-dot { font-size: 14px; }
+            .guru-letter, .guru-dot { font-size: 13px; }
+            #guru-mark { width: 18px; height: 18px; }
             #sync-dot { display: none; }
+            /* Shrink right-side header buttons on mobile */
+            #workspace-btn { font-size: 10px; }
+            #guru-voice-btn svg { width: 15px; height: 15px; }
 
-            /* Nav: horizontal scroll strip */
-            nav {
-                width: 100%;
+            /* Nav: scroll strip — override desktop space-evenly */
+            #toolbar nav {
+                justify-content: flex-start;
+                gap: 0;
+                padding: 0 0.25rem;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
-                scrollbar-width: none;
-                flex-wrap: nowrap;
-                padding-bottom: 1px;
             }
-            nav::-webkit-scrollbar { display: none; }
-            nav button { font-size: 8px; padding: 0.35rem 0.7rem; white-space: nowrap; flex-shrink: 0; }
+            nav button { font-size: 11px; padding: 0.35rem 0.65rem; white-space: nowrap; flex-shrink: 0; }
 
-            /* Chat bubbles */
+            /* Chat */
             .chat-wrap { padding: 1rem 0.75rem 0.5rem; }
             .bubble { padding: 0.9rem 1rem; font-size: 13px; }
             .bubble.user { max-width: 90%; }
@@ -1274,7 +1275,7 @@
             .socratic-panel { padding: 0.75rem 1rem; font-size: 12px; }
             .thought-block { font-size: 9px; padding: 0.6rem 0.75rem; }
 
-            /* Input bar — respect iPhone safe area */
+            /* Input — respect iPhone safe area */
             #input-area {
                 padding: 0.5rem 0.75rem;
                 padding-bottom: max(0.6rem, env(safe-area-inset-bottom));
@@ -1283,6 +1284,10 @@
             #query-input { font-size: 13px; }
             #exec-btn { padding: 8px 13px; font-size: 9px; }
             .status-line { font-size: 7px; }
+
+            /* Panel headers — wrap on small screens */
+            .panel-header { flex-wrap: wrap; gap: 0.5rem; }
+            .panel-header > div { flex-wrap: wrap; gap: 0.35rem; }
 
             /* Vault */
             #view-vault, #view-refs { padding: 1.25rem 0.75rem; max-width: 100%; }
@@ -1302,9 +1307,17 @@
 
             /* Settings */
             #view-settings { padding: 1.25rem 0.75rem; }
-            .s-input { font-size: 11px; padding: 0.6rem 0.85rem; }
-            select.s-input { font-size: 11px; }
+            .s-input { font-size: 13px; padding: 0.65rem 0.85rem; }
+            select.s-input { font-size: 13px; }
             textarea.s-input { min-height: 90px; }
+            /* Per-mode grid: stack vertically on mobile */
+            #view-settings [style*="grid-template-columns:90px"] {
+                grid-template-columns: 1fr 1fr !important;
+            }
+            /* Provider accordion touch targets */
+            .prov-hdr { padding: 0.85rem 1rem; font-size: 12px; min-height: 48px; }
+            .prov-body.prov-open { max-height: 480px; }
+            .zotero-hdr { padding: 0.85rem 1rem; min-height: 48px; }
 
             /* Archive */
             #arc-content { padding: 0.75rem 0.75rem 1.5rem; }
