@@ -17,13 +17,13 @@
   /* Header */
   .hdr { background: var(--card); border-bottom: 1px solid var(--border); padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
   .hdr-badge { font-family: monospace; font-size: 7px; letter-spacing: 0.1em; color: #020407; background: var(--pulse); border-radius: 3px; padding: 1px 5px; }
-  .guru-name { display: inline-flex; align-items: center; gap: 0; line-height: 1; }
-  .guru-letter { font-family: monospace; font-size: 15px; font-weight: 700; color: #ffffff; text-shadow: 0 0 1px #fff, 0 0 8px #fff, 0 0 14px rgba(0,255,204,0.9); letter-spacing: 0; }
-  .guru-dot { font-family: monospace; font-size: 15px; font-weight: 700; color: var(--pulse); display: inline-block; margin: 0 1px; animation: gdot 2.4s ease-in-out infinite; }
-  .guru-dot:nth-child(2) { animation-delay: 0s; }
-  .guru-dot:nth-child(4) { animation-delay: 0.6s; }
-  .guru-dot:nth-child(6) { animation-delay: 1.2s; }
-  .guru-dot:nth-child(8) { animation-delay: 1.8s; }
+  .horatio-name { display: inline-flex; align-items: center; gap: 0; line-height: 1; }
+  .horatio-letter { font-family: monospace; font-size: 15px; font-weight: 700; color: #ffffff; text-shadow: 0 0 1px #fff, 0 0 8px #fff, 0 0 14px rgba(0,255,204,0.9); letter-spacing: 0; }
+  .horatio-dot { font-family: monospace; font-size: 15px; font-weight: 700; color: var(--pulse); display: inline-block; margin: 0 1px; animation: gdot 2.4s ease-in-out infinite; }
+  .horatio-dot:nth-child(2) { animation-delay: 0s; }
+  .horatio-dot:nth-child(4) { animation-delay: 0.6s; }
+  .horatio-dot:nth-child(6) { animation-delay: 1.2s; }
+  .horatio-dot:nth-child(8) { animation-delay: 1.8s; }
   @keyframes gdot { 0%,100% { opacity:0.12; transform:scale(0.65); text-shadow:none; } 50% { opacity:1; transform:scale(1.5); text-shadow:0 0 10px var(--pulse), 0 0 22px rgba(0,255,204,0.7); } }
 
   /* Tabs */
@@ -109,14 +109,14 @@
   body.light .section-title { color: #64748b; }
   body.light .hint          { color: #64748b; }
   body.light .empty         { color: #94a3b8; }
-  body.light .guru-letter   { color: #1a2535; text-shadow: 0 0 1px rgba(0,122,94,0.4), 0 0 6px rgba(0,122,94,0.2); }
+  body.light .horatio-letter   { color: #1a2535; text-shadow: 0 0 1px rgba(0,122,94,0.4), 0 0 6px rgba(0,122,94,0.2); }
   body.light #theme-btn     { color: #64748b; }
 </style>
 </head>
 <body>
 
 <div class="hdr">
-  <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
+  <span class="horatio-name"><span class="horatio-letter">G</span><span class="horatio-dot">.</span><span class="horatio-letter">U</span><span class="horatio-dot">.</span><span class="horatio-letter">R</span><span class="horatio-dot">.</span><span class="horatio-letter">U</span><span class="horatio-dot">.</span></span>
   <div class="hdr-badge">DOCS</div>
   <button id="theme-btn" onclick="toggleTheme()" title="Toggle light / dark mode">☀️</button>
 </div>
@@ -131,9 +131,9 @@
 <!-- ASK TAB -->
 <div id="tab-ask" class="panel active">
   <label>Question / Prompt</label>
-  <textarea id="ask-prompt" placeholder="Ask GURU about the selected text, your research, or any legal question..."></textarea>
+  <textarea id="ask-prompt" placeholder="Ask Horatio about the selected text, your research, or any legal question..."></textarea>
   <div class="btn-row">
-    <button class="btn btn-primary" onclick="doAsk()">Ask GURU</button>
+    <button class="btn btn-primary" onclick="doAsk()">Ask Horatio</button>
     <button class="btn btn-blue" onclick="doAnalyseSelection()">Analyse Selection</button>
   </div>
   <div id="ask-status" class="status"></div>
@@ -184,7 +184,7 @@
   <input type="password" id="cfg-key" placeholder="AIza...">
   <p class="hint">Your own Gemini API key — never shared.</p>
 
-  <label>GURU Sync Passphrase</label>
+  <label>Horatio Sync Passphrase</label>
   <input type="password" id="cfg-pass" placeholder="Same passphrase as in Jarvis app...">
   <p class="hint">Must match the passphrase set in Jarvis Config → Cloud Sync. This connects to the same vault.</p>
 
@@ -192,7 +192,7 @@
   <div id="cfg-status" class="status"></div>
 
   <div class="section-title">About</div>
-  <p class="hint">GURU Research Intelligence add-on — connects Google Docs & Sheets to your shared Firestore research vault. Same passphrase = same memory as the Jarvis web app.</p>
+  <p class="hint">Horatio Research Intelligence add-on — connects Google Docs & Sheets to your shared Firestore research vault. Same passphrase = same memory as the Jarvis web app.</p>
 </div>
 
 <script>
@@ -209,11 +209,11 @@
   }
   function toggleTheme() {
     const next = document.body.classList.contains('light') ? 'dark' : 'light';
-    localStorage.setItem('guru_theme', next);
+    localStorage.setItem('horatio_theme', next);
     applyTheme(next);
   }
   // Init theme from same key as main app
-  applyTheme(localStorage.getItem('guru_theme') || 'dark');
+  applyTheme(localStorage.getItem('horatio_theme') || 'dark');
 
   // ---- Boot: load saved config ----
   google.script.run

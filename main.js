@@ -26,7 +26,7 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 1400,
         height: 900,
-        title: 'G.U.R.U. V2.0 — Doctoral Research Intelligence',
+        title: 'Horatio V2.0 — Doctoral Research Intelligence',
         backgroundColor: '#05070a',
         webPreferences: {
             nodeIntegration:  false,
@@ -45,7 +45,7 @@ function createWindow() {
             'microphone', 'media', 'audioCapture',
             'mediaKeySystem', 'geolocation'
         ];
-        console.log('[GURU] permission request:', permission,
+        console.log('[Horatio] permission request:', permission,
             '→', allowed.includes(permission) ? 'GRANTED' : 'DENIED');
         callback(allowed.includes(permission));
     });
@@ -64,15 +64,15 @@ function createWindow() {
         win.webContents.setAudioMuted(false);
 
         win.webContents.executeJavaScript(`
-            (function guruUnlockAudio() {
+            (function horatioUnlockAudio() {
                 try {
                     const ctx = new (window.AudioContext || window.webkitAudioContext)();
                     ctx.resume().then(() => {
-                        console.log('[GURU] AudioContext unlocked, state:', ctx.state);
+                        console.log('[Horatio] AudioContext unlocked, state:', ctx.state);
                         setTimeout(() => ctx.close(), 200);
                     });
                 } catch(e) {
-                    console.warn('[GURU] AudioContext unlock skipped:', e.message);
+                    console.warn('[Horatio] AudioContext unlock skipped:', e.message);
                 }
             })();
         `).catch(() => {});

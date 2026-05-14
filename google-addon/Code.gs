@@ -14,15 +14,15 @@ function onOpen(e) {
   const ui = _getUi();
   if (!ui) return;
   ui.createAddonMenu()
-    .addItem('Open G.U.R.U.', 'showSidebar')
+    .addItem('Open Horatio', 'showSidebar')
     .addToUi();
 }
 
 function buildHomepage(e) {
-  return _buildCard('G.U.R.U. — Research Intelligence', [
+  return _buildCard('Horatio — Research Intelligence', [
     CardService.newTextParagraph().setText('Open the sidebar to access your research vault, OSCOLA tools, and AI supervisor from any Google Doc or Sheet.'),
     CardService.newTextButton()
-      .setText('Open GURU Sidebar')
+      .setText('Open Horatio Sidebar')
       .setOnClickAction(CardService.newAction().setFunctionName('showSidebar'))
   ]);
 }
@@ -33,7 +33,7 @@ function onFileScopeGranted(e) {
 
 function showSidebar() {
   const html = HtmlService.createHtmlOutputFromFile('Sidebar')
-    .setTitle('G.U.R.U. — Research Intelligence')
+    .setTitle('Horatio — Research Intelligence')
     .setWidth(320);
   _getUi().showSidebar(html);
 }
@@ -219,8 +219,8 @@ function callGemini(geminiKey, prompt, vaultContext) {
   const model   = GEMINI_MODEL;
   const url     = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
   const system  = vaultContext
-    ? `You are GURU, a doctoral-level AI research supervisor specialising in UK law and legal theory.\n\nRelevant vault research:\n${vaultContext}\n\n---\n`
-    : 'You are GURU, a doctoral-level AI research supervisor specialising in UK law and legal theory.\n\n';
+    ? `You are Horatio, a doctoral-level AI research supervisor specialising in UK law and legal theory.\n\nRelevant vault research:\n${vaultContext}\n\n---\n`
+    : 'You are Horatio, a doctoral-level AI research supervisor specialising in UK law and legal theory.\n\n';
   const payload = JSON.stringify({
     contents: [{ role: 'user', parts: [{ text: system + prompt }] }],
     generationConfig: { temperature: 0.7 }

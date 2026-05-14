@@ -1,7 +1,7 @@
 {
-  "name": "guru-doctoral-research",
+  "name": "horatio-doctoral-research",
   "version": "2.0.0",
-  "description": "G.U.R.U. — Guided University Research Utility · Doctoral Research Intelligence",
+  "description": "Horatio — Guided University Research Utility · Doctoral Research Intelligence",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -15,14 +15,14 @@
     "email": "vdhiraj2@gmail.com"
   },
   "build": {
-    "appId": "com.guru.doctoral-research",
-    "productName": "G.U.R.U.",
+    "appId": "com.horatio.doctoral-research",
+    "productName": "Horatio",
     "copyright": "Copyright © 2026 Dhiraj Varma",
     "icon": "icon.png",
     "linux": {
       "target": ["AppImage"],
       "category": "Education",
-      "description": "G.U.R.U. — Guided University Research Utility"
+      "description": "Horatio — Guided University Research Utility"
     },
     "win": {
       "target": ["nsis", "portable"],
@@ -33,8 +33,8 @@
       "category": "public.app-category.education"
     },
     "nsis": {
-      "shortcutName": "G.U.R.U.",
-      "artifactName": "GURU-V2-Setup.exe"
+      "shortcutName": "Horatio",
+      "artifactName": "Horatio-V2-Setup.exe"
     }
   },
   "dependencies": {

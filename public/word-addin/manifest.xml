@@ -7,10 +7,10 @@
 
   <Id>7A4B2C3D-1E5F-4A6B-8C9D-0E1F2A3B4C5D</Id>
   <Version>1.9.8.0</Version>
-  <ProviderName>GURU Research Intelligence</ProviderName>
+  <ProviderName>Horatio Research Intelligence</ProviderName>
   <DefaultLocale>en-GB</DefaultLocale>
-  <DisplayName DefaultValue="GURU Research Intelligence"/>
-  <Description DefaultValue="GURU — AI doctoral research intelligence — OSCOLA citations, vault sync, and research assistance inside Word."/>
+  <DisplayName DefaultValue="Horatio Research Intelligence"/>
+  <Description DefaultValue="Horatio — AI doctoral research intelligence — OSCOLA citations, vault sync, and research assistance inside Word."/>
   <IconUrl DefaultValue="https://jarvisphd-80ecb.web.app/icon.png"/>
   <HighResolutionIconUrl DefaultValue="https://jarvisphd-80ecb.web.app/icon.png"/>
   <SupportUrl DefaultValue="https://jarvisphd-80ecb.web.app"/>
@@ -82,13 +82,13 @@
         <bt:Url id="Taskpane.Url"              DefaultValue="https://jarvisphd-80ecb.web.app/word-addin/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="GetStarted.Title"       DefaultValue="GURU Research Intelligence"/>
-        <bt:String id="CommandsGroup.Label"    DefaultValue="GURU"/>
-        <bt:String id="TaskpaneButton.Label"   DefaultValue="Open GURU"/>
+        <bt:String id="GetStarted.Title"       DefaultValue="Horatio Research Intelligence"/>
+        <bt:String id="CommandsGroup.Label"    DefaultValue="Horatio"/>
+        <bt:String id="TaskpaneButton.Label"   DefaultValue="Open Horatio"/>
       </bt:ShortStrings>
       <bt:LongStrings>
-        <bt:String id="GetStarted.Description" DefaultValue="GURU — AI doctoral research intelligence inside Word."/>
-        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Open the GURU research assistant sidebar."/>
+        <bt:String id="GetStarted.Description" DefaultValue="Horatio — AI doctoral research intelligence inside Word."/>
+        <bt:String id="TaskpaneButton.Tooltip" DefaultValue="Open the Horatio research assistant sidebar."/>
       </bt:LongStrings>
     </Resources>
   </VersionOverrides>

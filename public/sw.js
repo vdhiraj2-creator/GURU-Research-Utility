@@ -1,6 +1,6 @@
-// G.U.R.U. Service Worker — network-first for HTML, cache-first for static assets
+// Horatio Service Worker — network-first for HTML, cache-first for static assets
 // Bump CACHE version any time you deploy — forces old cache deletion
-const CACHE   = 'guru-v200';
+const CACHE   = 'horatio-v200';
 const STATIC  = ['/icon.png', '/manifest.json'];
 
 // ── INSTALL ────────────────────────────────────────────────────────

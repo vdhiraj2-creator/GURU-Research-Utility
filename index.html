@@ -1,5 +1,5 @@
 <!--
-  G.U.R.U. — Guided University Research Utility
+  Horatio — Guided University Research Utility
   Copyright © 2025 Dhiraj Varma. All rights reserved.
 
   This program is free software: you can redistribute it and/or modify
@@ -23,14 +23,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>G.U.R.U. — Doctoral Research Intelligence</title>
+    <title>Horatio — Doctoral Research Intelligence</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111111'/><path d='M16.5 4.5 C15.8 10 17.2 19 16 27.5' stroke='%231fb896' stroke-width='3' stroke-linecap='round' fill='none'/><path d='M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5' stroke='%231fb896' stroke-width='2.8' stroke-linecap='round' fill='none'/><path d='M6.5 10 C12 14 19.5 17.5 25.5 21.5' stroke='%231fb896' stroke-width='2.9' stroke-linecap='round' fill='none'/></svg>">
-    <meta name="application-name" content="G.U.R.U.">
-    <meta name="apple-mobile-web-app-title" content="G.U.R.U.">
+    <meta name="application-name" content="Horatio">
+    <meta name="apple-mobile-web-app-title" content="Horatio">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#020407">
-    <meta name="description" content="G.U.R.U. — Guided University Research Utility. AI doctoral research intelligence for PhD law students.">
+    <meta name="description" content="Horatio — Guided University Research Utility. AI doctoral research intelligence for PhD law students.">
     <link rel="manifest" href="/manifest.json">
     <link rel="apple-touch-icon" href="/icon-v2.png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -86,17 +86,17 @@
         body.light-mode nav button { color: var(--text-2); }
         body.light-mode nav button.active { color: var(--accent); background: var(--accent-dim); }
         body.light-mode nav button:hover:not(.active) { color: var(--text-1); background: var(--surface2); }
-        body.light-mode .bubble.guru { background: transparent; color: var(--text-1); }
+        body.light-mode .bubble.horatio { background: transparent; color: var(--text-1); }
         body.light-mode .bubble.user { background: var(--surface2); color: var(--text-1); }
         body.light-mode .bubble.system { color: var(--text-3); }
         body.light-mode .bubble-body { color: var(--text-1); }
-        body.light-mode .bubble.guru .bubble-body strong { color: var(--text-1); }
-        body.light-mode .bubble.guru .bubble-body a { color: #1d4ed8; }
-        body.light-mode .bubble.guru .bubble-body code { color: var(--accent); background: var(--surface2); }
-        body.light-mode .bubble.guru .bubble-body pre { background: var(--surface2); border-color: var(--border); }
-        body.light-mode .bubble.guru .bubble-body blockquote { color: var(--text-2); background: rgba(109,40,217,0.05); }
+        body.light-mode .bubble.horatio .bubble-body strong { color: var(--text-1); }
+        body.light-mode .bubble.horatio .bubble-body a { color: #1d4ed8; }
+        body.light-mode .bubble.horatio .bubble-body code { color: var(--accent); background: var(--surface2); }
+        body.light-mode .bubble.horatio .bubble-body pre { background: var(--surface2); border-color: var(--border); }
+        body.light-mode .bubble.horatio .bubble-body blockquote { color: var(--text-2); background: rgba(109,40,217,0.05); }
         body.light-mode .role-tag { color: var(--text-3) !important; opacity: 1; }
-        body.light-mode .bubble.guru .role-tag { color: var(--accent) !important; }
+        body.light-mode .bubble.horatio .role-tag { color: var(--accent) !important; }
         body.light-mode .thought-block { background: var(--thought); border-color: var(--border); color: var(--thought-text); }
         body.light-mode .thought-block:hover { border-color: #beb0a0; }
         body.light-mode .s-input, body.light-mode textarea.s-input { background: var(--surface2); color: var(--text-1); border-color: var(--border); }
@@ -119,10 +119,10 @@
         body.light-mode #chat-mic-btn { color: var(--text-3); }
         body.light-mode .status-line { color: var(--text-3); }
         body.light-mode .empty-state { color: var(--text-3); }
-        body.light-mode .guru-letter { color: var(--text-1); }
-        body.light-mode .guru-dot { color: var(--accent); }
-        body.light-mode #guru-voice-btn { border-color: var(--border); color: var(--text-2); }
-        body.light-mode #guru-voice-btn.active { color: var(--accent); border-color: var(--accent); }
+        body.light-mode .horatio-letter { color: var(--text-1); }
+        body.light-mode .horatio-dot { color: var(--accent); }
+        body.light-mode #horatio-voice-btn { border-color: var(--border); color: var(--text-2); }
+        body.light-mode #horatio-voice-btn.active { color: var(--accent); border-color: var(--accent); }
         body.light-mode .btn-save { background: var(--accent); color: #fff; }
         body.light-mode .vault-drop-zone { border-color: var(--border); background: var(--surface2); color: var(--text-3); }
         body.light-mode #theme-toggle { color: var(--text-2); }
@@ -138,12 +138,12 @@
         body.light-mode .mpop-item.active { color: var(--accent); background: var(--accent-dim); }
         body.light-mode .bubble.user { color: #0f172a; }
         body.light-mode .bubble-body { color: #0f172a !important; }
-        body.light-mode .bubble.guru .bubble-body strong  { color: #0f172a; font-weight: 700; }
-        body.light-mode .bubble.guru .bubble-body a       { color: #1d4ed8; }
-        body.light-mode .bubble.guru .bubble-body td      { color: #1e293b; }
-        body.light-mode .bubble.guru .bubble-body blockquote { color: #334155; }
-        body.light-mode .bubble.guru .bubble-body code    { color: var(--pulse); background: #f1f5f9; }
-        body.light-mode .bubble.guru .bubble-body pre     { background: #f1f5f9; }
+        body.light-mode .bubble.horatio .bubble-body strong  { color: #0f172a; font-weight: 700; }
+        body.light-mode .bubble.horatio .bubble-body a       { color: #1d4ed8; }
+        body.light-mode .bubble.horatio .bubble-body td      { color: #1e293b; }
+        body.light-mode .bubble.horatio .bubble-body blockquote { color: #334155; }
+        body.light-mode .bubble.horatio .bubble-body code    { color: var(--pulse); background: #f1f5f9; }
+        body.light-mode .bubble.horatio .bubble-body pre     { background: #f1f5f9; }
         body.light-mode .bubble.system { color: #475569; border-color: #cbd5e1; }
 
         /* Theme toggle button */
@@ -201,7 +201,7 @@
             align-items: center;
             gap: 0.6rem;
         }
-        #guru-icon-btn {
+        #horatio-icon-btn {
             position: relative;
             display: flex;
             align-items: center;
@@ -213,14 +213,14 @@
             border-radius: 8px;
             transition: opacity 0.15s;
         }
-        #guru-icon-btn:hover { opacity: 0.8; }
-        .guru-name {
+        #horatio-icon-btn:hover { opacity: 0.8; }
+        .horatio-name {
             display: inline-flex;
             align-items: center;
             gap: 0;
             line-height: 1;
         }
-        .guru-letter {
+        .horatio-letter {
             font-family: 'Playfair Display', Georgia, serif;
             font-size: 20px;
             font-weight: 700;
@@ -228,7 +228,7 @@
             letter-spacing: 0.01em;
             -webkit-font-smoothing: antialiased;
         }
-        .guru-dot {
+        .horatio-dot {
             font-family: 'Playfair Display', Georgia, serif;
             font-size: 20px;
             font-weight: 700;
@@ -294,7 +294,7 @@
             from { opacity: 0; transform: translateY(3px); }
             to   { opacity: 1; transform: translateY(0); }
         }
-        .bubble.guru {
+        .bubble.horatio {
             background: transparent;
         }
         .bubble.user {
@@ -317,7 +317,7 @@
             text-transform: none;
             margin-bottom: 0.6rem;
         }
-        .bubble.guru .role-tag  { color: var(--accent); }
+        .bubble.horatio .role-tag  { color: var(--accent); }
         .bubble.user .role-tag  { color: var(--text-2); }
         .bubble.system .role-tag { display: none; }
 
@@ -828,14 +828,14 @@
         }
         .vault-del-btn:hover { color: #ef4444; border-color: rgba(239,68,68,0.4); }
         .vault-del-btn.confirm-state { color: #ef4444; border-color: rgba(239,68,68,0.5); font-size: 8px; letter-spacing: 0.05em; }
-        /* Markdown rendered content in GURU bubbles — EB Garamond for legal document feel */
-        .bubble.guru .bubble-body {
+        /* Markdown rendered content in Horatio bubbles — EB Garamond for legal document feel */
+        .bubble.horatio .bubble-body {
             font-family: 'EB Garamond', Georgia, serif;
             font-size: 17px;
             line-height: 1.95;
             color: var(--text-1);
         }
-        .bubble.guru .bubble-body h1 {
+        .bubble.horatio .bubble-body h1 {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 18px;
             font-weight: 600;
@@ -848,7 +848,7 @@
             text-shadow: none;
             opacity: 1;
         }
-        .bubble.guru .bubble-body h2 {
+        .bubble.horatio .bubble-body h2 {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 15px;
             font-weight: 500;
@@ -860,7 +860,7 @@
             border-bottom: none;
             padding-bottom: 0;
         }
-        .bubble.guru .bubble-body h3 {
+        .bubble.horatio .bubble-body h3 {
             font-family: 'Inter', system-ui, sans-serif;
             font-size: 12px;
             font-weight: 500;
@@ -872,14 +872,14 @@
             border-bottom: none;
             padding-bottom: 0;
         }
-        .bubble.guru .bubble-body p { margin-bottom: 0.9rem; }
-        .bubble.guru .bubble-body p:last-child { margin-bottom: 0; }
-        .bubble.guru .bubble-body ul,
-        .bubble.guru .bubble-body ol { padding-left: 1.75rem; margin-bottom: 0.9rem; font-family: 'EB Garamond', Georgia, serif; }
-        .bubble.guru .bubble-body li { margin-bottom: 0.4rem; }
-        .bubble.guru .bubble-body strong { color: var(--text-pri); font-weight: 600; }
-        .bubble.guru .bubble-body em { color: var(--socratic); font-style: italic; }
-        .bubble.guru .bubble-body code {
+        .bubble.horatio .bubble-body p { margin-bottom: 0.9rem; }
+        .bubble.horatio .bubble-body p:last-child { margin-bottom: 0; }
+        .bubble.horatio .bubble-body ul,
+        .bubble.horatio .bubble-body ol { padding-left: 1.75rem; margin-bottom: 0.9rem; font-family: 'EB Garamond', Georgia, serif; }
+        .bubble.horatio .bubble-body li { margin-bottom: 0.4rem; }
+        .bubble.horatio .bubble-body strong { color: var(--text-pri); font-weight: 600; }
+        .bubble.horatio .bubble-body em { color: var(--socratic); font-style: italic; }
+        .bubble.horatio .bubble-body code {
             font-family: 'Space Mono', monospace;
             font-size: 12px;
             background: var(--thought);
@@ -887,7 +887,7 @@
             border-radius: 4px;
             color: var(--pulse);
         }
-        .bubble.guru .bubble-body pre {
+        .bubble.horatio .bubble-body pre {
             background: var(--thought);
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -895,8 +895,8 @@
             margin-bottom: 0.9rem;
             overflow-x: auto;
         }
-        .bubble.guru .bubble-body pre code { background: transparent; padding: 0; }
-        .bubble.guru .bubble-body blockquote {
+        .bubble.horatio .bubble-body pre code { background: transparent; padding: 0; }
+        .bubble.horatio .bubble-body blockquote {
             border-left: 2px solid var(--socratic);
             margin: 1rem 0;
             padding: 0.6rem 1.25rem;
@@ -905,14 +905,14 @@
             background: rgba(167,139,250,0.04);
             border-radius: 0 6px 6px 0;
         }
-        .bubble.guru .bubble-body a { color: #60a5fa; text-decoration: underline; text-underline-offset: 2px; }
-        .bubble.guru .bubble-body table {
+        .bubble.horatio .bubble-body a { color: #60a5fa; text-decoration: underline; text-underline-offset: 2px; }
+        .bubble.horatio .bubble-body table {
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 0.75rem;
             font-size: 12px;
         }
-        .bubble.guru .bubble-body th {
+        .bubble.horatio .bubble-body th {
             font-family: 'Space Mono', monospace;
             font-size: 8px;
             text-transform: uppercase;
@@ -922,13 +922,13 @@
             padding: 0.4rem 0.75rem;
             text-align: left;
         }
-        .bubble.guru .bubble-body td {
+        .bubble.horatio .bubble-body td {
             border-bottom: 1px solid var(--border);
             padding: 0.4rem 0.75rem;
             color: #94a3b8;
         }
         /* ============================================================
-           GURU ALIVE ANIMATIONS
+           Horatio ALIVE ANIMATIONS
         ============================================================ */
 
         /* Logo breathes — slow cyan glow pulse */
@@ -936,7 +936,7 @@
             0%, 100% { text-shadow: 0 0 6px rgba(0,255,204,0.25); }
             50%       { text-shadow: 0 0 18px rgba(0,255,204,0.65), 0 0 40px rgba(0,255,204,0.15); }
         }
-        /* logo-breathe removed — guru-dot-glow carries the animation */
+        /* logo-breathe removed — horatio-dot-glow carries the animation */
 
 
         /* Workspace ambient — removed for clean academic aesthetic */
@@ -944,8 +944,8 @@
 
         /* Sync dot — simple indicator, no glow effects */
 
-        /* GURU bubble — simple fade on entry */
-        .bubble.guru { animation: fadeUp 0.2s ease-out; }
+        /* Horatio bubble — simple fade on entry */
+        .bubble.horatio { animation: fadeUp 0.2s ease-out; }
 
         /* Thinking indicator — upgraded to a neural cascade */
         @keyframes neural-cascade {
@@ -990,8 +990,8 @@
         #search-btn { font-size: 13px; }
         #search-btn.active { color: var(--accent); }
 
-        /* GURU voice toggle button */
-        #guru-voice-btn {
+        /* Horatio voice toggle button */
+        #horatio-voice-btn {
             display: inline-flex;
             align-items: center;
             background: none;
@@ -1002,9 +1002,9 @@
             transition: color 0.15s, opacity 0.15s;
             opacity: 0.75;
         }
-        #guru-voice-btn:hover { opacity: 1; color: var(--text-1); }
-        #guru-voice-btn.active { color: var(--accent); opacity: 1; }
-        #guru-voice-btn .vbtn-icon { display: none; } /* SVG replaces emoji */
+        #horatio-voice-btn:hover { opacity: 1; color: var(--text-1); }
+        #horatio-voice-btn.active { color: var(--accent); opacity: 1; }
+        #horatio-voice-btn .vbtn-icon { display: none; } /* SVG replaces emoji */
 
         #pro-status-display {
             font-family: 'Space Mono', monospace;
@@ -1250,12 +1250,12 @@
                 row-gap: 0.35rem;
             }
             .logo { font-size: 9px; letter-spacing: 0.05em; }
-            .guru-letter, .guru-dot { font-size: 13px; }
-            #guru-mark { width: 18px; height: 18px; }
+            .horatio-letter, .horatio-dot { font-size: 13px; }
+            #horatio-mark { width: 18px; height: 18px; }
             #sync-dot { display: none; }
             /* Shrink right-side header buttons on mobile */
             #workspace-btn { font-size: 10px; }
-            #guru-voice-btn svg { width: 15px; height: 15px; }
+            #horatio-voice-btn svg { width: 15px; height: 15px; }
 
             /* Nav: scroll strip — override desktop space-evenly */
             #toolbar nav {
@@ -1865,6 +1865,7 @@
         body.light-mode .panel-menu-item:hover { background: var(--surface2); }
         body.light-mode .panel-action-primary { color: #fff; }
     </style>
+<style>.horatio-wordmark{display:inline;}.horatio-ho{font-family:"Times New Roman",Times,serif;font-style:normal;font-weight:400;}.horatio-ratio{font-family:"Times New Roman",Times,serif;font-style:italic;}</style>
 </head>
 <body>
 
@@ -1872,18 +1873,18 @@
     <div id="workspace">
         <header>
             <div class="logo">
-                <button id="guru-icon-btn" onclick="setTab('settings')" title="Settings">
-                    <svg id="guru-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+                <button id="horatio-icon-btn" onclick="setTab('settings')" title="Settings">
+                    <svg id="horatio-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
                         <path d="M16.5 4.5 C15.8 10 17.2 19 16 27.5" stroke="var(--accent)" stroke-width="3" stroke-linecap="round"/>
                         <path d="M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5" stroke="var(--accent)" stroke-width="2.8" stroke-linecap="round"/>
                         <path d="M6.5 10 C12 14 19.5 17.5 25.5 21.5" stroke="var(--accent)" stroke-width="2.9" stroke-linecap="round"/>
                     </svg>
-                    <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
+                    <span class="horatio-name"><span class="horatio-ho">Ho</span><span class="horatio-ratio">Ratio</span></span>
                 </button>
             </div>
             <div style="display:flex;align-items:center;gap:0.6rem;margin-left:auto;">
                 <button id="workspace-btn" onclick="toggleToolbar()" title="Open navigation">Navigate</button>
-                <button id="guru-voice-btn" onclick="GuruVoice.toggle()" title="Toggle voice output">
+                <button id="horatio-voice-btn" onclick="HoratioVoice.toggle()" title="Toggle voice output">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
                         <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
@@ -1986,7 +1987,7 @@
 
                     <!-- Paste mode -->
                     <div id="radd-paste">
-                        <p class="s-note" style="margin:0.6rem 0;">Paste one citation or an entire chapter bibliography — GURU splits and categorises every reference automatically. Handles hundreds at once.</p>
+                        <p class="s-note" style="margin:0.6rem 0;">Paste one citation or an entire chapter bibliography — Horatio splits and categorises every reference automatically. Handles hundreds at once.</p>
                         <textarea id="ref-paste-input" class="s-input" style="min-height:90px;resize:vertical;" placeholder="Paste a full bibliography — e.g.&#10;Montgomery v Lanarkshire Health Board [2015] UKSC 11&#10;Children Act 1989&#10;Smith J, 'Genomic Negligence' (2023) 43 LS 112&#10;Donoghue v Stevenson [1932] AC 562&#10;...paste as many as needed"></textarea>
                         <select id="ref-paste-type" class="s-input" style="margin-top:0.5rem;">
                             <option value="auto">Auto-detect type</option>
@@ -2069,7 +2070,7 @@
                         <div class="viva-start-icon">🎓</div>
                         <div class="viva-start-title">Viva Voce Simulator</div>
                         <p class="viva-start-desc">
-                            GURU will act as an external PhD examiner and conduct a rigorous oral examination of your work.<br>
+                            Horatio will act as an external PhD examiner and conduct a rigorous oral examination of your work.<br>
                             Vault entries are used as context. Choose your preferred mode below.
                         </p>
                         <div class="viva-voice-options">
@@ -2128,7 +2129,7 @@
                      onclick="document.getElementById('slide-pdf-input').click()">
                     <div class="slide-drop-icon">📑</div>
                     <div class="slide-drop-text">Drop PDF here or click to load</div>
-                    <div class="slide-drop-sub">PDF presentations rendered as slides — navigate, present, and discuss with GURU</div>
+                    <div class="slide-drop-sub">PDF presentations rendered as slides — navigate, present, and discuss with Horatio</div>
                 </div>
                 <div id="slide-viewer">
                     <div class="slide-stage">
@@ -2142,7 +2143,7 @@
                             <button class="btn-slide-nav" id="btn-slide-next" onclick="changeSlide(1)">Next →</button>
                         </div>
                         <div class="slide-action-btns">
-                            <button class="btn-slide-action btn-slide-discuss" onclick="discussCurrentSlide()">🎓 Discuss with GURU</button>
+                            <button class="btn-slide-action btn-slide-discuss" onclick="discussCurrentSlide()">🎓 Discuss with Horatio</button>
                             <button class="btn-slide-action btn-slide-action" onclick="sendSlideToViva()" style="color:#f59e0b;border-color:rgba(245,158,11,0.2);">🔬 Use in Viva</button>
                             <button class="btn-slide-action btn-slide-fullscreen" onclick="openFullscreen()">⛶ Present</button>
                         </div>
@@ -2169,7 +2170,7 @@
                         <span class="panel-title">Tools</span>
                     </div>
                     <p class="s-section">Document Paste Bridge</p>
-                    <p class="s-note" style="margin-bottom:0.75rem;">Paste text from Word, Google Docs, LibreOffice, or any source. Analyse it, load it into the vault, or diff it against GURU's suggested revision.</p>
+                    <p class="s-note" style="margin-bottom:0.75rem;">Paste text from Word, Google Docs, LibreOffice, or any source. Analyse it, load it into the vault, or diff it against Horatio's suggested revision.</p>
                     <div class="s-group">
                         <label class="s-label" for="tool-paste">Document Text</label>
                         <textarea id="tool-paste" class="s-input" style="min-height:130px;resize:vertical;" placeholder="Paste your document, paragraph, draft, or excerpt here..."></textarea>
@@ -2194,14 +2195,14 @@
                     <div id="tool-map-out" class="tool-output" style="display:none;margin-top:1rem;overflow:auto;"></div>
 
                     <p class="s-section" style="margin-top:1.5rem;">Document Diff</p>
-                    <p class="s-note" style="margin-bottom:0.75rem;">Paste original and revised text to see word-level changes highlighted. Leave Revised blank — GURU will suggest edits.</p>
+                    <p class="s-note" style="margin-bottom:0.75rem;">Paste original and revised text to see word-level changes highlighted. Leave Revised blank — Horatio will suggest edits.</p>
                     <div class="tool-diff-grid">
                         <div>
                             <label class="s-label">Original</label>
                             <textarea id="tool-diff-orig" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Paste original paragraph..."></textarea>
                         </div>
                         <div>
-                            <label class="s-label">Revised (blank = ask GURU)</label>
+                            <label class="s-label">Revised (blank = ask Horatio)</label>
                             <textarea id="tool-diff-rev" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Paste revised text, or leave blank..."></textarea>
                         </div>
                     </div>
@@ -2209,7 +2210,7 @@
                     <div id="tool-diff-out" class="tool-output" style="display:none;white-space:pre-wrap;"></div>
 
                     <p class="s-section" style="margin-top:1.5rem;">OSCOLA Footnote Formatter</p>
-                    <p class="s-note" style="margin-bottom:0.75rem;">List the sources you are citing in footnote order — one per line. GURU generates properly formatted OSCOLA footnotes with <em>ibid</em> and <em>above n</em> shortening automatically.</p>
+                    <p class="s-note" style="margin-bottom:0.75rem;">List the sources you are citing in footnote order — one per line. Horatio generates properly formatted OSCOLA footnotes with <em>ibid</em> and <em>above n</em> shortening automatically.</p>
                     <div class="s-group">
                         <label class="s-label">Sources in citation order (one per line — paste party names, titles, or citation strings)</label>
                         <textarea id="tool-fn-input" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Montgomery v Lanarkshire Health Board&#10;Bolam v Friern Hospital Management Committee&#10;Montgomery v Lanarkshire Health Board&#10;Watson JD and Crick FHC, The Structure of DNA&#10;Bolam v Friern Hospital Management Committee&#10;..."></textarea>
@@ -2272,7 +2273,7 @@
                     <div id="sheet-tabs" class="sheet-tabs" style="display:none;"></div>
 
                     <div id="sheet-action-bar" class="sheet-action-bar" style="display:none;">
-                        <button class="btn-save" onclick="analyseSpreadsheetInChat()">Analyse with GURU →</button>
+                        <button class="btn-save" onclick="analyseSpreadsheetInChat()">Analyse with Horatio →</button>
                         <button class="btn-save" style="background:transparent;border:1px solid rgba(37,99,235,0.35);color:#2563eb;" onclick="extractRefsFromSheet()">Extract References</button>
                         <button class="btn-save" style="background:transparent;border:1px solid rgba(37,99,235,0.35);color:#60a5fa;" onclick="loadSheetToVault()">Load to Vault</button>
                     </div>
@@ -2383,8 +2384,8 @@
                     </div>
                 </div>
                 <div class="s-group">
-                    <label class="s-label" for="cfg-voice">GURU Voice</label>
-                    <select id="cfg-voice" class="s-input" onchange="localStorage.setItem('guru_voice_name', this.value)">
+                    <label class="s-label" for="cfg-voice">Horatio Voice</label>
+                    <select id="cfg-voice" class="s-input" onchange="localStorage.setItem('horatio_voice_name', this.value)">
                         <option value="Charon">Charon — Deep, authoritative gravitas</option>
                         <option value="Fenrir">Fenrir — Powerful, commanding baritone</option>
                         <option value="Kore">Kore — Precise, professional clarity</option>
@@ -2410,11 +2411,11 @@
                     <label class="s-label" for="cfg-directive">PhD Research Focus</label>
                     <textarea id="cfg-directive" class="s-input" placeholder="e.g. Medical negligence and AI diagnostics under UK tort law, PhD at [University]. Focus on duty of care, causation, and NHS liability frameworks."></textarea>
                 </div>
-                <button class="btn-save" onclick="saveSettings()">Save & Calibrate GURU</button>
-                <p class="s-section">GURU Pro</p>
+                <button class="btn-save" onclick="saveSettings()">Save & Calibrate Horatio</button>
+                <p class="s-section">Horatio Pro</p>
                 <div class="s-group">
                     <label class="s-label" for="cfg-pro">Licence Key</label>
-                    <input type="text" id="cfg-pro" class="s-input" placeholder="GURU-XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off">
+                    <input type="text" id="cfg-pro" class="s-input" placeholder="Horatio-XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off">
                     <div id="pro-status-display"></div>
                 </div>
                 <button class="btn-save" style="background:transparent;border:1px solid rgba(0,255,204,0.3);color:var(--pulse);margin-bottom:0.75rem;" onclick="unlockPro()">Unlock Pro</button>
@@ -2422,8 +2423,8 @@
                 <p class="s-section">External Research Context</p>
                 <div class="s-group">
                     <label class="s-label" for="cfg-ext-context">Gemini Gem / Claude Project Instructions</label>
-                    <textarea id="cfg-ext-context" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Paste your Gemini Gem system prompt or Claude Project instructions here. GURU will use this as additional research context in every session — bridging your Gem and Project knowledge into GURU."></textarea>
-                    <p class="s-note" style="margin-top:0.4rem;">Copy from: Gemini AI Studio → Your Gem → System Instructions · or · Claude.ai → Project → Project Instructions. There is no live API link to either — paste the context here once and GURU carries it forward.</p>
+                    <textarea id="cfg-ext-context" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Paste your Gemini Gem system prompt or Claude Project instructions here. Horatio will use this as additional research context in every session — bridging your Gem and Project knowledge into Horatio."></textarea>
+                    <p class="s-note" style="margin-top:0.4rem;">Copy from: Gemini AI Studio → Your Gem → System Instructions · or · Claude.ai → Project → Project Instructions. There is no live API link to either — paste the context here once and Horatio carries it forward.</p>
                 </div>
 
                 <p class="s-section">Integrations</p>
@@ -2443,7 +2444,7 @@
                 </div>
 
                 <p class="s-section">Academic &amp; Legal Databases</p>
-                <p class="s-note"><strong>All 22 databases are fully free — no API keys required.</strong> GURU searches all simultaneously on every query.</p>
+                <p class="s-note"><strong>All 22 databases are fully free — no API keys required.</strong> Horatio searches all simultaneously on every query.</p>
                 <p class="s-note" style="margin-top:0.5rem;"><strong>Journals &amp; Academic:</strong> OpenAlex · CrossRef · PubMed · PubMed Central · Europe PMC · Semantic Scholar · DOAJ · arXiv · ClinicalTrials.gov · WHO IRIS</p>
                 <p class="s-note" style="margin-top:0.3rem;"><strong>Genetics &amp; Clinical:</strong> ClinVar · OMIM · NCBI Gene · UniProt · Orphanet · GWAS Catalog</p>
                 <p class="s-note" style="margin-top:0.3rem;"><strong>Case Law:</strong> HUDOC (ECHR) · Find Case Law UK · CourtListener (US) · Caselaw Access Project (US)</p>
@@ -2472,7 +2473,7 @@
                     <div id="storage-label" style="font-family:'Space Mono',monospace;font-size:8px;color:#334155;">Calculating...</div>
                 </div>
                 <p class="s-note">
-                    G.U.R.U. V2.0 — Web app · Google Docs &amp; Sheets · Desktop (Electron) · Mobile PWA · Gemini TTS voices · Reference Manager · Viva Simulator · Cloud Sync (Pro) · Light &amp; Dark mode.<br>
+                    Horatio V2.0 — Web app · Google Docs &amp; Sheets · Desktop (Electron) · Mobile PWA · Gemini TTS voices · Reference Manager · Viva Simulator · Cloud Sync (Pro) · Light &amp; Dark mode.<br>
                     API key stored in browser localStorage only. No data leaves your device without Cloud Sync.<br>
                     <a href="/privacy.html" target="_blank" style="color:var(--pulse);opacity:0.6;text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms.html" target="_blank" style="color:var(--pulse);opacity:0.6;text-decoration:none;">Terms of Use</a>
                 </p>
@@ -2491,7 +2492,7 @@
 
                 <!-- Step 1: Provider -->
                 <div class="ob-step active" id="ob-step-1">
-                    <h2 class="ob-title">Welcome to G.U.R.U.</h2>
+                    <h2 class="ob-title">Welcome to Horatio</h2>
                     <p class="ob-sub">Your AI doctoral research intelligence. Choose a provider to get started — Groq is free, no credit card required.</p>
                     <div class="ob-prov-grid">
                         <button class="ob-prov-btn" data-prov="groq" onclick="selectObProvider('groq')">
@@ -2522,9 +2523,9 @@
                 <!-- Step 2: Directive -->
                 <div class="ob-step" id="ob-step-2">
                     <h2 class="ob-title">Your research focus</h2>
-                    <p class="ob-sub">Tell GURU your PhD area so it calibrates supervision, sources, and argument development to your specific field from the start.</p>
+                    <p class="ob-sub">Tell Horatio your PhD area so it calibrates supervision, sources, and argument development to your specific field from the start.</p>
                     <textarea id="ob-directive-input" placeholder="e.g. Genomic negligence in English tort law — specifically whether surgical interference causing adverse epigenetic changes constitutes actionable harm under existing duty of care principles."></textarea>
-                    <p class="ob-hint">Can be updated anytime in Settings. Leave blank to use GURU across all areas of law.</p>
+                    <p class="ob-hint">Can be updated anytime in Settings. Leave blank to use Horatio across all areas of law.</p>
                     <div class="ob-footer">
                         <button class="ob-btn-secondary" onclick="goToOnboardingStep(1)">← Back</button>
                         <button class="ob-btn-primary" onclick="obNext(2)">Continue →</button>
@@ -2547,7 +2548,7 @@
                             <div class="ob-feature-icon">📚</div>
                             <div class="ob-feature-body">
                                 <div class="ob-feature-name">Research Library</div>
-                                <div class="ob-feature-desc">Upload PDFs, case law, notes. GURU searches your library and cites from it automatically in every response.</div>
+                                <div class="ob-feature-desc">Upload PDFs, case law, notes. Horatio searches your library and cites from it automatically in every response.</div>
                             </div>
                         </div>
                         <div class="ob-feature">
@@ -2574,11 +2575,11 @@
                 <!-- Step 4: Pro -->
                 <div class="ob-step" id="ob-step-4">
                     <h2 class="ob-title">Start free, upgrade when ready</h2>
-                    <p class="ob-sub">GURU is fully functional on the free tier. Pro unlocks features for serious researchers.</p>
+                    <p class="ob-sub">Horatio is fully functional on the free tier. Pro unlocks features for serious researchers.</p>
                     <div class="ob-pro-list">
                         <div class="ob-pro-item">Extended context — up to 50 messages of conversation memory</div>
                         <div class="ob-pro-item">Cloud sync — journal, library and chat across all your devices</div>
-                        <div class="ob-pro-item">Streaming responses — see GURU's thinking in real time</div>
+                        <div class="ob-pro-item">Streaming responses — see Horatio's thinking in real time</div>
                         <div class="ob-pro-item">Temperature control — tune creativity vs precision per session</div>
                     </div>
                     <div class="ob-footer">
@@ -2607,7 +2608,7 @@
             <div id="input-inner-pad"><div class="input-inner">
                 <div id="preview-chips" style="display:none;" class="preview-chips"></div>
                 <div class="input-box">
-                    <textarea id="query-input" rows="1" placeholder="Ask GURU — or paste a passage to critique, analyse, or expand..."></textarea>
+                    <textarea id="query-input" rows="1" placeholder="Ask Horatio — or paste a passage to critique, analyse, or expand..."></textarea>
                     <div class="input-row">
                         <div class="input-tools-left">
                             <button class="clip-btn" onclick="document.getElementById('file-input').click()" title="Attach image or PDF">📎</button>
@@ -2645,7 +2646,7 @@
 
             <div id="app-footer">
                 <span id="pro-badge">Pro</span>
-                <span style="color:var(--text-3);">G.U.R.U. v2.0</span>
+                <span style="color:var(--text-3);">Horatio v2.0</span>
                 <span class="footer-spacer"></span>
                 <a href="/privacy.html" target="_blank">Privacy</a>
                 <a href="/terms.html" target="_blank">Terms</a>
@@ -2673,22 +2674,22 @@
         };
         marked.setOptions({ renderer: _renderer });
 
-        // One-time migration: move any jarvis_* localStorage keys to guru_* equivalents
+        // One-time migration: move any jarvis_* localStorage keys to horatio_* equivalents
         (function migrateStorage() {
             const map = {
-                'jarvis_chat_v191':   'guru_chat_v191',
-                'jarvis_api_key':     'guru_api_key',
-                'jarvis_model':       'guru_model',
-                'jarvis_directive':   'guru_directive',
-                'jarvis_vault_v191':  'guru_vault_v191',
-                'jarvis_temp':        'guru_temp',
-                'jarvis_context':     'guru_context',
-                'jarvis_session_id':  'guru_session_id',
-                'jarvis_pro_key':     'guru_pro_key',
-                'jarvis_sync_pass':   'guru_sync_pass',
-                'jarvis_voice_enabled':'guru_voice_enabled',
-                'jarvis_refs_v1':     'guru_refs_v1',
-                'jarvis_voice_name':  'guru_voice_name',
+                'jarvis_chat_v191':   'horatio_chat_v191',
+                'jarvis_api_key':     'horatio_api_key',
+                'jarvis_model':       'horatio_model',
+                'jarvis_directive':   'horatio_directive',
+                'jarvis_vault_v191':  'horatio_vault_v191',
+                'jarvis_temp':        'horatio_temp',
+                'jarvis_context':     'horatio_context',
+                'jarvis_session_id':  'horatio_session_id',
+                'jarvis_pro_key':     'horatio_pro_key',
+                'jarvis_sync_pass':   'horatio_sync_pass',
+                'jarvis_voice_enabled':'horatio_voice_enabled',
+                'jarvis_refs_v1':     'horatio_refs_v1',
+                'jarvis_voice_name':  'horatio_voice_name',
             };
             let migrated = false;
             for (const [oldKey, newKey] of Object.entries(map)) {
@@ -2699,7 +2700,7 @@
                 }
                 localStorage.removeItem(oldKey);
             }
-            if (migrated) console.info('[GURU] Storage migrated from jarvis_* keys to guru_* keys.');
+            if (migrated) console.info('[Horatio] Storage migrated from jarvis_* keys to horatio_* keys.');
         })();
 
         let _pdfJsLoaded = false;
@@ -2722,7 +2723,7 @@
         // INDEXEDDB STORAGE ENGINE
         // ============================================================
         const GDB = (() => {
-            const DB_NAME    = 'guru_db_v1';
+            const DB_NAME    = 'horatio_db_v1';
             const DB_VERSION = 1;
             const STORES     = ['chat', 'vault', 'journal', 'refs'];
             let _db = null;
@@ -2737,7 +2738,7 @@
                     };
                     req.onsuccess  = e => { _db = e.target.result; resolve(_db); };
                     req.onerror    = e => reject(e.target.error);
-                    req.onblocked  = () => console.warn('[GURU] IndexedDB open blocked');
+                    req.onblocked  = () => console.warn('[Horatio] IndexedDB open blocked');
                 });
             }
 
@@ -2774,10 +2775,10 @@
         // One-time migration from localStorage → IndexedDB
         async function _migrateLocalStorageToIDB() {
             const migrations = [
-                { ls: 'guru_chat_v191',  idb: ['chat',    'messages'] },
-                { ls: 'guru_vault_v191', idb: ['vault',   'entries']  },
-                { ls: 'guru_journal_v1', idb: ['journal', 'entries']  },
-                { ls: 'guru_refs_v1',    idb: ['refs',    'entries']  },
+                { ls: 'horatio_chat_v191',  idb: ['chat',    'messages'] },
+                { ls: 'horatio_vault_v191', idb: ['vault',   'entries']  },
+                { ls: 'horatio_journal_v1', idb: ['journal', 'entries']  },
+                { ls: 'horatio_refs_v1',    idb: ['refs',    'entries']  },
             ];
             let migrated = false;
             for (const m of migrations) {
@@ -2789,9 +2790,9 @@
                     await GDB.put(m.idb[0], JSON.parse(raw), m.idb[1]);
                     localStorage.removeItem(m.ls);
                     migrated = true;
-                } catch(e) { console.warn('[GURU] Migration failed for', m.ls, e); }
+                } catch(e) { console.warn('[Horatio] Migration failed for', m.ls, e); }
             }
-            if (migrated) console.info('[GURU] Data migrated from localStorage to IndexedDB.');
+            if (migrated) console.info('[Horatio] Data migrated from localStorage to IndexedDB.');
         }
 
         // ============================================================
@@ -2813,33 +2814,33 @@
 
         const MODEL_DEFAULT     = 'gemini-2.5-flash';
         const DIRECTIVE_DEFAULT = '';
-        const SK_CHAT    = 'guru_chat_v191';
-        const SK_KEY     = 'guru_api_key';
-        const SK_MODEL   = 'guru_model';
-        const SK_DIR     = 'guru_directive';
-        const SK_VAULT   = 'guru_vault_v191';
-        const SK_TEMP    = 'guru_temp';
-        const SK_CONTEXT = 'guru_context';
-        const SK_SESSION = 'guru_session_id';
-        const SK_PRO     = 'guru_pro_key';
-        const SK_FB_PASS = 'guru_sync_pass';
-        const SK_VOICE      = 'guru_voice_enabled';
-        const SK_REFS       = 'guru_refs_v1';
-        const SK_VOICE_NAME = 'guru_voice_name';
-        const SK_THEME      = 'guru_theme';
-        const SK_JOURNAL    = 'guru_journal_v1';
-        const SK_SUP_EMAIL  = 'guru_supervisor_email';
-        const SK_SEARCH_KEY  = 'guru_search_key';   // Tavily API key for real web search
-        const SK_EXT_CONTEXT = 'guru_ext_context';  // Gemini Gem / Claude Project instructions
-        const SK_PROVIDER    = 'guru_provider';    // 'gemini' | 'claude' | 'groq' | 'ollama'
-        const SK_CLAUDE_KEY  = 'guru_claude_key';
-        const SK_GROQ_KEY    = 'guru_groq_key';
-        const SK_OLLAMA_URL  = 'guru_ollama_url';
-        const SK_MODEL_OLLAMA = 'guru_model_ollama';
-        const SK_MODEL_CHAT  = 'guru_model_chat';
-        const SK_MODEL_VIVA  = 'guru_model_viva';
-        const SK_MODEL_TOOLS = 'guru_model_tools';
-        const SK_MODEL_REPORT= 'guru_model_report';
+        const SK_CHAT    = 'horatio_chat_v191';
+        const SK_KEY     = 'horatio_api_key';
+        const SK_MODEL   = 'horatio_model';
+        const SK_DIR     = 'horatio_directive';
+        const SK_VAULT   = 'horatio_vault_v191';
+        const SK_TEMP    = 'horatio_temp';
+        const SK_CONTEXT = 'horatio_context';
+        const SK_SESSION = 'horatio_session_id';
+        const SK_PRO     = 'horatio_pro_key';
+        const SK_FB_PASS = 'horatio_sync_pass';
+        const SK_VOICE      = 'horatio_voice_enabled';
+        const SK_REFS       = 'horatio_refs_v1';
+        const SK_VOICE_NAME = 'horatio_voice_name';
+        const SK_THEME      = 'horatio_theme';
+        const SK_JOURNAL    = 'horatio_journal_v1';
+        const SK_SUP_EMAIL  = 'horatio_supervisor_email';
+        const SK_SEARCH_KEY  = 'horatio_search_key';   // Tavily API key for real web search
+        const SK_EXT_CONTEXT = 'horatio_ext_context';  // Gemini Gem / Claude Project instructions
+        const SK_PROVIDER    = 'horatio_provider';    // 'gemini' | 'claude' | 'groq' | 'ollama'
+        const SK_CLAUDE_KEY  = 'horatio_claude_key';
+        const SK_GROQ_KEY    = 'horatio_groq_key';
+        const SK_OLLAMA_URL  = 'horatio_ollama_url';
+        const SK_MODEL_OLLAMA = 'horatio_model_ollama';
+        const SK_MODEL_CHAT  = 'horatio_model_chat';
+        const SK_MODEL_VIVA  = 'horatio_model_viva';
+        const SK_MODEL_TOOLS = 'horatio_model_tools';
+        const SK_MODEL_REPORT= 'horatio_model_report';
 
         // Firebase cloud sync state
         let _fbDb = null, _fbEnabled = false, _fbPath = null, _fbVaultPath = null, _fbJournalPath = null, _fbUnsub = null, _fbVaultUnsub = null, _fbJournalUnsub = null, _fbNodeHash = null;
@@ -2896,7 +2897,7 @@
             if (mode === 'sources' && !_searchMode) {
                 _searchMode = true;
                 document.getElementById('search-btn')?.classList.add('active');
-                setStatus('Sources mode: web search activated — GURU will find current literature');
+                setStatus('Sources mode: web search activated — Horatio will find current literature');
                 setTimeout(() => setStatus(''), 3500);
             }
         }
@@ -2926,7 +2927,7 @@
         // FIREBASE CLOUD SYNC  (Pro only)
         // ============================================================
         async function _deriveNodeHash(passphrase) {
-            const data = new TextEncoder().encode(passphrase.trim() + ':guru_sovereign_node');
+            const data = new TextEncoder().encode(passphrase.trim() + ':horatio_sovereign_node');
             const buf  = await crypto.subtle.digest('SHA-256', data);
             return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
         }
@@ -2936,9 +2937,9 @@
             const fbStatus = document.getElementById('fb-status-display');
             try {
                 _fbNodeHash   = await _deriveNodeHash(passphrase);
-                _fbPath        = `guru_nodes/${_fbNodeHash}/chat`;
-                _fbVaultPath   = `guru_nodes/${_fbNodeHash}/vault`;
-                _fbJournalPath = `guru_nodes/${_fbNodeHash}/journal`;
+                _fbPath        = `horatio_nodes/${_fbNodeHash}/chat`;
+                _fbVaultPath   = `horatio_nodes/${_fbNodeHash}/vault`;
+                _fbJournalPath = `horatio_nodes/${_fbNodeHash}/journal`;
 
                 let app;
                 try { app = firebase.app(); } catch(e) {
@@ -2978,7 +2979,7 @@
                     document.getElementById('chat-stage').innerHTML = '';
                     chatHistory.forEach(m => renderBubble(m.role, m.text, m.thought, m.socratic, false));
                     biblioSources = [];
-                    chatHistory.filter(m => m.role === 'guru').forEach(m => updateBiblio(m.text));
+                    chatHistory.filter(m => m.role === 'horatio').forEach(m => updateBiblio(m.text));
                     scrollDown();
                 }
             }, err => { console.error('Firebase chat sync error:', err); _fbEnabled = false; setDot('error'); });
@@ -3121,9 +3122,9 @@
                 return false;
             }
 
-            // ── Path B: JRVS manual key (format: GURU-XXXX-XXXX-XXXX) ──
+            // ── Path B: JRVS manual key (format: Horatio-XXXX-XXXX-XXXX) ──
             const upper = normalised.toUpperCase();
-            if (!/^(GURU|JRVS)-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(upper)) return false;
+            if (!/^(Horatio|JRVS)-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}$/.test(upper)) return false;
             const encoder = new TextEncoder();
             const data    = encoder.encode(upper + 'JRVS_SOVEREIGN_PHD_2025');
             const buf     = await crypto.subtle.digest('SHA-256', data);
@@ -3279,7 +3280,7 @@ Citation text: "${src.text}"`
 {\\colortbl ;\\red102\\green102\\blue102;}
 \\widowctrl\\hyphauto\\f0\\fs24
 \\margl1800\\margr1800\\margt1440\\margb1440
-\\pard\\sb0\\sa120{\\b\\fs36 G.U.R.U. \\u8212? Living Bibliography}\\par
+\\pard\\sb0\\sa120{\\b\\fs36 Horatio \\u8212? Living Bibliography}\\par
 \\pard\\sb0\\sa40{\\fs18\\cf1 Guided University Research Utility \\u183? Doctoral Research Intelligence}\\par
 \\pard\\sb0\\sa40{\\fs18\\cf1 Exported: ${_r(dateStr)}}\\par
 \\pard\\sb0\\sa300 \\par
@@ -3288,7 +3289,7 @@ ${body}}`;
 
             const a = document.createElement('a');
             a.href     = 'data:application/rtf;charset=utf-8,' + encodeURIComponent(rtf);
-            a.download = `GURU_Bibliography_${new Date().toISOString().slice(0,10)}.rtf`;
+            a.download = `Horatio_Bibliography_${new Date().toISOString().slice(0,10)}.rtf`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -3312,13 +3313,13 @@ ${body}}`;
             }).join('\n\n');
             const a = document.createElement('a');
             a.href     = 'data:application/x-research-info-systems;charset=utf-8,' + encodeURIComponent(lines);
-            a.download = `GURU_References_${new Date().toISOString().slice(0,10)}.ris`;
+            a.download = `Horatio_References_${new Date().toISOString().slice(0,10)}.ris`;
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
         }
 
         async function pushAllToZotero() {
-            const key = localStorage.getItem('guru_zotero_key') || '';
-            const uid = localStorage.getItem('guru_zotero_uid') || '';
+            const key = localStorage.getItem('horatio_zotero_key') || '';
+            const uid = localStorage.getItem('horatio_zotero_uid') || '';
             if (!key || !uid) {
                 addBubble('system', '⇄ Zotero not configured. Go to Config → Zotero Integration and paste your API key and User ID from zotero.org/settings/keys, then Save.');
                 setTab('settings'); return;
@@ -3340,7 +3341,7 @@ ${body}}`;
                     return { creatorType:'author', lastName: parts[0]||'', firstName: parts.slice(1).join(' ')||'' };
                 }).filter(c => c.lastName);
                 const item = { itemType, title: r.parties || r.title || '', creators,
-                    date: r.year || '', abstractNote: r.notes || '', extra: `Source: ${r.source_db||'GURU'}` };
+                    date: r.year || '', abstractNote: r.notes || '', extra: `Source: ${r.source_db||'Horatio'}` };
                 if (itemType === 'journalArticle') item.publicationTitle = r.journal || '';
                 if (r.doi) item.DOI = r.doi;
                 if (r.url) item.url = r.url;
@@ -3416,12 +3417,12 @@ ${body}}`;
             if (provider === 'gemini') {
                 return { chat: SK_MODEL_CHAT, viva: SK_MODEL_VIVA, tools: SK_MODEL_TOOLS, report: SK_MODEL_REPORT }[mode] || SK_MODEL_CHAT;
             }
-            return `guru_model_${provider}_${mode}`;
+            return `horatio_model_${provider}_${mode}`;
         }
 
         // Returns the provider for a specific mode, falling back to the global provider.
         function getProviderForMode(mode) {
-            return localStorage.getItem(`guru_provider_${mode}`) || localStorage.getItem(SK_PROVIDER) || 'gemini';
+            return localStorage.getItem(`horatio_provider_${mode}`) || localStorage.getItem(SK_PROVIDER) || 'gemini';
         }
 
         function getModelForMode(mode) {
@@ -3464,7 +3465,7 @@ ${body}}`;
             ['chat','viva','tools','report'].forEach(mode => {
                 const provSel  = document.getElementById(`cfg-prov-${mode}`);
                 const modelSel = document.getElementById(`cfg-model-${mode}`);
-                if (provSel  && provSel.value)  localStorage.setItem(`guru_provider_${mode}`, provSel.value);
+                if (provSel  && provSel.value)  localStorage.setItem(`horatio_provider_${mode}`, provSel.value);
                 if (modelSel && modelSel.value) {
                     const prov = provSel?.value || getProviderForMode(mode);
                     localStorage.setItem(_modelKey(prov, mode), modelSel.value);
@@ -3489,8 +3490,8 @@ ${body}}`;
             if (supEmail) localStorage.setItem(SK_SUP_EMAIL, supEmail);
             const zoteroKey = (document.getElementById('cfg-zotero-key')?.value||'').trim();
             const zoteroUid = (document.getElementById('cfg-zotero-uid')?.value||'').trim();
-            if (zoteroKey && !zoteroKey.startsWith('•')) localStorage.setItem('guru_zotero_key', zoteroKey);
-            if (zoteroUid) localStorage.setItem('guru_zotero_uid', zoteroUid);
+            if (zoteroKey && !zoteroKey.startsWith('•')) localStorage.setItem('horatio_zotero_key', zoteroKey);
+            if (zoteroUid) localStorage.setItem('horatio_zotero_uid', zoteroUid);
             if (isPro()) {
                 localStorage.setItem(SK_TEMP,    document.getElementById('cfg-temp').value);
                 localStorage.setItem(SK_CONTEXT, document.getElementById('cfg-context').value);
@@ -3507,13 +3508,13 @@ ${body}}`;
             setDot('active');
             _updateDirectiveStrip();
             setTab('chat');
-            addBubble('system', 'GURU recalibrated. New directive active.');
+            addBubble('system', 'Horatio recalibrated. New directive active.');
         }
 
         function _updateDirectiveStrip() {
             const el = document.getElementById('directive-strip-text');
             if (!el) return;
-            const dir = localStorage.getItem('guru_directive') || '';
+            const dir = localStorage.getItem('horatio_directive') || '';
             el.textContent = dir || 'No research directive set — configure in Config tab';
         }
 
@@ -3525,9 +3526,9 @@ ${body}}`;
             document.getElementById('cfg-voice').value     = localStorage.getItem(SK_VOICE_NAME) || 'Charon';
             document.getElementById('cfg-sup-email').value   = localStorage.getItem(SK_SUP_EMAIL)   || '';
             const zkEl = document.getElementById('cfg-zotero-key');
-            if (zkEl) zkEl.value = localStorage.getItem('guru_zotero_key') ? '••••••••••••••••' : '';
+            if (zkEl) zkEl.value = localStorage.getItem('horatio_zotero_key') ? '••••••••••••••••' : '';
             const zuEl = document.getElementById('cfg-zotero-uid');
-            if (zuEl) zuEl.value = localStorage.getItem('guru_zotero_uid') || '';
+            if (zuEl) zuEl.value = localStorage.getItem('horatio_zotero_uid') || '';
             const skEl = document.getElementById('cfg-search-key');
             if (skEl) skEl.value = localStorage.getItem(SK_SEARCH_KEY) ? '••••••••••••••••' : '';
             const ecEl = document.getElementById('cfg-ext-context');
@@ -3574,7 +3575,7 @@ ${body}}`;
         function setProvider(p) {
             localStorage.setItem(SK_PROVIDER, p);
             // Quick-set: apply to all modes at once
-            ['chat','viva','tools','report'].forEach(mode => localStorage.setItem(`guru_provider_${mode}`, p));
+            ['chat','viva','tools','report'].forEach(mode => localStorage.setItem(`horatio_provider_${mode}`, p));
             _refreshProviderUI();
         }
 
@@ -3684,7 +3685,7 @@ ${body}}`;
         // CHAT STORAGE
         // ============================================================
         async function saveChat() {
-            try { await GDB.put('chat', chatHistory, 'messages'); } catch(e) { console.warn('[GURU] saveChat failed:', e); }
+            try { await GDB.put('chat', chatHistory, 'messages'); } catch(e) { console.warn('[Horatio] saveChat failed:', e); }
         }
         async function loadChat() {
             try {
@@ -3707,10 +3708,10 @@ ${body}}`;
 
             const tag = document.createElement('div');
             tag.className   = 'role-tag';
-            tag.textContent = role === 'guru' ? 'GURU // ENGINE' : role === 'user' ? 'YOU' : 'SYSTEM';
+            tag.textContent = role === 'horatio' ? 'Horatio // ENGINE' : role === 'user' ? 'YOU' : 'SYSTEM';
             wrap.appendChild(tag);
 
-            if (thought && role === 'guru') {
+            if (thought && role === 'horatio') {
                 const tb      = document.createElement('div');
                 tb.className  = 'thought-block';
                 const preview = document.createElement('div');
@@ -3727,7 +3728,7 @@ ${body}}`;
 
             const body = document.createElement('div');
             body.className = 'bubble-body';
-            if (role === 'guru') {
+            if (role === 'horatio') {
                 // Strip stray code fences before markdown parsing
                 const safe = text.replace(/^```[\w]*\n?/, '').replace(/\n?```$/, '');
                 // marked.js escapes HTML in source, so injected HTML from Gemini is safe
@@ -3758,12 +3759,12 @@ ${body}}`;
             if (role !== 'system') {
                 chatHistory.push({ role, text, thought, socratic });
                 saveChat();
-                if (role === 'guru') {
+                if (role === 'horatio') {
                     updateBiblio(text);
-                    // Read GURU responses aloud if voice is enabled globally
-                    if (GuruVoice.enabled) {
-                        GuruVoice.speak(text, {
-                            onStart: () => setStatus('GURU SPEAKING...'),
+                    // Read Horatio responses aloud if voice is enabled globally
+                    if (HoratioVoice.enabled) {
+                        HoratioVoice.speak(text, {
+                            onStart: () => setStatus('Horatio SPEAKING...'),
                             onEnd:   () => {
                                 setStatus('');
                                 if (_seamlessMic && !isThinking) {
@@ -3781,7 +3782,7 @@ ${body}}`;
         function showThinking() {
             const el = document.createElement('div');
             el.id = 'thinking'; el.className = 'thinking';
-            el.innerHTML = '<span></span><span></span><span></span> GURU IS THINKING';
+            el.innerHTML = '<span></span><span></span><span></span> Horatio IS THINKING';
             document.getElementById('chat-stage').appendChild(el);
             scrollDown();
         }
@@ -3831,12 +3832,12 @@ ${body}}`;
             const older  = history.slice(0, -KEEP);
             if (_histCache.age !== older.length) {
                 const snippets = older.map(m =>
-                    `${m.role === 'guru' ? 'GURU' : 'Student'}: ${m.text.replace(/[#*`]/g, '').slice(0, 120)}`
+                    `${m.role === 'horatio' ? 'Horatio' : 'Student'}: ${m.text.replace(/[#*`]/g, '').slice(0, 120)}`
                 ).join('\n');
                 _histCache.summary = `[Earlier conversation summary — do not repeat these topics unless asked:\n${snippets}]`;
                 _histCache.age = older.length;
             }
-            return [{ role: 'user', text: _histCache.summary }, { role: 'guru', text: 'Understood, continuing.' }, ...recent];
+            return [{ role: 'user', text: _histCache.summary }, { role: 'horatio', text: 'Understood, continuing.' }, ...recent];
         }
 
         // Classify query → drives max_tokens budget
@@ -3902,7 +3903,7 @@ ${body}}`;
                 ? `\n\nTOOL RESULTS — incorporate these directly into your response:\n${toolResultsText}`
                 : '';
 
-            return `You are GURU, an AI PhD supervisor specialising in law at doctoral level.${directiveLine}${extSection}${vaultManifest}${refsSection}${toolSection}
+            return `You are Horatio, an AI PhD supervisor specialising in law at doctoral level.${directiveLine}${extSection}${vaultManifest}${refsSection}${toolSection}
 
 Current supervision mode: ${(MODES[currentMode]?.label || 'Supervise').toUpperCase()}
 Mode instruction: ${modeInstruction}
@@ -3953,7 +3954,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
 
             // Compressed history
             const compressed = _buildCompressedHistory(chatHistory, s.context);
-            const histParts  = compressed.map(m => ({ role: m.role === 'guru' ? 'model' : 'user', parts: [{ text: m.text }] }));
+            const histParts  = compressed.map(m => ({ role: m.role === 'horatio' ? 'model' : 'user', parts: [{ text: m.text }] }));
 
             // User parts (files + message)
             const userParts = [];
@@ -4047,7 +4048,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                                 if (!js || js === '[DONE]') continue;
                                 try { const p = JSON.parse(js); const t = p?.candidates?.[0]?.content?.parts?.[0]?.text || ''; accumulated += t; charCount += t.length; } catch(e) {}
                             }
-                            if (Date.now() - _lastSS > 150) { _lastSS = Date.now(); setStatus(`GURU IS COMPOSING... [${charCount} chars]`); }
+                            if (Date.now() - _lastSS > 150) { _lastSS = Date.now(); setStatus(`Horatio IS COMPOSING... [${charCount} chars]`); }
                         }
                         if (!accumulated) throw new Error('Empty stream response');
                         rawText = accumulated;
@@ -4097,7 +4098,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
 
             // Compressed history in Claude format
             const compressed     = _buildCompressedHistory(chatHistory, s.context);
-            let claudeMessages   = compressed.map(m => ({ role: m.role === 'guru' ? 'assistant' : 'user', content: m.text }));
+            let claudeMessages   = compressed.map(m => ({ role: m.role === 'horatio' ? 'assistant' : 'user', content: m.text }));
 
             // User content (files + message)
             const userContent = [];
@@ -4203,7 +4204,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                                     }
                                 } catch(e) { /* partial SSE chunk */ }
                             }
-                            if (Date.now() - _lastStreamStatus > 150) { _lastStreamStatus = Date.now(); setStatus(`GURU IS COMPOSING... [${charCount} chars]`); }
+                            if (Date.now() - _lastStreamStatus > 150) { _lastStreamStatus = Date.now(); setStatus(`Horatio IS COMPOSING... [${charCount} chars]`); }
                         }
                         if (!accumulated) throw new Error('Empty stream response');
                         rawText = accumulated;
@@ -4265,7 +4266,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             const providerName = isOllama ? 'Ollama' : 'Groq';
 
             const compressed = _buildCompressedHistory(chatHistory, s.context);
-            const histMsgs   = compressed.map(m => ({ role: m.role === 'guru' ? 'assistant' : 'user', content: m.text }));
+            const histMsgs   = compressed.map(m => ({ role: m.role === 'horatio' ? 'assistant' : 'user', content: m.text }));
 
             // User content — text + files
             const userParts = [];
@@ -4360,7 +4361,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                                 if (!js || js === '[DONE]') continue;
                                 try { const p = JSON.parse(js); const t = p?.choices?.[0]?.delta?.content || ''; accumulated += t; charCount += t.length; } catch(e) {}
                             }
-                            if (Date.now() - _lastSS > 150) { _lastSS = Date.now(); setStatus(`GURU IS COMPOSING... [${charCount} chars]`); }
+                            if (Date.now() - _lastSS > 150) { _lastSS = Date.now(); setStatus(`Horatio IS COMPOSING... [${charCount} chars]`); }
                         }
                         if (!accumulated) throw new Error('Empty stream response');
                         rawText = accumulated;
@@ -4548,7 +4549,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
 
             // ── OpenAlex — 250M+ papers, rich metadata ────────────────────────
             const _oa = (async () => { try {
-                const d = await (await fetch(`https://api.openalex.org/works?search=${q}&per_page=5&sort=relevance_score&mailto=guru-phd-tool`)).json();
+                const d = await (await fetch(`https://api.openalex.org/works?search=${q}&per_page=5&sort=relevance_score&mailto=horatio-phd-tool`)).json();
                 return (d.results||[]).map(w => {
                     const authors = (w.authorships||[]).slice(0,3).map(a => {
                         const n = a.author?.display_name||''; const p = n.split(' ');
@@ -4564,7 +4565,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
 
             // ── CrossRef — journal articles, strong law journal coverage ──────
             const _cr = (async () => { try {
-                const d = await (await fetch(`https://api.crossref.org/works?query=${q}&rows=4&sort=relevance&mailto=guru-phd-tool`)).json();
+                const d = await (await fetch(`https://api.crossref.org/works?query=${q}&rows=4&sort=relevance&mailto=horatio-phd-tool`)).json();
                 return (d.message?.items||[]).map(item => {
                     const doi = item.DOI||'';
                     const authors = (item.author||[]).slice(0,3)
@@ -4580,7 +4581,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             // ── PubMed (NCBI) — 35M+ biomedical articles ─────────────────────
             const _pm = (async () => { try {
                 const es = await (await fetch(
-                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${q}&retmax=4&retmode=json&tool=guru-phd&email=guru-phd-tool@example.org`
+                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pubmed&term=${q}&retmax=4&retmode=json&tool=horatio-phd&email=horatio-phd-tool@example.org`
                 )).json();
                 const ids = (es.esearchresult?.idlist||[]).slice(0,4);
                 if (!ids.length) return [];
@@ -4755,7 +4756,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             // ── NCBI Gene — human gene summaries and function ─────────────────
             const _gene = (async () => { try {
                 const es = await (await fetch(
-                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${q}+AND+%22Homo+sapiens%22[Organism]&retmax=3&retmode=json&tool=guru-phd&email=guru-phd-tool@example.org`
+                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=gene&term=${q}+AND+%22Homo+sapiens%22[Organism]&retmax=3&retmode=json&tool=horatio-phd&email=horatio-phd-tool@example.org`
                 )).json();
                 const ids = (es.esearchresult?.idlist||[]).slice(0,3);
                 if (!ids.length) return [];
@@ -4795,7 +4796,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             // ── PubMed Central (PMC) — full-text open access genomics journals ─
             const _pmc = (async () => { try {
                 const es = await (await fetch(
-                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=${q}&retmax=4&retmode=json&tool=guru-phd&email=guru-phd-tool@example.org`
+                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=pmc&term=${q}&retmax=4&retmode=json&tool=horatio-phd&email=horatio-phd-tool@example.org`
                 )).json();
                 const ids = (es.esearchresult?.idlist||[]).slice(0,4);
                 if (!ids.length) return [];
@@ -4855,7 +4856,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             // ── ClinVar (NCBI) — clinical significance of genetic variants ─────
             const _clinvar = (async () => { try {
                 const es = await (await fetch(
-                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=clinvar&term=${q}&retmax=3&retmode=json&tool=guru-phd&email=guru-phd-tool@example.org`
+                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=clinvar&term=${q}&retmax=3&retmode=json&tool=horatio-phd&email=horatio-phd-tool@example.org`
                 )).json();
                 const ids = (es.esearchresult?.idlist||[]).slice(0,3);
                 if (!ids.length) return [];
@@ -4878,7 +4879,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
             // ── OMIM (via NCBI) — genetic disease & gene reference ────────────
             const _omim = (async () => { try {
                 const es = await (await fetch(
-                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=omim&term=${q}&retmax=3&retmode=json&tool=guru-phd&email=guru-phd-tool@example.org`
+                    `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=omim&term=${q}&retmax=3&retmode=json&tool=horatio-phd&email=horatio-phd-tool@example.org`
                 )).json();
                 const ids = (es.esearchresult?.idlist||[]).slice(0,3);
                 if (!ids.length) return [];
@@ -5098,7 +5099,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
         // ============================================================
         async function handleInquiry() {
             if (isThinking) return;
-            GuruVoice.stop(); // interrupt any ongoing speech immediately
+            HoratioVoice.stop(); // interrupt any ongoing speech immediately
             const box = document.getElementById('query-input');
             const q   = box.value.trim();
             if (!q && attachments.length === 0) return;
@@ -5123,7 +5124,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                 const result = await callBrain(q, currentFiles);
                 hideThinking();
                 setStatus('');
-                addBubble('guru', result.text, result.thought, result.socratic);
+                addBubble('horatio', result.text, result.thought, result.socratic);
                 // Re-render bibliography sidebar to show any grounding sources added by callBrain
                 if (_searchMode) updateBiblio(result.text);
                 setDot('active');
@@ -5234,7 +5235,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
         }
 
         async function saveVault() {
-            try { await GDB.put('vault', vaultEntries, 'entries'); } catch(e) { console.warn('[GURU] saveVault failed:', e); }
+            try { await GDB.put('vault', vaultEntries, 'entries'); } catch(e) { console.warn('[Horatio] saveVault failed:', e); }
         }
 
         // ============================================================
@@ -5252,7 +5253,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
         }
 
         async function saveJournal() {
-            try { await GDB.put('journal', journalEntries, 'entries'); } catch(e) { console.warn('[GURU] saveJournal failed:', e); }
+            try { await GDB.put('journal', journalEntries, 'entries'); } catch(e) { console.warn('[Horatio] saveJournal failed:', e); }
         }
 
         function addToJournal(mapCode) {
@@ -5261,7 +5262,7 @@ Return ONLY the JSON. No markdown fences. No preamble.`;
                 date: new Date().toISOString(),
                 mapCode,
                 reflection: '',
-                sessionId: window._guruSessionId
+                sessionId: window._horatioSessionId
             };
             journalEntries.push(entry);
             saveJournal();
@@ -5503,11 +5504,11 @@ ${entrySummaries}`;
 \\widowctrl\\hyphauto\\f0\\fs24
 \\margl1800\\margr1800\\margt1440\\margb1440
 \\pard\\sb0\\sa120{\\b\\fs32 PhD Progress Report}\\par
-\\pard\\sb0\\sa60{\\fs20\\cf1 Generated by G.U.R.U. \\u8212? Guided University Research Utility \\u183? Exported: ${_r(dateStr)}}\\par
+\\pard\\sb0\\sa60{\\fs20\\cf1 Generated by Horatio \\u8212? Guided University Research Utility \\u183? Exported: ${_r(dateStr)}}\\par
 \\pard\\sb0\\sa300 \\par
 ${body}}`;
 
-            const filename = `GURU_Supervisor_Report_${new Date().toISOString().slice(0,10)}.rtf`;
+            const filename = `Horatio_Supervisor_Report_${new Date().toISOString().slice(0,10)}.rtf`;
             const a = document.createElement('a');
             a.href     = 'data:application/rtf;charset=utf-8,' + encodeURIComponent(rtf);
             a.download = filename;
@@ -5518,7 +5519,7 @@ ${body}}`;
             // Open email client if supervisor address is configured
             if (supEmail) {
                 const subject  = encodeURIComponent(`PhD Progress Report — ${dateStr}`);
-                const mailBody = encodeURIComponent(`Dear Supervisor,\n\nPlease find attached my PhD progress report generated from my GURU Living Journal.\n\nKind regards`);
+                const mailBody = encodeURIComponent(`Dear Supervisor,\n\nPlease find attached my PhD progress report generated from my Horatio Living Journal.\n\nKind regards`);
                 setTimeout(() => { window.location.href = `mailto:${encodeURIComponent(supEmail)}?subject=${subject}&body=${mailBody}`; }, 600);
             }
         }
@@ -5709,11 +5710,11 @@ ${_getSheetAsText(300)}`;
             const id    = crypto.randomUUID();
             const title = _sheetFilename + ` (${_sheetData.length}r × ${cols}c)`;
             vaultEntries.push({ id, title, content: _getSheetAsText(500), source: _sheetFilename,
-                session: _sheetFilename, sessionId: window._guruSessionId,
+                session: _sheetFilename, sessionId: window._horatioSessionId,
                 date: new Date().toISOString(), type: 'document' });
             saveVault(); updateVaultStats();
             if (typeof writeVaultEntryToFirebase === 'function') writeVaultEntryToFirebase(vaultEntries[vaultEntries.length-1]);
-            addBubble('system', `"${_sheetFilename}" loaded to Vault — GURU can now reference it in chat.`);
+            addBubble('system', `"${_sheetFilename}" loaded to Vault — Horatio can now reference it in chat.`);
             setTab('vault');
         }
 
@@ -5799,7 +5800,7 @@ ${_getSheetAsText(300)}`;
             } else if (ext === 'pdf') {
                 if (!isPro()) {
                     setTab('chat');
-                    addBubble('system', 'PDF vault support requires GURU Pro. Unlock in the Config tab.');
+                    addBubble('system', 'PDF vault support requires Horatio Pro. Unlock in the Config tab.');
                     return;
                 }
                 setStatus('Extracting PDF text...');
@@ -5827,16 +5828,16 @@ ${_getSheetAsText(300)}`;
                 sections.forEach((section, i) => {
                     const sessionMatch = section.match(/SESSION:\s*(.+)/i);
                     const title = sessionMatch ? sessionMatch[1].trim() : `${filename} — Entry ${i + 1}`;
-                    vaultEntries.push({ id: crypto.randomUUID(), title, content: section.trim(), source: filename, session: filename, sessionId: window._guruSessionId, date: timestamp, type: 'session' });
+                    vaultEntries.push({ id: crypto.randomUUID(), title, content: section.trim(), source: filename, session: filename, sessionId: window._horatioSessionId, date: timestamp, type: 'session' });
                 });
             } else {
                 const chunkSize = 2000;
                 if (content.length > chunkSize) {
                     for (let i = 0; i < content.length; i += chunkSize) {
-                        vaultEntries.push({ id: crypto.randomUUID(), title: `${filename} — Part ${Math.floor(i / chunkSize) + 1}`, content: content.slice(i, i + chunkSize), source: filename, session: filename, sessionId: window._guruSessionId, date: timestamp, type: 'document' });
+                        vaultEntries.push({ id: crypto.randomUUID(), title: `${filename} — Part ${Math.floor(i / chunkSize) + 1}`, content: content.slice(i, i + chunkSize), source: filename, session: filename, sessionId: window._horatioSessionId, date: timestamp, type: 'document' });
                     }
                 } else {
-                    vaultEntries.push({ id: crypto.randomUUID(), title: filename, content, source: filename, session: filename, sessionId: window._guruSessionId, date: timestamp, type: 'document' });
+                    vaultEntries.push({ id: crypto.randomUUID(), title: filename, content, source: filename, session: filename, sessionId: window._horatioSessionId, date: timestamp, type: 'document' });
                 }
             }
             saveVault(); updateVaultStats(); renderVault();
@@ -5961,14 +5962,14 @@ ${_getSheetAsText(300)}`;
 {\\colortbl ;\\red102\\green102\\blue102;}
 \\widowctrl\\hyphauto\\f0\\fs24
 \\margl1800\\margr1800\\margt1440\\margb1440
-\\pard\\sb0\\sa120{\\b\\fs32 GURU \\u8212? Research Vault}\\par
+\\pard\\sb0\\sa120{\\b\\fs32 Horatio \\u8212? Research Vault}\\par
 \\pard\\sb0\\sa60{\\fs20\\cf1 Exported: ${_r(dateStr)} \\u8212? ${vaultEntries.length} entries}\\par
 \\pard\\sb0\\sa300 \\par
 ${body}}`;
 
             const a = document.createElement('a');
             a.href     = 'data:application/rtf;charset=utf-8,' + encodeURIComponent(rtf);
-            a.download = `GURU_Vault_${new Date().toISOString().slice(0,10)}.rtf`;
+            a.download = `Horatio_Vault_${new Date().toISOString().slice(0,10)}.rtf`;
             document.body.appendChild(a); a.click(); document.body.removeChild(a);
         }
 
@@ -6087,10 +6088,10 @@ ${body}}`;
                 bodyDiv.className   = 'vault-entry-body';
                 bodyDiv.textContent = entry.content;
 
-                // Ask GURU button
+                // Ask Horatio button
                 const askBtn = document.createElement('button');
                 askBtn.className   = 'vault-ask-btn';
-                askBtn.textContent = 'Ask GURU about this →';
+                askBtn.textContent = 'Ask Horatio about this →';
 
                 div.appendChild(topRow);
                 div.appendChild(bodyDiv);
@@ -6098,7 +6099,7 @@ ${body}}`;
 
                 // Events
                 topRow.addEventListener('click', () => div.classList.toggle('expanded'));
-                askBtn.addEventListener('click', e => { e.stopPropagation(); askGuruAboutVaultEntry(entry.id); });
+                askBtn.addEventListener('click', e => { e.stopPropagation(); askHoratioAboutVaultEntry(entry.id); });
                 delBtn.addEventListener('click', e => { e.stopPropagation(); confirmDeleteVaultEntry(entry.id, delBtn); });
 
                 stage.appendChild(div);
@@ -6106,7 +6107,7 @@ ${body}}`;
             showDropZone();
         }
 
-        function askGuruAboutVaultEntry(id) {
+        function askHoratioAboutVaultEntry(id) {
             const entry = vaultEntries.find(e => e.id === id);
             if (!entry) return;
             setTab('chat');
@@ -6209,7 +6210,7 @@ ${body}}`;
 
                 const roleDiv = document.createElement('div');
                 roleDiv.className   = 'arc-role';
-                roleDiv.textContent = m.role === 'guru' ? 'GURU' : 'YOU';
+                roleDiv.textContent = m.role === 'horatio' ? 'Horatio' : 'YOU';
 
                 const textDiv = document.createElement('div');
                 textDiv.className   = 'arc-text';
@@ -6231,9 +6232,9 @@ ${body}}`;
                 id: crypto.randomUUID(),
                 title: `Chat Session — ${new Date().toLocaleDateString('en-GB')}`,
                 content,
-                source: 'GURU Chat',
+                source: 'Horatio Chat',
                 session: `Session ${new Date().toLocaleDateString('en-GB')}`,
-                sessionId: window._guruSessionId,
+                sessionId: window._horatioSessionId,
                 date: new Date().toISOString(),
                 type: 'session'
             });
@@ -6244,16 +6245,16 @@ ${body}}`;
         function downloadChatAsMarkdown() {
             if (!isPro()) {
                 setTab('chat');
-                addBubble('system', 'Markdown export requires GURU Pro. Unlock in the Config tab.');
+                addBubble('system', 'Markdown export requires Horatio Pro. Unlock in the Config tab.');
                 return;
             }
             if (chatHistory.length === 0) return;
             const date    = new Date();
             const dateStr = date.toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' });
-            let md = `# GURU Chat Session\n**Exported:** ${dateStr}\n\n---\n\n`;
+            let md = `# Horatio Chat Session\n**Exported:** ${dateStr}\n\n---\n\n`;
             chatHistory.forEach(m => {
-                if (m.role === 'guru') {
-                    md += `## GURU\n\n`;
+                if (m.role === 'horatio') {
+                    md += `## Horatio\n\n`;
                     if (m.thought) md += `<details>\n<summary>Reasoning</summary>\n\n${m.thought}\n\n</details>\n\n`;
                     md += `${m.text}\n\n`;
                     if (m.socratic) md += `> **Supervisor Probe:** ${m.socratic}\n\n`;
@@ -6262,7 +6263,7 @@ ${body}}`;
                 }
                 md += `---\n\n`;
             });
-            const filename = `guru-session-${date.toISOString().slice(0, 10)}.md`;
+            const filename = `horatio-session-${date.toISOString().slice(0, 10)}.md`;
             const a = document.createElement('a');
             a.href     = URL.createObjectURL(new Blob([md], { type: 'text/markdown;charset=utf-8' }));
             a.download = filename;
@@ -6277,7 +6278,7 @@ ${body}}`;
         function downloadChatAsDoc() {
             if (!isPro()) {
                 setTab('chat');
-                addBubble('system', 'Word export requires GURU Pro. Unlock in the Config tab.');
+                addBubble('system', 'Word export requires Horatio Pro. Unlock in the Config tab.');
                 return;
             }
             if (chatHistory.length === 0) return;
@@ -6287,9 +6288,9 @@ ${body}}`;
 
             let bodyHtml = '';
             chatHistory.forEach(m => {
-                if (m.role === 'guru') {
-                    if (m.thought) bodyHtml += `<p style="background:#f5f5f5;padding:8pt 10pt;font-size:9pt;color:#666;font-style:italic;border-left:3px solid #999;margin-bottom:6pt;"><strong>GURU Reasoning:</strong> ${escapeHtml(m.thought)}</p>`;
-                    bodyHtml += `<p style="font-weight:bold;color:#006B5E;font-size:8pt;letter-spacing:1pt;text-transform:uppercase;margin-bottom:4pt;">GURU</p>`;
+                if (m.role === 'horatio') {
+                    if (m.thought) bodyHtml += `<p style="background:#f5f5f5;padding:8pt 10pt;font-size:9pt;color:#666;font-style:italic;border-left:3px solid #999;margin-bottom:6pt;"><strong>Horatio Reasoning:</strong> ${escapeHtml(m.thought)}</p>`;
+                    bodyHtml += `<p style="font-weight:bold;color:#006B5E;font-size:8pt;letter-spacing:1pt;text-transform:uppercase;margin-bottom:4pt;">Horatio</p>`;
                     bodyHtml += `<p style="margin-bottom:10pt;">${escapeHtml(m.text).replace(/\n/g,'<br>')}</p>`;
                     if (m.socratic) bodyHtml += `<p style="border-left:3pt solid #6d28d9;padding:6pt 10pt;color:#6d28d9;font-style:italic;margin-bottom:10pt;"><strong>Supervisor Probe:</strong> ${escapeHtml(m.socratic)}</p>`;
                 } else {
@@ -6305,7 +6306,7 @@ ${body}}`;
       xmlns:w='urn:schemas-microsoft-com:office:word'
       xmlns='http://www.w3.org/TR/REC-html40'>
 <head><meta charset="utf-8">
-<title>GURU Session</title>
+<title>Horatio Session</title>
 <!--[if gte mso 9]><xml><w:WordDocument><w:View>Print</w:View><w:Zoom>90</w:Zoom></w:WordDocument></xml><![endif]-->
 <style>
   body { font-family: 'Times New Roman', serif; font-size: 12pt; margin: 2cm; color: #111; }
@@ -6314,14 +6315,14 @@ ${body}}`;
 </style>
 </head>
 <body>
-<h1>GURU — Chat Session</h1>
+<h1>Horatio — Chat Session</h1>
 <p style="color:#666;font-size:10pt;"><strong>Exported:</strong> ${dateStr}</p>
 ${directive}
 <hr style="border:none;border-top:2px solid #00ffcc;margin:12pt 0;">
 ${bodyHtml}
 </body></html>`;
 
-            const filename = `guru-session-${date.toISOString().slice(0,10)}.doc`;
+            const filename = `horatio-session-${date.toISOString().slice(0,10)}.doc`;
             const a = document.createElement('a');
             a.href     = 'data:application/msword;charset=utf-8,' + encodeURIComponent(doc);
             a.download = filename;
@@ -6608,7 +6609,7 @@ Respond with valid JSON — no markdown fences:
                 const report = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'Report generation failed.';
                 setStatus('');
                 setTab('chat');
-                addBubble('guru', `**VIVA EXAMINER REPORT**\n\n${report}`, 'Auto-generated from viva transcript.', null);
+                addBubble('horatio', `**VIVA EXAMINER REPORT**\n\n${report}`, 'Auto-generated from viva transcript.', null);
             } catch(e) {
                 setStatus('');
             }
@@ -6651,9 +6652,9 @@ Respond with valid JSON — no markdown fences:
         }
 
         // ============================================================
-        // GURU VOICE MODULE — shared by chat and viva examiner
+        // Horatio VOICE MODULE — shared by chat and viva examiner
         // ============================================================
-        const GuruVoice = {
+        const HoratioVoice = {
             rate: 0.93,
             pitch: 1.0,
             _active: false,        // currently producing audio
@@ -6666,7 +6667,7 @@ Respond with valid JSON — no markdown fences:
 
             setEnabled(val) {
                 localStorage.setItem(SK_VOICE, val ? '1' : '0');
-                const btn = document.getElementById('guru-voice-btn');
+                const btn = document.getElementById('horatio-voice-btn');
                 if (btn) btn.classList.toggle('active', val);
                 if (!val) this.stop();
             },
@@ -6674,7 +6675,7 @@ Respond with valid JSON — no markdown fences:
             toggle() { this.setEnabled(!this.enabled); },
 
             init() {
-                const btn = document.getElementById('guru-voice-btn');
+                const btn = document.getElementById('horatio-voice-btn');
                 if (btn) btn.classList.toggle('active', this.enabled);
                 // Pre-unlock AudioContext on first user gesture (required for Electron autoplay policy)
                 const unlockAudio = () => {
@@ -6899,7 +6900,7 @@ Respond with valid JSON — no markdown fences:
         }
 
         async function saveRefs() {
-            try { await GDB.put('refs', references, 'entries'); } catch(e) { console.warn('[GURU] saveRefs failed:', e); }
+            try { await GDB.put('refs', references, 'entries'); } catch(e) { console.warn('[Horatio] saveRefs failed:', e); }
             updateRefsStats();
         }
 
@@ -6975,13 +6976,13 @@ Produce a structured coverage analysis under these headings:
 1. STRENGTHS — what is comprehensively covered (cite specific sources by name)
 2. GAPS — specific areas, jurisdictions, time periods, or source types that are absent or underrepresented
 3. IMBALANCES — ratio of case law vs academic commentary vs legislation vs scientific literature
-4. PRIORITY RECOMMENDATIONS — 5 specific types of sources to find next, with search terms to use in GURU
+4. PRIORITY RECOMMENDATIONS — 5 specific types of sources to find next, with search terms to use in Horatio
 5. CHAPTER COVERAGE — assessment of which thesis chapters are well-sourced and which need work
 
 Be specific, critical, and actionable. Do not be vague.`;
             try {
                 const result = await _callToolAI(prompt, 'tools');
-                addBubble('guru', result);
+                addBubble('horatio', result);
             } catch(e) { addBubble('system', 'Gap analysis failed: ' + e.message); }
         }
 
@@ -7117,7 +7118,7 @@ Be specific, critical, and actionable. Do not be vague.`;
                         btnUnpaywall.disabled = true;
                         try {
                             const doi = btnUnpaywall.dataset.doi;
-                            const d = await (await fetch(`https://api.unpaywall.org/v2/${encodeURIComponent(doi)}?email=guru-phd-tool@example.org`)).json();
+                            const d = await (await fetch(`https://api.unpaywall.org/v2/${encodeURIComponent(doi)}?email=horatio-phd-tool@example.org`)).json();
                             const url = d.best_oa_location?.url_for_pdf || d.best_oa_location?.url || d.oa_locations?.[0]?.url_for_pdf || d.oa_locations?.[0]?.url;
                             if (url) {
                                 window.open(url, '_blank', 'noopener');
@@ -8060,7 +8061,7 @@ ${rawBiblio}`;
             };
 
             if (fmt === 'txt') {
-                let txt = `BIBLIOGRAPHY\nGenerated by G.U.R.U. — ${date}\n${'═'.repeat(60)}\n\n`;
+                let txt = `BIBLIOGRAPHY\nGenerated by Horatio — ${date}\n${'═'.repeat(60)}\n\n`;
                 sections.forEach(s => {
                     txt += `${s.heading}\n${'─'.repeat(s.heading.length)}\n`;
                     s.items.forEach(r => {
@@ -8070,7 +8071,7 @@ ${rawBiblio}`;
                     });
                     txt += '\n';
                 });
-                _dl(new Blob([txt], { type: 'text/plain;charset=utf-8' }), `GURU_Bibliography_${new Date().toISOString().slice(0,10)}.txt`);
+                _dl(new Blob([txt], { type: 'text/plain;charset=utf-8' }), `Horatio_Bibliography_${new Date().toISOString().slice(0,10)}.txt`);
 
             } else if (fmt === 'html') {
                 const _esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -8085,7 +8086,7 @@ ${rawBiblio}`;
                 });
                 const html = `<!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8">
-<title>Bibliography — G.U.R.U.</title>
+<title>Bibliography — Horatio</title>
 <style>
   body{font-family:"Times New Roman",Times,serif;margin:2.5cm;font-size:12pt;line-height:1.6;color:#000;}
   h1{font-size:16pt;margin-bottom:0.2em;}
@@ -8096,16 +8097,16 @@ ${rawBiblio}`;
 </style></head>
 <body>
 <h1>Bibliography</h1>
-<p class="date">Generated by G.U.R.U. &mdash; ${_esc(date)}</p>
+<p class="date">Generated by Horatio &mdash; ${_esc(date)}</p>
 ${body}
 </body></html>`;
-                _dl(new Blob([html], { type: 'text/html;charset=utf-8' }), `GURU_Bibliography_${new Date().toISOString().slice(0,10)}.html`);
+                _dl(new Blob([html], { type: 'text/html;charset=utf-8' }), `Horatio_Bibliography_${new Date().toISOString().slice(0,10)}.html`);
 
             } else {
                 // RTF
                 const _r = s => (s||'').replace(/\\/g,'\\\\').replace(/\{/g,'\\{').replace(/\}/g,'\\}')
                     .replace(/[^\x00-\x7F]/g, c => `\\u${c.charCodeAt(0)}?`);
-                let body = `\\pard\\sb0\\sa120{\\b\\fs36 G.U.R.U. \\u8212? Bibliography}\\par\n\\pard\\sb0\\sa60{\\fs20\\cf1 ${_r(date)}}\\par\n\n`;
+                let body = `\\pard\\sb0\\sa120{\\b\\fs36 Horatio \\u8212? Bibliography}\\par\n\\pard\\sb0\\sa60{\\fs20\\cf1 ${_r(date)}}\\par\n\n`;
                 sections.forEach(s => {
                     body += `\\pard\\sb360\\sa80{\\b\\fs26 ${_r(s.heading)}}\\par\n`;
                     s.items.forEach(r => {
@@ -8116,7 +8117,7 @@ ${body}
                     body += '\n';
                 });
                 const rtf = `{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang2057\n{\\fonttbl{\\f0\\froman\\fcharset0 Times New Roman;}}\n{\\colortbl ;\\red102\\green102\\blue102;}\n\\widowctrl\\hyphauto\\f0\\fs24\n\\margl1800\\margr1800\\margt1440\\margb1440\n${body}}`;
-                _dl(new Blob([rtf], { type: 'application/rtf' }), `GURU_Bibliography_${new Date().toISOString().slice(0,10)}.rtf`);
+                _dl(new Blob([rtf], { type: 'application/rtf' }), `Horatio_Bibliography_${new Date().toISOString().slice(0,10)}.rtf`);
             }
         }
 
@@ -8167,12 +8168,12 @@ ${body}
                         title: `${title} — Part ${Math.floor(i / chunkSize) + 1}`,
                         content: text.slice(i, i + chunkSize),
                         source: 'paste', session: 'paste',
-                        sessionId: window._guruSessionId, date: timestamp, type: 'document' });
+                        sessionId: window._horatioSessionId, date: timestamp, type: 'document' });
                 }
             } else {
                 vaultEntries.push({ id: crypto.randomUUID(), title, content: text,
                     source: 'paste', session: 'paste',
-                    sessionId: window._guruSessionId, date: timestamp, type: 'document' });
+                    sessionId: window._horatioSessionId, date: timestamp, type: 'document' });
             }
             saveVault(); updateVaultStats();
             addBubble('system', `Added "${title}" to vault.`);
@@ -8273,7 +8274,7 @@ ${body}
             }
 
             const summary = researchMsgs.slice(-20)
-                .map(m => `${m.role === 'user' ? 'Student' : 'GURU'}: ${m.text.slice(0, 300)}`)
+                .map(m => `${m.role === 'user' ? 'Student' : 'Horatio'}: ${m.text.slice(0, 300)}`)
                 .join('\n\n');
             const mapPrompt = `Analyse this doctoral supervision conversation and create a Mermaid argument map showing the research concepts, theoretical arguments, and intellectual development.
 ${_searchMode ? `
@@ -8418,7 +8419,7 @@ Conversation to map:\n${summary}`;
             if (!rev) {
                 const s = getSettings();
                 if (!s.key) { out.textContent = 'Add your API key in Config, or paste revised text manually.'; return; }
-                out.textContent = 'GURU is suggesting edits…';
+                out.textContent = 'Horatio is suggesting edits…';
                 try {
                     const resp = await fetch(
                         `https://generativelanguage.googleapis.com/v1beta/models/${s.model}:generateContent?key=${s.key}`,
@@ -8607,7 +8608,7 @@ Conversation to map:\n${summary}`;
                 btn.style.color        = 'var(--pulse)';
                 btn.style.borderColor  = 'var(--pulse)';
                 btn.style.background   = 'var(--pulse-dim)';
-                setStatus('LIVE MODE ON — GURU WILL REOPEN MIC AFTER EACH RESPONSE');
+                setStatus('LIVE MODE ON — Horatio WILL REOPEN MIC AFTER EACH RESPONSE');
                 setTimeout(() => setStatus(''), 3000);
             } else {
                 btn.style.color        = '#334155';
@@ -8664,14 +8665,14 @@ Conversation to map:\n${summary}`;
             }
         }
 
-        // Delegate speakAsExaminer to GuruVoice so both modes share one engine
+        // Delegate speakAsExaminer to HoratioVoice so both modes share one engine
         async function speakAsExaminer(text) {
             if (!voiceActiveInSession) return;
             isSpeaking = true;
             document.getElementById('voice-waveform').classList.add('active');
             setVoiceStatus('EXAMINER SPEAKING', 'speaking');
 
-            await GuruVoice.speak(text, {
+            await HoratioVoice.speak(text, {
                 onEnd: () => {
                     isSpeaking = false;
                     document.getElementById('voice-waveform').classList.remove('active');
@@ -9034,7 +9035,7 @@ Conversation to map:\n${summary}`;
                     sid = 'sess_' + today + '_' + Math.random().toString(36).slice(2, 9);
                     localStorage.setItem(SK_SESSION, JSON.stringify({ id: sid, date: today }));
                 }
-                window._guruSessionId = sid;
+                window._horatioSessionId = sid;
             })();
 
             // Boot Firebase sync if Pro passphrase is stored
@@ -9044,7 +9045,7 @@ Conversation to map:\n${summary}`;
             }
 
             initTheme();
-            GuruVoice.init();
+            HoratioVoice.init();
             loadSettingsUI();  // apply Pro gate before any async work so slider is correct on first paint
             showProBadge();
             await GDB.open();
@@ -9061,8 +9062,8 @@ Conversation to map:\n${summary}`;
             if (!s.key) {
                 setDot('error');
                 // First-run: guide new users to set up
-                addBubble('guru',
-                    `Welcome to GURU — your AI PhD research intelligence.\n\n**To get started, you need a free Gemini API key.**\n\n1. Go to [Google AI Studio](https://aistudio.google.com/apikey)\n2. Sign in with your Google account\n3. Click **Create API key** — it's free, no payment required\n4. Copy the key and paste it into the **Config** tab above\n5. Set your research area in **PhD Research Focus**\n\nThat's it. GURU will be calibrated to your specific field.`,
+                addBubble('horatio',
+                    `Welcome to Horatio — your AI PhD research intelligence.\n\n**To get started, you need a free Gemini API key.**\n\n1. Go to [Google AI Studio](https://aistudio.google.com/apikey)\n2. Sign in with your Google account\n3. Click **Create API key** — it's free, no payment required\n4. Copy the key and paste it into the **Config** tab above\n5. Set your research area in **PhD Research Focus**\n\nThat's it. Horatio will be calibrated to your specific field.`,
                     'New user detected — no API key in storage. Presenting setup guidance.',
                     null
                 );
@@ -9073,9 +9074,9 @@ Conversation to map:\n${summary}`;
                 if (chatHistory.length === 0) {
                     const directiveInfo = s.directive
                         ? `Directive: ${s.directive}`
-                        : 'No research directive set — go to Config to personalise GURU to your PhD area.';
-                    addBubble('guru',
-                        `GURU V2.0 online.\n\n${directiveInfo}\n\nModel: ${s.model}\n\nReasoning display active. Refs panel auto-populates from every search. Research Vault ready.${isPro() ? `\n\nPro features active: streaming · PDF vault · markdown export · presentation mode · voice viva · Gemini TTS${_fbEnabled ? ' · cloud sync' : ''}.` : ''}\n\nStanding by for doctoral inquiry.`,
+                        : 'No research directive set — go to Config to personalise Horatio to your PhD area.';
+                    addBubble('horatio',
+                        `Horatio V2.0 online.\n\n${directiveInfo}\n\nModel: ${s.model}\n\nReasoning display active. Refs panel auto-populates from every search. Research Vault ready.${isPro() ? `\n\nPro features active: streaming · PDF vault · markdown export · presentation mode · voice viva · Gemini TTS${_fbEnabled ? ' · cloud sync' : ''}.` : ''}\n\nStanding by for doctoral inquiry.`,
                         'System initialisation — checking configuration, loading vault, confirming API connectivity.',
                         null
                     );
@@ -9135,7 +9136,7 @@ Conversation to map:\n${summary}`;
                     if (keyMap[_obProvider]) localStorage.setItem(keyMap[_obProvider], keyVal);
                 }
                 localStorage.setItem(SK_PROVIDER, _obProvider);
-                ['chat','viva','tools','report'].forEach(m => localStorage.setItem(`guru_provider_${m}`, _obProvider));
+                ['chat','viva','tools','report'].forEach(m => localStorage.setItem(`horatio_provider_${m}`, _obProvider));
             }
             if (fromStep === 2) {
                 const dir = document.getElementById('ob-directive-input')?.value.trim();
@@ -9153,7 +9154,7 @@ Conversation to map:\n${summary}`;
             const dir = document.getElementById('ob-directive-input')?.value.trim();
             if (dir) localStorage.setItem(SK_DIR, dir);
             localStorage.setItem(SK_PROVIDER, _obProvider);
-            ['chat','viva','tools','report'].forEach(m => localStorage.setItem(`guru_provider_${m}`, _obProvider));
+            ['chat','viva','tools','report'].forEach(m => localStorage.setItem(`horatio_provider_${m}`, _obProvider));
             document.getElementById('onboarding-overlay').classList.remove('active');
             _refreshProviderUI();
             loadSettingsUI();
@@ -9213,11 +9214,11 @@ Conversation to map:\n${summary}`;
     <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2rem;border-bottom:1px solid #0f1f30;background:#020407;position:sticky;top:0;z-index:1;">
       <div>
-        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#00ffcc;opacity:0.7;margin-bottom:0.2rem;">G.U.R.U. V2.0</div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:#00ffcc;opacity:0.7;margin-bottom:0.2rem;">Horatio V2.0</div>
         <div style="font-family:'Space Mono',monospace;font-size:11px;color:#94a3b8;letter-spacing:0.08em;">User Guide &amp; Quick Reference</div>
       </div>
       <div style="display:flex;gap:0.75rem;align-items:center;">
-        <a href="GURU_User_Guide_V2.html" target="_blank" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#00ffcc;opacity:0.7;text-decoration:none;border:1px solid rgba(0,255,204,0.25);padding:5px 10px;border-radius:4px;" title="Open full guide in new tab">Full Guide ↗</a>
+        <a href="Horatio_User_Guide_V2.html" target="_blank" style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.08em;text-transform:uppercase;color:#00ffcc;opacity:0.7;text-decoration:none;border:1px solid rgba(0,255,204,0.25);padding:5px 10px;border-radius:4px;" title="Open full guide in new tab">Full Guide ↗</a>
         <button onclick="closeHelp()" style="background:none;border:none;color:#334155;font-size:22px;cursor:pointer;line-height:1;padding:2px;" title="Close">×</button>
       </div>
     </div>
@@ -9276,10 +9277,10 @@ Conversation to map:\n${summary}`;
       </div>
 
       <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:#00ffcc;opacity:0.5;margin-bottom:0.75rem;">Relay — bridging external AI</div>
-      <p style="font-size:14px;color:#94a3b8;margin-bottom:2rem;">Copy any response from your Gemini Gem or Claude Project → click ⇄ RELAY → paste → GURU extracts citations into Library and uses the content as research context for your next query.</p>
+      <p style="font-size:14px;color:#94a3b8;margin-bottom:2rem;">Copy any response from your Gemini Gem or Claude Project → click ⇄ RELAY → paste → Horatio extracts citations into Library and uses the content as research context for your next query.</p>
 
       <div style="text-align:center;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.1em;color:#1e293b;border-top:1px solid #0f1f30;padding-top:1.5rem;">
-        G.U.R.U. V2.0 &nbsp;·&nbsp; Guided University Research Utility &nbsp;·&nbsp; Doctoral Research Intelligence
+        Horatio V2.0 &nbsp;·&nbsp; Guided University Research Utility &nbsp;·&nbsp; Doctoral Research Intelligence
       </div>
     </div>
   </div>
@@ -9297,13 +9298,13 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape') closeHelp();
     <div style="display:flex;align-items:center;justify-content:space-between;">
       <div>
         <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:0.15em;text-transform:uppercase;color:#a78bfa;margin-bottom:0.3rem;">⇄ Research Relay</div>
-        <div style="font-size:13px;color:#94a3b8;line-height:1.5;">Paste a response from your <strong style="color:#e2e8f0;">Gemini Gem</strong> or <strong style="color:#e2e8f0;">Claude Project</strong>.<br>GURU will extract citations into Refs and use the content as research context.</div>
+        <div style="font-size:13px;color:#94a3b8;line-height:1.5;">Paste a response from your <strong style="color:#e2e8f0;">Gemini Gem</strong> or <strong style="color:#e2e8f0;">Claude Project</strong>.<br>Horatio will extract citations into Refs and use the content as research context.</div>
       </div>
       <button onclick="closeRelay()" style="background:none;border:none;color:#334155;font-size:20px;cursor:pointer;padding:4px;line-height:1;" title="Close">×</button>
     </div>
-    <textarea id="relay-input" style="width:100%;min-height:220px;background:#020407;border:1px solid var(--border);border-radius:8px;padding:1rem;color:#e2e8f0;font-family:'Space Mono',monospace;font-size:12px;line-height:1.7;resize:vertical;outline:none;box-sizing:border-box;" placeholder="Paste your Gemini Gem or Claude Project response here...&#10;&#10;GURU will:&#10;• Extract any case citations, statutes, and journal articles → saved to Refs&#10;• Use the full content as additional research context for your next query"></textarea>
+    <textarea id="relay-input" style="width:100%;min-height:220px;background:#020407;border:1px solid var(--border);border-radius:8px;padding:1rem;color:#e2e8f0;font-family:'Space Mono',monospace;font-size:12px;line-height:1.7;resize:vertical;outline:none;box-sizing:border-box;" placeholder="Paste your Gemini Gem or Claude Project response here...&#10;&#10;Horatio will:&#10;• Extract any case citations, statutes, and journal articles → saved to Refs&#10;• Use the full content as additional research context for your next query"></textarea>
     <div style="display:flex;gap:0.75rem;align-items:center;">
-      <button onclick="submitRelay()" style="background:#a78bfa;color:#020407;border:none;border-radius:8px;padding:10px 22px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#c4b5fd'" onmouseout="this.style.background='#a78bfa'">Relay into GURU</button>
+      <button onclick="submitRelay()" style="background:#a78bfa;color:#020407;border:none;border-radius:8px;padding:10px 22px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;transition:all 0.15s;" onmouseover="this.style.background='#c4b5fd'" onmouseout="this.style.background='#a78bfa'">Relay into Horatio</button>
       <button onclick="closeRelay()" style="background:transparent;color:#475569;border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-family:'Space Mono',monospace;font-size:10px;cursor:pointer;">Cancel</button>
       <span id="relay-status" style="font-family:'Space Mono',monospace;font-size:9px;color:#334155;margin-left:auto;"></span>
     </div>
@@ -9369,5 +9370,70 @@ function submitRelay() {
 }
 </script>
 
+<script>
+(function styleHoRatio() {
+    var skip = new Set(["SCRIPT","STYLE","TEXTAREA","INPUT","CODE","PRE"]);
+    var walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, {
+        acceptNode: function(n) {
+            return skip.has(n.parentElement && n.parentElement.tagName)
+                ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+        }
+    });
+    var nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(function(node) {
+        if (!node.textContent.includes("Horatio")) return;
+        var parts = node.textContent.split(/(Horatio)/);
+        if (parts.length < 2) return;
+        var frag = document.createDocumentFragment();
+        parts.forEach(function(part) {
+            if (part === "Horatio") {
+                var w = document.createElement("span");
+                w.className = "horatio-wordmark";
+                w.innerHTML = "<span class=\"horatio-ho\">Ho</span><span class=\"horatio-ratio\">Ratio</span>";
+                frag.appendChild(w);
+            } else if (part) {
+                frag.appendChild(document.createTextNode(part));
+            }
+        });
+        node.parentNode.replaceChild(frag, node);
+    });
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(m) {
+            m.addedNodes.forEach(function(n) {
+                if (n.nodeType === 1) styleNode(n);
+            });
+        });
+    });
+    observer.observe(document.body, {childList: true, subtree: true});
+    function styleNode(root) {
+        var w2 = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+            acceptNode: function(n) {
+                return skip.has(n.parentElement && n.parentElement.tagName)
+                    ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+            }
+        });
+        var ns = [];
+        while (w2.nextNode()) ns.push(w2.currentNode);
+        ns.forEach(function(node) {
+            if (!node.textContent.includes("Horatio")) return;
+            var parts = node.textContent.split(/(Horatio)/);
+            if (parts.length < 2) return;
+            var frag = document.createDocumentFragment();
+            parts.forEach(function(part) {
+                if (part === "Horatio") {
+                    var w = document.createElement("span");
+                    w.className = "horatio-wordmark";
+                    w.innerHTML = "<span class=\"horatio-ho\">Ho</span><span class=\"horatio-ratio\">Ratio</span>";
+                    frag.appendChild(w);
+                } else if (part) {
+                    frag.appendChild(document.createTextNode(part));
+                }
+            });
+            node.parentNode.replaceChild(frag, node);
+        });
+    }
+})();
+</script>
 </body>
 </html>
