@@ -140,82 +140,44 @@
   }
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
 
-  /* ── APP MOCKUP ── */
-  .app-mockup {
-    width: 100%; max-width: 520px;
-    background: #111; border: 1px solid #1e2a38;
-    border-radius: 10px; overflow: hidden;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,255,204,0.06),
-                0 0 60px rgba(0,255,204,0.04);
-    font-family: 'EB Garamond', Georgia, serif;
+  /* ── SCREENSHOT STACK ── */
+  .screenshot-stack {
+    position: relative;
+    width: 100%;
+    max-width: 580px;
+    /* tall enough to show the stagger */
+    padding-bottom: 3.5rem;
+    padding-right: 2.5rem;
   }
-  .mockup-bar {
-    background: #0d0d0d; border-bottom: 1px solid #1a1a1a;
-    padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+  .screenshot-stack img {
+    display: block;
+    width: 100%;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.08);
   }
-  .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
-  .mockup-dot:nth-child(1) { background: #ff5f57; }
-  .mockup-dot:nth-child(2) { background: #febc2e; }
-  .mockup-dot:nth-child(3) { background: #28c840; }
-  .mockup-title {
-    margin-left: auto; margin-right: auto;
-    font-family: 'Space Mono', monospace; font-size: 0.55rem;
-    letter-spacing: 0.12em; color: #444; text-transform: uppercase;
+  .ss-dark {
+    position: relative;
+    z-index: 2;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7), 0 0 0 1px rgba(0,255,204,0.08);
   }
-  .mockup-tabs {
-    background: #0d0d0d; border-bottom: 1px solid #1a1a1a;
-    display: flex; gap: 0; padding: 0 1rem;
+  .ss-light {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 88%;
+    z-index: 1;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    border: 1px solid rgba(0,0,0,0.12) !important;
   }
-  .mockup-tab {
-    font-family: 'Space Mono', monospace; font-size: 0.55rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 0.55rem 0.9rem; color: #444; border-bottom: 2px solid transparent;
-    cursor: default;
-  }
-  .mockup-tab.active { color: #1fb896; border-bottom-color: #1fb896; }
-  .mockup-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
-  .mockup-mode {
-    display: inline-flex; align-items: center; gap: 0.4rem;
+  .ss-label {
+    position: absolute;
     font-family: 'Space Mono', monospace; font-size: 0.5rem;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: #1fb896; background: rgba(31,184,150,0.08);
-    border: 1px solid rgba(31,184,150,0.2); padding: 0.25rem 0.6rem;
-    border-radius: 2px; align-self: flex-start;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--bg); border: 1px solid var(--border);
+    padding: 0.2rem 0.55rem; border-radius: 2px;
+    color: var(--muted);
   }
-  .mockup-msg { display: flex; flex-direction: column; gap: 0.3rem; }
-  .mockup-role {
-    font-family: 'Space Mono', monospace; font-size: 0.48rem;
-    letter-spacing: 0.12em; text-transform: uppercase; color: #333;
-  }
-  .mockup-role.ai { color: #1fb896; }
-  .mockup-bubble {
-    font-size: 0.8rem; line-height: 1.6; color: #ccc;
-    max-width: 92%;
-  }
-  .mockup-bubble.user {
-    background: #181818; border: 1px solid #222;
-    padding: 0.6rem 0.8rem; border-radius: 6px; color: #aaa;
-    align-self: flex-end; max-width: 80%;
-  }
-  .mockup-cite {
-    display: inline; font-style: italic; color: #1fb896; font-size: 0.75rem;
-  }
-  .mockup-input {
-    margin: 0 1.25rem 1.25rem;
-    background: #0d0d0d; border: 1px solid #1a2530;
-    border-radius: 6px; padding: 0.7rem 1rem;
-    display: flex; align-items: center; gap: 0.75rem;
-  }
-  .mockup-input-text {
-    font-family: 'EB Garamond', serif; font-size: 0.85rem;
-    color: #333; flex: 1;
-  }
-  .mockup-send {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: #1fb896; display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0;
-  }
-  .mockup-send svg { width: 12px; height: 12px; }
+  .ss-label-dark  { top: -0.7rem; left: 0.75rem; }
+  .ss-label-light { bottom: 2.8rem; right: 3.3rem; }
   .btn {
     display: inline-block; text-decoration: none;
     font-family: 'Space Mono', monospace; font-size: 0.68rem;
@@ -360,7 +322,7 @@
   @media (max-width: 1024px) {
     .hero { grid-template-columns: 1fr; gap: 3rem; padding: 8rem 2.5rem 5rem; }
     .hero-right { justify-content: flex-start; }
-    .app-mockup { max-width: 100%; }
+    .screenshot-stack { max-width: 100%; padding-bottom: 4rem; padding-right: 3rem; }
   }
   @media (max-width: 768px) {
     nav { padding: 1rem 1.25rem; }
@@ -433,42 +395,13 @@
     </div>
   </div>
 
-  <!-- Right column: app mockup -->
+  <!-- Right column: real screenshots stacked -->
   <div class="hero-right">
-    <div class="app-mockup">
-      <div class="mockup-bar">
-        <span class="mockup-dot"></span>
-        <span class="mockup-dot"></span>
-        <span class="mockup-dot"></span>
-        <span class="mockup-title">HoRatio — Dialectic</span>
-      </div>
-      <div class="mockup-tabs">
-        <span class="mockup-tab active">Dialectic</span>
-        <span class="mockup-tab">Library</span>
-        <span class="mockup-tab">Journal</span>
-        <span class="mockup-tab">Tools</span>
-      </div>
-      <div class="mockup-body">
-        <span class="mockup-mode">⬡ Supervise mode</span>
-        <div class="mockup-msg">
-          <span class="mockup-role">You</span>
-          <span class="mockup-bubble user">Does the proportionality doctrine in EU law constrain Member State discretion under Art 36 TFEU in the same way it does under the Charter?</span>
-        </div>
-        <div class="mockup-msg">
-          <span class="mockup-role ai">HoRatio</span>
-          <div class="mockup-bubble">
-            That framing conflates two analytically distinct operations of proportionality. Under Art 36 TFEU, the Court applies a means–ends rationality test: the measure must be suitable and necessary to achieve a legitimate public interest. Under the Charter, proportionality under Art 52(1) is strict — necessity must be established against the fundamental right as such, not merely the policy objective.<br><br>
-            The critical distinction is the <em>comparator</em>. In <span class="mockup-cite">Pharmaceutical Society [1989] ECR 1235</span>, the Court permitted Member State latitude where the measure was "consistent with the Treaty." Charter review admits no such deference — see <span class="mockup-cite">Fransson (C-617/10) [2013]</span>.<br><br>
-            <strong>Supervision note:</strong> Your thesis would benefit from addressing whether post-<em>Lisbon</em> case law has narrowed that gap. Can you identify a judgment where the Court applied Charter proportionality to an Art 36 context?
-          </div>
-        </div>
-      </div>
-      <div class="mockup-input">
-        <span class="mockup-input-text">Ask a research question…</span>
-        <span class="mockup-send">
-          <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="#020407" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </span>
-      </div>
+    <div class="screenshot-stack">
+      <span class="ss-label ss-label-dark">Dark mode</span>
+      <img class="ss-dark" src="screenshot-dark.png" alt="HoRatio app — dark mode" width="1440" height="900">
+      <img class="ss-light" src="screenshot-light.png" alt="HoRatio app — light mode" width="1440" height="900">
+      <span class="ss-label ss-label-light">Light mode</span>
     </div>
   </div>
 </section>
