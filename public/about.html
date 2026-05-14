@@ -39,6 +39,12 @@
     font-family: 'Space Mono', monospace;
     font-size: 1.1rem; font-weight: 700;
     color: var(--accent); text-decoration: none; letter-spacing: 0.04em;
+    display: flex; flex-direction: column; gap: 0.1rem; line-height: 1;
+  }
+  .nav-logo-sub {
+    font-family: 'Space Mono', monospace; font-size: 0.5rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); font-weight: 400;
   }
   .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
   .nav-links a {
@@ -248,7 +254,10 @@
 </div>
 
 <nav>
-  <a href="about.html" class="nav-logo"><span class="ho">Ho</span><span class="ratio">Ratio</span></a>
+  <a href="about.html" class="nav-logo">
+    <span><span class="ho">Ho</span><span class="ratio">Ratio</span></span>
+    <span class="nav-logo-sub">v2.0 &mdash; Doctoral Research Intelligence</span>
+  </a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#guide">User Guide</a></li>
@@ -259,7 +268,6 @@
 
 <!-- HERO -->
 <section class="hero">
-  <p class="hero-label">v2.0 — Doctoral Research Intelligence</p>
   <h1 class="hero-title">
     Research,<br>
     reasoned<br>
