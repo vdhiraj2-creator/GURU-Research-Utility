@@ -24,7 +24,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>G.U.R.U. — Doctoral Research Intelligence</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111111'/><line x1='16' y1='5' x2='16' y2='27' stroke='%231fb896' stroke-width='2.5' stroke-linecap='round'/><line x1='6.5' y1='10.5' x2='25.5' y2='21.5' stroke='%231fb896' stroke-width='2.5' stroke-linecap='round'/><line x1='25.5' y1='10.5' x2='6.5' y2='21.5' stroke='%231fb896' stroke-width='2.5' stroke-linecap='round'/></svg>">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%23111111'/><path d='M16.5 4.5 C15.8 10 17.2 19 16 27.5' stroke='%231fb896' stroke-width='2.3' stroke-linecap='round' fill='none'/><path d='M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5' stroke='%231fb896' stroke-width='2.1' stroke-linecap='round' fill='none'/><path d='M6.5 10 C12 14 19.5 17.5 25.5 21.5' stroke='%231fb896' stroke-width='2.2' stroke-linecap='round' fill='none'/><path d='M6.5 10 L5 7 L1 6 L3 10.5 Z' fill='%23edeae5' opacity='0.9'/><path d='M6.5 10 L1 6' stroke='%23111111' stroke-width='0.6' stroke-linecap='round' fill='none'/></svg>">
     <meta name="application-name" content="G.U.R.U.">
     <meta name="apple-mobile-web-app-title" content="G.U.R.U.">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -121,7 +121,7 @@
         body.light-mode .empty-state { color: var(--text-3); }
         body.light-mode .guru-letter { color: var(--text-1); }
         body.light-mode .guru-dot { color: var(--accent); }
-        body.light-mode #guru-mark line { stroke: var(--accent); }
+        body.light-mode #guru-mark { color: var(--text-1); }
         body.light-mode #guru-voice-btn { border-color: var(--border); color: var(--text-2); }
         body.light-mode #guru-voice-btn.active { color: var(--accent); border-color: var(--accent); }
         body.light-mode .btn-save { background: var(--accent); color: #fff; }
@@ -1831,10 +1831,15 @@
     <div id="workspace">
         <header>
             <div class="logo">
-                <svg id="guru-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:0.45rem;">
-                    <line x1="16" y1="5" x2="16" y2="27" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
-                    <line x1="6.5" y1="10.5" x2="25.5" y2="21.5" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
-                    <line x1="25.5" y1="10.5" x2="6.5" y2="21.5" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round"/>
+                <svg id="guru-mark" width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;margin-right:0.45rem;color:var(--text-1);">
+                    <!-- Hand-drawn asterisk: three slightly organic strokes in teal ink -->
+                    <path d="M16.5 4.5 C15.8 10 17.2 19 16 27.5" stroke="var(--accent)" stroke-width="2.3" stroke-linecap="round"/>
+                    <path d="M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5" stroke="var(--accent)" stroke-width="2.1" stroke-linecap="round"/>
+                    <path d="M6.5 10 C12 14 19.5 17.5 25.5 21.5" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round"/>
+                    <!-- Quill nib at the upper-left arm tip — as if it just drew the asterisk -->
+                    <path d="M6.5 10 L5 7 L1 6 L3 10.5 Z" fill="currentColor" opacity="0.9"/>
+                    <!-- Nib slit (ink channel) -->
+                    <path d="M6.5 10 L1 6" stroke="var(--bg)" stroke-width="0.6" stroke-linecap="round"/>
                 </svg>
                 <span class="guru-name"><span class="guru-letter">G</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span><span class="guru-letter">R</span><span class="guru-dot">.</span><span class="guru-letter">U</span><span class="guru-dot">.</span></span>
             </div>
