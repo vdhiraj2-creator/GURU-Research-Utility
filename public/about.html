@@ -62,10 +62,13 @@
 
   /* ── HERO ── */
   .hero {
-    min-height: 100vh; display: flex; flex-direction: column;
-    justify-content: flex-end; align-items: flex-start;
-    padding: 7rem 3.5rem 5rem; position: relative; overflow: hidden;
+    min-height: 100vh; display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center; gap: 4rem;
+    padding: 8rem 3.5rem 5rem; position: relative; overflow: hidden;
   }
+  .hero-left { display: flex; flex-direction: column; }
+  .hero-right { display: flex; justify-content: flex-end; align-items: center; }
   .hero::before {
     content: ''; position: absolute; inset: 0;
     background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(0,255,204,0.05) 0%, transparent 70%),
@@ -132,10 +135,87 @@
   }
   .hero-title em { font-style: italic; color: var(--accent); }
   .hero-sub {
-    max-width: 56ch; font-size: 1.2rem; line-height: 1.7;
+    max-width: 48ch; font-size: 1.2rem; line-height: 1.7;
     color: var(--muted); margin-bottom: 3rem;
   }
   .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+  /* ── APP MOCKUP ── */
+  .app-mockup {
+    width: 100%; max-width: 520px;
+    background: #111; border: 1px solid #1e2a38;
+    border-radius: 10px; overflow: hidden;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(0,255,204,0.06),
+                0 0 60px rgba(0,255,204,0.04);
+    font-family: 'EB Garamond', Georgia, serif;
+  }
+  .mockup-bar {
+    background: #0d0d0d; border-bottom: 1px solid #1a1a1a;
+    padding: 0.6rem 1rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .mockup-dot:nth-child(1) { background: #ff5f57; }
+  .mockup-dot:nth-child(2) { background: #febc2e; }
+  .mockup-dot:nth-child(3) { background: #28c840; }
+  .mockup-title {
+    margin-left: auto; margin-right: auto;
+    font-family: 'Space Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.12em; color: #444; text-transform: uppercase;
+  }
+  .mockup-tabs {
+    background: #0d0d0d; border-bottom: 1px solid #1a1a1a;
+    display: flex; gap: 0; padding: 0 1rem;
+  }
+  .mockup-tab {
+    font-family: 'Space Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.55rem 0.9rem; color: #444; border-bottom: 2px solid transparent;
+    cursor: default;
+  }
+  .mockup-tab.active { color: #1fb896; border-bottom-color: #1fb896; }
+  .mockup-body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+  .mockup-mode {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    font-family: 'Space Mono', monospace; font-size: 0.5rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: #1fb896; background: rgba(31,184,150,0.08);
+    border: 1px solid rgba(31,184,150,0.2); padding: 0.25rem 0.6rem;
+    border-radius: 2px; align-self: flex-start;
+  }
+  .mockup-msg { display: flex; flex-direction: column; gap: 0.3rem; }
+  .mockup-role {
+    font-family: 'Space Mono', monospace; font-size: 0.48rem;
+    letter-spacing: 0.12em; text-transform: uppercase; color: #333;
+  }
+  .mockup-role.ai { color: #1fb896; }
+  .mockup-bubble {
+    font-size: 0.8rem; line-height: 1.6; color: #ccc;
+    max-width: 92%;
+  }
+  .mockup-bubble.user {
+    background: #181818; border: 1px solid #222;
+    padding: 0.6rem 0.8rem; border-radius: 6px; color: #aaa;
+    align-self: flex-end; max-width: 80%;
+  }
+  .mockup-cite {
+    display: inline; font-style: italic; color: #1fb896; font-size: 0.75rem;
+  }
+  .mockup-input {
+    margin: 0 1.25rem 1.25rem;
+    background: #0d0d0d; border: 1px solid #1a2530;
+    border-radius: 6px; padding: 0.7rem 1rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+  .mockup-input-text {
+    font-family: 'EB Garamond', serif; font-size: 0.85rem;
+    color: #333; flex: 1;
+  }
+  .mockup-send {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: #1fb896; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .mockup-send svg { width: 12px; height: 12px; }
   .btn {
     display: inline-block; text-decoration: none;
     font-family: 'Space Mono', monospace; font-size: 0.68rem;
@@ -277,10 +357,15 @@
   }
 
   /* ── RESPONSIVE ── */
+  @media (max-width: 1024px) {
+    .hero { grid-template-columns: 1fr; gap: 3rem; padding: 8rem 2.5rem 5rem; }
+    .hero-right { justify-content: flex-start; }
+    .app-mockup { max-width: 100%; }
+  }
   @media (max-width: 768px) {
     nav { padding: 1rem 1.25rem; }
     .nav-links li:not(:last-child) { display: none; }
-    .hero { padding: 7rem 1.25rem 4rem; }
+    .hero { padding: 7rem 1.25rem 4rem; gap: 2.5rem; }
     .section { padding: 4rem 1.25rem; }
     .features { grid-template-columns: 1fr; }
     .guide-grid { grid-template-columns: 1fr; }
@@ -316,33 +401,75 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="intro-row">
-    <div class="intro-avatar" id="introAvatar">
-      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M16.5 4.5 C15.8 10 17.2 19 16 27.5" stroke="#00ffcc" stroke-width="3" stroke-linecap="round"/>
-        <path d="M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5" stroke="#00ffcc" stroke-width="2.8" stroke-linecap="round"/>
-        <path d="M6.5 10 C12 14 19.5 17.5 25.5 21.5" stroke="#00ffcc" stroke-width="2.9" stroke-linecap="round"/>
-      </svg>
-    </div>
-    <div class="intro-bubble" id="introBubble">
-      <div class="typing-dots" id="typingDots">
-        <span></span><span></span><span></span>
+  <!-- Left column: intro bubble + headline + CTA -->
+  <div class="hero-left">
+    <div class="intro-row">
+      <div class="intro-avatar" id="introAvatar">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16.5 4.5 C15.8 10 17.2 19 16 27.5" stroke="#00ffcc" stroke-width="3" stroke-linecap="round"/>
+          <path d="M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5" stroke="#00ffcc" stroke-width="2.8" stroke-linecap="round"/>
+          <path d="M6.5 10 C12 14 19.5 17.5 25.5 21.5" stroke="#00ffcc" stroke-width="2.9" stroke-linecap="round"/>
+        </svg>
       </div>
-      <p class="intro-text" id="introText"></p>
+      <div class="intro-bubble" id="introBubble">
+        <div class="typing-dots" id="typingDots">
+          <span></span><span></span><span></span>
+        </div>
+        <p class="intro-text" id="introText"></p>
+      </div>
+    </div>
+
+    <h1 class="hero-title">
+      Research,<br>
+      reasoned<br>
+      <em>differently.</em>
+    </h1>
+    <p class="hero-sub">
+      <span class="ho">Ho</span><span class="ratio">Ratio</span> is an AI research companion built for PhD law students — combining Socratic supervision, parallel database search, vault management, and OSCOLA citation generation in one place.
+    </p>
+    <div class="hero-actions">
+      <a href="/index.html" class="btn btn-primary">Open App</a>
+      <a href="#guide" class="btn btn-ghost">Read the Guide</a>
     </div>
   </div>
 
-  <h1 class="hero-title">
-    Research,<br>
-    reasoned<br>
-    <em>differently.</em>
-  </h1>
-  <p class="hero-sub">
-    <span class="ho">Ho</span><span class="ratio">Ratio</span> is an AI research companion built for PhD law students — combining Socratic supervision, parallel database search, vault management, and OSCOLA citation generation in one place.
-  </p>
-  <div class="hero-actions">
-    <a href="/index.html" class="btn btn-primary">Open App</a>
-    <a href="#guide" class="btn btn-ghost">Read the Guide</a>
+  <!-- Right column: app mockup -->
+  <div class="hero-right">
+    <div class="app-mockup">
+      <div class="mockup-bar">
+        <span class="mockup-dot"></span>
+        <span class="mockup-dot"></span>
+        <span class="mockup-dot"></span>
+        <span class="mockup-title">HoRatio — Dialectic</span>
+      </div>
+      <div class="mockup-tabs">
+        <span class="mockup-tab active">Dialectic</span>
+        <span class="mockup-tab">Library</span>
+        <span class="mockup-tab">Journal</span>
+        <span class="mockup-tab">Tools</span>
+      </div>
+      <div class="mockup-body">
+        <span class="mockup-mode">⬡ Supervise mode</span>
+        <div class="mockup-msg">
+          <span class="mockup-role">You</span>
+          <span class="mockup-bubble user">Does the proportionality doctrine in EU law constrain Member State discretion under Art 36 TFEU in the same way it does under the Charter?</span>
+        </div>
+        <div class="mockup-msg">
+          <span class="mockup-role ai">HoRatio</span>
+          <div class="mockup-bubble">
+            That framing conflates two analytically distinct operations of proportionality. Under Art 36 TFEU, the Court applies a means–ends rationality test: the measure must be suitable and necessary to achieve a legitimate public interest. Under the Charter, proportionality under Art 52(1) is strict — necessity must be established against the fundamental right as such, not merely the policy objective.<br><br>
+            The critical distinction is the <em>comparator</em>. In <span class="mockup-cite">Pharmaceutical Society [1989] ECR 1235</span>, the Court permitted Member State latitude where the measure was "consistent with the Treaty." Charter review admits no such deference — see <span class="mockup-cite">Fransson (C-617/10) [2013]</span>.<br><br>
+            <strong>Supervision note:</strong> Your thesis would benefit from addressing whether post-<em>Lisbon</em> case law has narrowed that gap. Can you identify a judgment where the Court applied Charter proportionality to an Art 36 context?
+          </div>
+        </div>
+      </div>
+      <div class="mockup-input">
+        <span class="mockup-input-text">Ask a research question…</span>
+        <span class="mockup-send">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 3l5 5-5 5" stroke="#020407" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+      </div>
+    </div>
   </div>
 </section>
 
