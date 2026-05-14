@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HoRatio — Doctoral Research Intelligence</title>
+<link rel="icon" href="/icon.png">
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #020407;
+    --surface:  #080d14;
+    --border:   #0f1f30;
+    --text:     #c8d6e5;
+    --muted:    #475569;
+    --accent:   #00ffcc;
+    --accent2:  #a78bfa;
+    --accent3:  #3b82f6;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; background: var(--bg); color: var(--text); }
+  body { font-family: 'EB Garamond', Georgia, serif; font-size: 17px; line-height: 1.8; overflow-x: hidden; }
+
+  /* ── WORDMARK ── */
+  .ho  { font-family: 'Times New Roman', Times, serif; font-style: normal; font-weight: 400; }
+  .ratio { font-family: 'Times New Roman', Times, serif; font-style: italic; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1rem 2.5rem;
+    border-bottom: 1px solid var(--border);
+    background: rgba(2,4,7,0.88);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  .nav-logo {
+    font-family: 'Space Mono', monospace;
+    font-size: 1.1rem; font-weight: 700;
+    color: var(--accent); text-decoration: none; letter-spacing: 0.04em;
+  }
+  .nav-links { display: flex; align-items: center; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent); color: var(--bg) !important;
+    padding: 0.45rem 1.1rem; font-weight: 700;
+    transition: opacity 0.2s !important;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh; display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    padding: 8rem 2.5rem 5rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 60% 40%, rgba(0,255,204,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 85% 70%, rgba(167,139,250,0.04) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-size: clamp(3.5rem, 8vw, 8rem); font-weight: 400;
+    line-height: 0.95; letter-spacing: -0.01em;
+    color: #e2e8f0; margin-bottom: 2rem;
+  }
+  .hero-title em { font-style: italic; color: var(--accent); }
+  .hero-sub {
+    max-width: 52ch; font-size: 1.15rem; line-height: 1.7;
+    color: var(--muted); margin-bottom: 3rem;
+  }
+  .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; text-decoration: none;
+    font-family: 'Space Mono', monospace; font-size: 0.68rem;
+    letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
+    padding: 0.9rem 1.8rem; transition: opacity 0.2s;
+  }
+  .btn-primary { background: var(--accent); color: var(--bg); }
+  .btn-primary:hover { opacity: 0.85; }
+  .btn-ghost { border: 1px solid var(--border); color: var(--muted); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+
+  /* ── SECTION ── */
+  .section { padding: 6rem 2.5rem; border-top: 1px solid var(--border); }
+  .section-label {
+    font-family: 'Space Mono', monospace; font-size: 0.62rem;
+    letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3.5rem); font-weight: 400;
+    line-height: 1.05; color: #e2e8f0; margin-bottom: 1rem;
+  }
+  .section-desc { max-width: 52ch; color: var(--muted); margin-bottom: 3.5rem; }
+
+  /* ── FEATURE GRID ── */
+  .features {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border);
+  }
+  .feature {
+    background: var(--bg); padding: 2rem;
+    transition: background 0.25s; cursor: default;
+  }
+  .feature:hover { background: var(--surface); }
+  .feature-num {
+    font-family: 'Space Mono', monospace; font-size: 0.58rem;
+    letter-spacing: 0.15em; color: var(--muted); margin-bottom: 1rem;
+  }
+  .feature-title {
+    font-size: 1.25rem; font-weight: 500; color: #e2e8f0;
+    margin-bottom: 0.5rem; line-height: 1.2;
+  }
+  .feature-desc { font-size: 0.88rem; line-height: 1.7; color: var(--muted); }
+  .feature-tag {
+    display: inline-block; margin-top: 1.25rem;
+    font-family: 'Space Mono', monospace; font-size: 0.55rem;
+    letter-spacing: 0.14em; text-transform: uppercase;
+    padding: 0.25rem 0.55rem; border-radius: 2px;
+  }
+  .tag-green  { color: var(--accent);  border: 1px solid rgba(0,255,204,0.3);  }
+  .tag-purple { color: var(--accent2); border: 1px solid rgba(167,139,250,0.3); }
+  .tag-blue   { color: var(--accent3); border: 1px solid rgba(59,130,246,0.3);  }
+
+  /* ── GUIDE NAV ── */
+  .guide-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--border);
+  }
+  .guide-card {
+    background: var(--bg); padding: 1.75rem 2rem;
+    text-decoration: none; display: flex; align-items: flex-start;
+    gap: 1.25rem; transition: background 0.2s;
+  }
+  .guide-card:hover { background: var(--surface); }
+  .guide-card-num {
+    font-family: 'Space Mono', monospace; font-size: 0.75rem;
+    color: var(--accent); flex-shrink: 0; padding-top: 0.1rem;
+  }
+  .guide-card-body {}
+  .guide-card-title { font-size: 1.05rem; color: #e2e8f0; margin-bottom: 0.3rem; }
+  .guide-card-desc  { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── DOCS CTA ── */
+  .docs-cta {
+    margin-top: 3rem; padding: 2.5rem; background: var(--surface);
+    border: 1px solid var(--border); display: flex;
+    align-items: center; justify-content: space-between; gap: 2rem;
+  }
+  .docs-cta-text h3 { font-size: 1.3rem; color: #e2e8f0; margin-bottom: 0.4rem; }
+  .docs-cta-text p  { font-size: 0.88rem; color: var(--muted); }
+
+  /* ── LEGAL ── */
+  .legal-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
+  .legal-card {
+    background: var(--bg); padding: 2rem;
+    text-decoration: none; transition: background 0.2s;
+  }
+  .legal-card:hover { background: var(--surface); }
+  .legal-card-label {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.75rem;
+  }
+  .legal-card-title { font-size: 1.3rem; color: #e2e8f0; margin-bottom: 0.5rem; }
+  .legal-card-desc  { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .legal-card-arrow {
+    display: inline-block; margin-top: 1.25rem;
+    font-family: 'Space Mono', monospace; font-size: 0.65rem;
+    color: var(--accent); letter-spacing: 0.1em;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border); padding: 2rem 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.1em; color: var(--muted);
+  }
+  .footer-links { display: flex; gap: 2rem; list-style: none; }
+  .footer-links a {
+    font-family: 'Space Mono', monospace; font-size: 0.6rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.25rem; }
+    .nav-links li:not(:last-child) { display: none; }
+    .hero { padding: 7rem 1.25rem 4rem; }
+    .section { padding: 4rem 1.25rem; }
+    .features { grid-template-columns: 1fr; }
+    .guide-grid { grid-template-columns: 1fr; }
+    .legal-grid { grid-template-columns: 1fr; }
+    .docs-cta { flex-direction: column; align-items: flex-start; }
+    footer { flex-direction: column; gap: 1.25rem; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="about.html" class="nav-logo"><span class="ho">Ho</span><span class="ratio">Ratio</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#guide">User Guide</a></li>
+    <li><a href="#legal">Legal</a></li>
+    <li><a href="/index.html" class="nav-cta">Open App →</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-label">v2.0 — Doctoral Research Intelligence</p>
+  <h1 class="hero-title">
+    Research,<br>
+    reasoned<br>
+    <em>differently.</em>
+  </h1>
+  <p class="hero-sub">
+    <span class="ho">Ho</span><span class="ratio">Ratio</span> is an AI research companion built for PhD law students — combining Socratic supervision, parallel database search, vault management, and OSCOLA citation generation in one place.
+  </p>
+  <div class="hero-actions">
+    <a href="/index.html" class="btn btn-primary">Open App</a>
+    <a href="#guide" class="btn btn-ghost">Read the Guide</a>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <p class="section-label">[ 01 ] — What it does</p>
+  <h2 class="section-title">Everything you need<br>for doctoral research</h2>
+  <p class="section-desc">No API keys required. All 22 academic databases are searched simultaneously on every query — completely free.</p>
+
+  <div class="features">
+    <div class="feature">
+      <p class="feature-num">01</p>
+      <h3 class="feature-title">Dialectic Engine</h3>
+      <p class="feature-desc">Seven supervision modes — Supervise, Critique, Sources, Consistency, Expand, Examiner, and Draft — each calibrated to a different stage of doctoral work.</p>
+      <span class="feature-tag tag-green">AI Supervision</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">02</p>
+      <h3 class="feature-title">22 Databases in Parallel</h3>
+      <p class="feature-desc">BAILII, OSCOLA, Google Scholar, JSTOR, PhilPapers, arXiv, Semantic Scholar and 15 more — searched simultaneously on every query.</p>
+      <span class="feature-tag tag-blue">Research</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">03</p>
+      <h3 class="feature-title">Research Vault</h3>
+      <p class="feature-desc">Upload PDFs, case law, and notes. <span class="ho">Ho</span><span class="ratio">Ratio</span> searches your private library and cites from it automatically in every response.</p>
+      <span class="feature-tag tag-blue">Library</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">04</p>
+      <h3 class="feature-title">Reference Manager</h3>
+      <p class="feature-desc">Paste a bibliography or a single citation — <span class="ho">Ho</span><span class="ratio">Ratio</span> splits, categorises, and stores every reference with automatic OSCOLA formatting.</p>
+      <span class="feature-tag tag-green">Citations</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">05</p>
+      <h3 class="feature-title">Viva Simulator</h3>
+      <p class="feature-desc">An AI external examiner conducts a full oral viva on your submitted work — rigorous, adversarial, and formative before the real thing.</p>
+      <span class="feature-tag tag-purple">Viva Prep</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">06</p>
+      <h3 class="feature-title">Slide Discussion</h3>
+      <p class="feature-desc">Upload PDF presentations and discuss them slide by slide. Navigate, annotate, and rehearse conference presentations with AI feedback.</p>
+      <span class="feature-tag tag-purple">Presentations</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">07</p>
+      <h3 class="feature-title">Living Journal</h3>
+      <p class="feature-desc">Auto-generated research journal that logs every session. Export supervisor-ready progress reports from your research history.</p>
+      <span class="feature-tag tag-green">Journaling</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">08</p>
+      <h3 class="feature-title">OSCOLA Footnotes</h3>
+      <p class="feature-desc">List sources in footnote order — <span class="ho">Ho</span><span class="ratio">Ratio</span> generates properly formatted OSCOLA footnotes with <em>ibid</em> and <em>above n</em> shortening automatically.</p>
+      <span class="feature-tag tag-blue">Citations</span>
+    </div>
+    <div class="feature">
+      <p class="feature-num">09</p>
+      <h3 class="feature-title">Research Relay</h3>
+      <p class="feature-desc">Bridge your Gemini Gem or Claude Project into <span class="ho">Ho</span><span class="ratio">Ratio</span> — paste any response and citations are extracted into your library automatically.</p>
+      <span class="feature-tag tag-purple">Integration</span>
+    </div>
+  </div>
+</section>
+
+<!-- USER GUIDE -->
+<section class="section" id="guide">
+  <p class="section-label">[ 02 ] — Documentation</p>
+  <h2 class="section-title">User Guide</h2>
+  <p class="section-desc">Everything you need to get the most out of <span class="ho">Ho</span><span class="ratio">Ratio</span> — from first login to advanced research workflows.</p>
+
+  <div class="guide-grid">
+    <a href="Horatio_User_Guide_V2.html#intro" class="guide-card">
+      <span class="guide-card-num">01</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Introduction</p>
+        <p class="guide-card-desc">What HoRatio is, who it's built for, and the philosophy behind its supervision model.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#start" class="guide-card">
+      <span class="guide-card-num">02</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Quick Start</p>
+        <p class="guide-card-desc">Get up and running in minutes — first session, API setup, and calibration.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#interface" class="guide-card">
+      <span class="guide-card-num">03</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Interface Overview</p>
+        <p class="guide-card-desc">Navigation tabs, toolbar, and the layout of every panel explained.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#dialectic" class="guide-card">
+      <span class="guide-card-num">04</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Dialectic — The AI Engine</p>
+        <p class="guide-card-desc">Supervision modes, search, voice output, Research Relay, and file attachments.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#library" class="guide-card">
+      <span class="guide-card-num">05</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Research Library</p>
+        <p class="guide-card-desc">Vault, Reference Manager, Zotero integration, gap analysis, and export.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#modes" class="guide-card">
+      <span class="guide-card-num">06</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Supervision Mode Reference</p>
+        <p class="guide-card-desc">Full breakdown of all seven supervision modes and when to use each.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#viva" class="guide-card">
+      <span class="guide-card-num">07</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Viva Simulator</p>
+        <p class="guide-card-desc">How to run a full AI oral examination and interpret the feedback.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#journal" class="guide-card">
+      <span class="guide-card-num">09</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Living Journal &amp; Supervisor Reports</p>
+        <p class="guide-card-desc">Auto-logging, session history, and exporting formatted supervisor reports.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#tools" class="guide-card">
+      <span class="guide-card-num">10</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Tools</p>
+        <p class="guide-card-desc">Text diff, OSCOLA footnote generator, spreadsheet analyser, and more.</p>
+      </div>
+    </a>
+    <a href="Horatio_User_Guide_V2.html#config" class="guide-card">
+      <span class="guide-card-num">12</span>
+      <div class="guide-card-body">
+        <p class="guide-card-title">Configuration</p>
+        <p class="guide-card-desc">API keys, Research Directive, voice settings, and Pro features.</p>
+      </div>
+    </a>
+  </div>
+
+  <div class="docs-cta">
+    <div class="docs-cta-text">
+      <h3>Read the full guide</h3>
+      <p>The complete user guide covers every feature in detail, with examples and workflows for each stage of doctoral research.</p>
+    </div>
+    <a href="Horatio_User_Guide_V2.html" class="btn btn-primary">Full User Guide →</a>
+  </div>
+</section>
+
+<!-- LEGAL -->
+<section class="section" id="legal">
+  <p class="section-label">[ 03 ] — Legal</p>
+  <h2 class="section-title">Policies</h2>
+  <p class="section-desc">How your data is handled and the terms governing use of <span class="ho">Ho</span><span class="ratio">Ratio</span>.</p>
+
+  <div class="legal-grid">
+    <a href="privacy.html" class="legal-card">
+      <p class="legal-card-label">Data &amp; Privacy</p>
+      <h3 class="legal-card-title">Privacy Policy</h3>
+      <p class="legal-card-desc">What data HoRatio collects, how it's stored, and your rights. Your research content never leaves your device or your chosen API provider.</p>
+      <span class="legal-card-arrow">Read policy →</span>
+    </a>
+    <a href="terms.html" class="legal-card">
+      <p class="legal-card-label">Usage</p>
+      <h3 class="legal-card-title">Terms of Use</h3>
+      <p class="legal-card-desc">Acceptable use, limitations of liability, and the conditions under which HoRatio is provided.</p>
+      <span class="legal-card-arrow">Read terms →</span>
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p class="footer-copy">© 2026 <span class="ho">Ho</span><span class="ratio">Ratio</span> — Doctoral Research Intelligence. All rights reserved.</p>
+  <ul class="footer-links">
+    <li><a href="/index.html">App</a></li>
+    <li><a href="Horatio_User_Guide_V2.html">Guide</a></li>
+    <li><a href="privacy.html">Privacy</a></li>
+    <li><a href="terms.html">Terms</a></li>
+  </ul>
+</footer>
+
+</body>
+</html>
