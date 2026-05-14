@@ -200,6 +200,28 @@
   }
   .footer-links a:hover { color: var(--accent); }
 
+  /* ── FLOATING ASTERISK ── */
+  .float-mark {
+    position: fixed;
+    right: -60px;
+    top: 50%;
+    transform: translateY(-50%) rotate(0deg);
+    width: 280px;
+    height: 280px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.13;
+    filter: blur(0.5px) drop-shadow(0 0 18px rgba(0,255,204,0.35));
+    transition: opacity 0.4s;
+    will-change: transform;
+  }
+  .float-mark svg { width: 100%; height: 100%; }
+
+  @keyframes idle-spin {
+    from { --base-angle: 0deg; }
+    to   { --base-angle: 360deg; }
+  }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
     nav { padding: 1rem 1.25rem; }
@@ -215,6 +237,15 @@
 </style>
 </head>
 <body>
+
+<!-- Floating asterisk that follows the user through scroll -->
+<div class="float-mark" id="floatMark" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.5 4.5 C15.8 10 17.2 19 16 27.5" stroke="#00ffcc" stroke-width="3" stroke-linecap="round"/>
+    <path d="M25.5 10.5 C20 13.5 13.5 16.5 6.5 21.5" stroke="#00ffcc" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M6.5 10 C12 14 19.5 17.5 25.5 21.5" stroke="#00ffcc" stroke-width="2.9" stroke-linecap="round"/>
+  </svg>
+</div>
 
 <nav>
   <a href="about.html" class="nav-logo"><span class="ho">Ho</span><span class="ratio">Ratio</span></a>
@@ -427,5 +458,44 @@
   </ul>
 </footer>
 
+<script>
+  (function () {
+    var mark     = document.getElementById('floatMark');
+    var lastY    = window.scrollY;
+    var angle    = 0;       // accumulated rotation in degrees
+    var velocity = 0;       // current spin speed
+    var raf      = null;
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function tick() {
+      var scrollY   = window.scrollY;
+      var delta     = scrollY - lastY;
+      lastY         = scrollY;
+
+      // Add scroll velocity to spin; decay toward idle speed (0.15 deg/frame)
+      var idle = 0.15;
+      velocity = lerp(velocity, idle + Math.abs(delta) * 0.9, 0.12);
+      angle   += velocity;
+
+      // Vertical drift: float-mark drifts slightly toward scroll direction
+      var maxDrift  = 40; // px above/below centre
+      var docHeight = document.body.scrollHeight - window.innerHeight;
+      var progress  = docHeight > 0 ? scrollY / docHeight : 0;
+      var drift     = (progress - 0.5) * 2 * maxDrift; // -40 → +40 px
+
+      // Opacity: a touch brighter while scrolling
+      var opacity = Math.min(0.18, 0.1 + Math.abs(delta) * 0.008);
+      mark.style.opacity = opacity;
+
+      mark.style.transform =
+        'translateY(calc(-50% + ' + drift + 'px)) rotate(' + angle + 'deg)';
+
+      raf = requestAnimationFrame(tick);
+    }
+
+    tick();
+  })();
+</script>
 </body>
 </html>
