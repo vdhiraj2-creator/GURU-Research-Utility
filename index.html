@@ -541,7 +541,7 @@
         /* ============================================================
            ARCHIVE VIEW
         ============================================================ */
-        #arc-content { max-width: 820px; margin: 0 auto; padding: 2rem 1.5rem; }
+        #arc-content { padding: 1rem 1.5rem 2rem; }
         .arc-item { padding: 1rem 1.25rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: 0.6rem; background: var(--card); cursor: pointer; transition: border-color 0.2s; }
         .arc-item:hover { border-color: rgba(0,255,204,0.15); }
         .arc-role { font-family: 'Space Mono', monospace; font-size: 8px; color: var(--pulse); opacity: 0.4; margin-bottom: 0.25rem; text-transform: uppercase; }
@@ -718,8 +718,8 @@
             height: 44px;
             display: flex;
             align-items: center;
-            gap: 0.15rem;
-            padding: 0 1.75rem;
+            justify-content: space-evenly;
+            padding: 0 0.5rem;
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -1279,7 +1279,7 @@
             textarea.s-input { min-height: 90px; }
 
             /* Archive */
-            #arc-content { padding: 1.25rem 0.75rem; max-width: 100%; }
+            #arc-content { padding: 0.75rem 0.75rem 1.5rem; }
             .arc-item { padding: 0.75rem 1rem; }
         }
         /* ============================================================
@@ -2245,6 +2245,20 @@
 
             <!-- ARCHIVE -->
             <div id="view-horizon" class="view">
+                <div class="panel-header">
+                    <span class="panel-title">Archive</span>
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                        <button class="panel-btn" onclick="exportChatToVault()">Import from Source</button>
+                        <button class="panel-btn primary" onclick="downloadChatAsDoc()">Export to Doc</button>
+                        <div class="panel-menu-wrap">
+                            <button class="panel-menu-trigger" onclick="togglePanelMenu('arc-panel-menu', event)">···</button>
+                            <div class="panel-menu" id="arc-panel-menu">
+                                <button class="panel-menu-item" onclick="downloadChatAsMarkdown();document.getElementById('arc-panel-menu').classList.remove('open')">Download .md</button>
+                                <button class="panel-menu-item" id="arc-clear-btn" style="color:#ef4444;" onclick="confirmArchiveClear()">Clear Archive / Cache</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div id="arc-content"></div>
             </div>
 
@@ -6087,68 +6101,36 @@ ${body}}`;
         // ============================================================
         // ARCHIVE
         // ============================================================
+        let _arcClearTimer = null;
+        function confirmArchiveClear() {
+            const btn = document.getElementById('arc-clear-btn');
+            if (!btn) return;
+            if (btn.dataset.confirming === 'true') {
+                clearTimeout(_arcClearTimer);
+                btn.dataset.confirming = 'false';
+                btn.textContent = 'Clear Archive / Cache';
+                document.getElementById('arc-panel-menu').classList.remove('open');
+                chatHistory = [];
+                GDB.del('chat', 'messages');
+                document.getElementById('chat-stage').innerHTML = '';
+                clearFirebaseChat().catch(() => {});
+                renderArchive();
+                setTab('chat');
+                addBubble('system', 'Archive cleared.');
+            } else {
+                btn.dataset.confirming = 'true';
+                btn.textContent = 'Confirm — tap again to clear';
+                _arcClearTimer = setTimeout(() => {
+                    btn.dataset.confirming = 'false';
+                    btn.textContent = 'Clear Archive / Cache';
+                }, 3000);
+            }
+        }
+
         function renderArchive() {
             const el = document.getElementById('arc-content');
             el.innerHTML = '';
-            if (chatHistory.length === 0) { el.innerHTML = '<div class="empty-state">No archive entries</div>'; return; }
-
-            // Clear button — inline double-confirm
-            const clearBtn = document.createElement('button');
-            clearBtn.className   = 'btn-clear';
-            clearBtn.textContent = 'Clear Archive';
-            let clearTimer = null;
-            clearBtn.onclick = async () => {
-                if (clearBtn.dataset.confirming === 'true') {
-                    clearTimeout(clearTimer);
-                    try {
-                        chatHistory = [];
-                        GDB.del('chat', 'messages');
-                        document.getElementById('chat-stage').innerHTML = '';
-                        await clearFirebaseChat();
-                    } catch(e) { console.warn('Archive clear error:', e); }
-                    renderArchive();
-                    setTab('chat');
-                    addBubble('system', 'Archive cleared.');
-                } else {
-                    clearBtn.dataset.confirming = 'true';
-                    clearBtn.textContent        = 'CONFIRM CLEAR ✕';
-                    clearBtn.style.color        = '#ef4444';
-                    clearBtn.style.background   = 'rgba(239,68,68,0.08)';
-                    clearTimer = setTimeout(() => {
-                        clearBtn.dataset.confirming = 'false';
-                        clearBtn.textContent        = 'Clear Archive';
-                        clearBtn.style.color        = '';
-                        clearBtn.style.background   = '';
-                    }, 3000);
-                }
-            };
-            el.appendChild(clearBtn);
-
-            // Export to Vault button
-            const exportBtn = document.createElement('button');
-            exportBtn.className   = 'btn-clear';
-            exportBtn.style.cssText = 'color:var(--pulse);border-color:rgba(0,255,204,0.2);margin-left:0.5rem;';
-            exportBtn.textContent = 'Export to Vault';
-            exportBtn.onclick     = exportChatToVault;
-            el.appendChild(exportBtn);
-
-            // Download .md button (Pro)
-            const dlBtn = document.createElement('button');
-            dlBtn.className   = 'btn-clear';
-            dlBtn.style.cssText = 'color:#60a5fa;border-color:rgba(96,165,250,0.2);margin-left:0.5rem;';
-            dlBtn.textContent = isPro() ? 'Download .md' : 'Download .md (Pro)';
-            dlBtn.onclick     = downloadChatAsMarkdown;
-            el.appendChild(dlBtn);
-
-            const docBtn = document.createElement('button');
-            docBtn.className   = 'btn-clear';
-            docBtn.style.cssText = 'color:#34d399;border-color:rgba(52,211,153,0.2);margin-left:0.5rem;';
-            docBtn.textContent = isPro() ? 'Download .doc' : 'Download .doc (Pro)';
-            docBtn.onclick     = downloadChatAsDoc;
-            el.appendChild(docBtn);
-
-            el.appendChild(document.createElement('br'));
-            el.appendChild(document.createElement('br'));
+            if (chatHistory.length === 0) { el.innerHTML = '<div class="empty-state">No archive entries yet — start a research conversation in Chat.</div>'; return; }
 
             [...chatHistory].reverse().forEach(m => {
                 const div = document.createElement('div');
