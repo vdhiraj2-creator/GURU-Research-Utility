@@ -560,6 +560,22 @@
         .arc-text { font-size: 12px; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .btn-clear { font-family: 'Space Mono', monospace; font-size: 9px; color: #ef4444; background: transparent; border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 0.4rem 0.8rem; cursor: pointer; margin-bottom: 1.25rem; letter-spacing: 0.08em; text-transform: uppercase; transition: all 0.15s; }
         .btn-clear:hover { background: rgba(239,68,68,0.08); }
+        /* Provider accordion */
+        .prov-accordion { display: flex; flex-direction: column; gap: 0.35rem; }
+        .prov-hdr { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0.65rem 1rem; background: transparent; border: 1px solid var(--border); border-radius: 9px; cursor: pointer; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); transition: all 0.18s; }
+        .prov-hdr:hover { color: var(--text-1); background: var(--surface2); }
+        .prov-hdr.prov-open { border-radius: 9px 9px 0 0; font-weight: 700; }
+        .prov-caret { transition: transform 0.2s; opacity: 0.45; font-style: normal; }
+        .prov-hdr.prov-open .prov-caret { transform: rotate(90deg); opacity: 1; }
+        .prov-body { max-height: 0; overflow: hidden; transition: max-height 0.28s ease, padding 0.28s ease; padding: 0 1rem; background: var(--card); border: 1px solid var(--border); border-top: none; border-radius: 0 0 9px 9px; }
+        .prov-body.prov-open { max-height: 400px; padding: 0.8rem 1rem; }
+        /* Zotero toggle */
+        .zotero-hdr { width: 100%; display: flex; align-items: center; gap: 0.65rem; padding: 0.65rem 1rem; background: transparent; border: 1px solid var(--border); border-radius: 9px; cursor: pointer; font-family: 'Space Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); transition: all 0.18s; }
+        .zotero-hdr:hover { color: var(--text-1); background: var(--surface2); }
+        .zotero-hdr.prov-open { border-radius: 9px 9px 0 0; }
+        .zotero-z { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; color: #cc2936; line-height: 1; }
+        .zotero-body { max-height: 0; overflow: hidden; transition: max-height 0.28s ease, padding 0.28s ease; padding: 0 1rem; background: var(--card); border: 1px solid var(--border); border-top: none; border-radius: 0 0 9px 9px; }
+        .zotero-body.prov-open { max-height: 400px; padding: 0.8rem 1rem; }
         .empty-state { font-family: 'Space Mono', monospace; font-size: 10px; color: #1e293b; text-align: center; padding: 3rem; letter-spacing: 0.1em; text-transform: uppercase; }
 
         /* ============================================================
@@ -2279,36 +2295,53 @@
             <div id="view-settings" class="view">
                 <p class="s-section">API Configuration</p>
                 <div class="s-group">
-                    <label class="s-label" for="cfg-key">Gemini API Key</label>
-                    <input type="password" id="cfg-key" class="s-input" placeholder="AIza...">
-                </div>
-                <div class="s-group">
-                    <label class="s-label">Set All Modes To</label>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;margin-bottom:0.75rem;">
-                        <button id="btn-provider-gemini" class="btn-save" style="flex:1;" onclick="setProvider('gemini')">Gemini</button>
-                        <button id="btn-provider-claude" class="btn-save" style="flex:1;background:transparent;border:1px solid rgba(167,139,250,0.4);color:#a78bfa;" onclick="setProvider('claude')">Claude</button>
-                        <button id="btn-provider-groq"   class="btn-save" style="flex:1;background:transparent;border:1px solid rgba(251,146,60,0.4);color:#fb923c;" onclick="setProvider('groq')">Groq <span style="font-size:8px;opacity:0.8;">FREE</span></button>
-                        <button id="btn-provider-ollama" class="btn-save" style="flex:1;background:transparent;border:1px solid rgba(148,163,184,0.3);color:#94a3b8;" onclick="setProvider('ollama')">Ollama <span style="font-size:8px;opacity:0.8;">LOCAL</span></button>
+                    <label class="s-label">Provider — click to configure</label>
+                    <div class="prov-accordion">
+                        <!-- GEMINI -->
+                        <div>
+                            <button id="btn-provider-gemini" class="prov-hdr" onclick="selectProviderAccordion('gemini')">
+                                <span>Gemini</span><i class="prov-caret">›</i>
+                            </button>
+                            <div class="prov-body" id="prov-body-gemini">
+                                <input type="password" id="cfg-key" class="s-input" placeholder="AIza…" style="margin-bottom:0.4rem;">
+                                <p class="s-note">Get a free key at <strong>aistudio.google.com</strong>. Stored locally only.</p>
+                            </div>
+                        </div>
+                        <!-- CLAUDE -->
+                        <div>
+                            <button id="btn-provider-claude" class="prov-hdr" onclick="selectProviderAccordion('claude')">
+                                <span>Claude</span><i class="prov-caret">›</i>
+                            </button>
+                            <div class="prov-body" id="prov-body-claude">
+                                <input type="password" id="cfg-claude-key" class="s-input" placeholder="sk-ant-…" autocomplete="off" style="margin-bottom:0.4rem;">
+                                <p class="s-note">Get a key at <strong>console.anthropic.com</strong>. Stored locally, never transmitted to our servers.</p>
+                            </div>
+                        </div>
+                        <!-- GROQ -->
+                        <div>
+                            <button id="btn-provider-groq" class="prov-hdr" onclick="selectProviderAccordion('groq')">
+                                <span>Groq <span style="font-size:8px;opacity:0.65;">FREE</span></span><i class="prov-caret">›</i>
+                            </button>
+                            <div class="prov-body" id="prov-body-groq">
+                                <input type="password" id="cfg-groq-key" class="s-input" placeholder="gsk_…" autocomplete="off" style="margin-bottom:0.4rem;">
+                                <p class="s-note">Free at <strong>console.groq.com</strong> — runs Llama 3.3 70B at ~300 tok/s. No credit card required.</p>
+                            </div>
+                        </div>
+                        <!-- OLLAMA -->
+                        <div>
+                            <button id="btn-provider-ollama" class="prov-hdr" onclick="selectProviderAccordion('ollama')">
+                                <span>Ollama <span style="font-size:8px;opacity:0.65;">LOCAL</span></span><i class="prov-caret">›</i>
+                            </button>
+                            <div class="prov-body" id="prov-body-ollama">
+                                <input type="text" id="cfg-ollama-url" class="s-input" placeholder="http://localhost:11434" autocomplete="off" style="margin-bottom:0.4rem;">
+                                <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.4rem;">
+                                    <select id="cfg-ollama-model" class="s-input" style="font-size:10px;padding:4px 8px;flex:1;"></select>
+                                    <button onclick="fetchOllamaModels()" class="btn-save" style="font-size:9px;padding:4px 10px;white-space:nowrap;">Detect Models</button>
+                                </div>
+                                <p class="s-note">Runs models locally — no internet needed after setup. Requires <strong>Ollama</strong> installed.</p>
+                            </div>
+                        </div>
                     </div>
-                </div>
-                <div class="s-group" id="cfg-claude-key-group" style="display:none;">
-                    <label class="s-label" for="cfg-claude-key">Anthropic API Key</label>
-                    <input type="password" id="cfg-claude-key" class="s-input" placeholder="sk-ant-..." autocomplete="off">
-                    <p class="s-note" style="margin-top:0.4rem;">Get a key at console.anthropic.com. Stored locally, never transmitted to our servers.</p>
-                </div>
-                <div class="s-group" id="cfg-groq-key-group" style="display:none;">
-                    <label class="s-label" for="cfg-groq-key">Groq API Key &nbsp;<span style="background:rgba(251,146,60,0.15);color:#fb923c;font-size:8px;padding:2px 6px;border-radius:3px;font-family:'Space Mono',monospace;letter-spacing:0.08em;">FREE TIER</span></label>
-                    <input type="password" id="cfg-groq-key" class="s-input" placeholder="gsk_..." autocomplete="off">
-                    <p class="s-note" style="margin-top:0.4rem;">Free at <strong>console.groq.com</strong> — runs Llama 3.3 70B at ~300 tok/s. No credit card required. Stored locally only.</p>
-                </div>
-                <div class="s-group" id="cfg-ollama-group" style="display:none;">
-                    <label class="s-label">Ollama — Local / Offline</label>
-                    <input type="text" id="cfg-ollama-url" class="s-input" placeholder="http://localhost:11434" autocomplete="off" style="margin-bottom:0.4rem;">
-                    <div style="display:flex;gap:0.5rem;align-items:center;">
-                        <select id="cfg-ollama-model" class="s-input" style="font-size:10px;padding:4px 8px;flex:1;"></select>
-                        <button onclick="fetchOllamaModels()" class="btn-save" style="font-size:9px;padding:4px 10px;white-space:nowrap;">Detect Models</button>
-                    </div>
-                    <p class="s-note" style="margin-top:0.5rem;">Runs models locally — no internet needed after setup. Requires <strong>Ollama</strong> installed. Best models for this hardware: <code>phi4-mini</code> (fast), <code>llama3.2:8b</code> (balanced).<br>From the web app set <code style="word-break:break-all;">OLLAMA_ORIGINS=https://jarvisphd-80ecb.web.app</code> — or use the desktop build for seamless offline access.</p>
                 </div>
                 <div class="s-group">
                     <label class="s-label">Provider &amp; Model per Mode</label>
@@ -2380,18 +2413,21 @@
                     <p class="s-note" style="margin-top:0.4rem;">Copy from: Gemini AI Studio → Your Gem → System Instructions · or · Claude.ai → Project → Project Instructions. There is no live API link to either — paste the context here once and GURU carries it forward.</p>
                 </div>
 
-                <p class="s-section">Zotero Integration</p>
+                <p class="s-section">Integrations</p>
                 <div class="s-group">
-                    <label class="s-label" for="cfg-zotero-key">Zotero API Key</label>
-                    <input type="password" id="cfg-zotero-key" class="s-input" placeholder="Paste Zotero API key..." autocomplete="off">
-                    <p class="s-note" style="margin-top:0.4rem;">Get a free key at <strong>zotero.org/settings/keys</strong> — create a key with write access to your library.</p>
+                    <button class="zotero-hdr" id="zotero-hdr-btn" onclick="toggleZoteroFields()">
+                        <span class="zotero-z">Z</span>
+                        <span>Zotero</span>
+                        <i class="prov-caret" style="margin-left:auto;">›</i>
+                    </button>
+                    <div class="zotero-body" id="zotero-body">
+                        <label class="s-label" for="cfg-zotero-key" style="margin-top:0;">API Key</label>
+                        <input type="password" id="cfg-zotero-key" class="s-input" placeholder="Paste Zotero API key…" autocomplete="off" style="margin-bottom:0.5rem;">
+                        <label class="s-label" for="cfg-zotero-uid">User ID</label>
+                        <input type="text" id="cfg-zotero-uid" class="s-input" placeholder="Numeric user ID…" autocomplete="off" spellcheck="false" style="margin-bottom:0.5rem;">
+                        <p class="s-note">Get both at <strong>zotero.org/settings/keys</strong>. Once saved, the ⇄ Zotero button in Library pushes your reference list directly to your Zotero library.</p>
+                    </div>
                 </div>
-                <div class="s-group">
-                    <label class="s-label" for="cfg-zotero-uid">Zotero User ID</label>
-                    <input type="text" id="cfg-zotero-uid" class="s-input" placeholder="Your numeric Zotero user ID..." autocomplete="off" spellcheck="false">
-                    <p class="s-note" style="margin-top:0.4rem;">Found at <strong>zotero.org/settings/keys</strong> — shown at the top of that page as "Your userID for use in API calls".</p>
-                </div>
-                <p class="s-note" style="margin-top:0.2rem;">Once saved, the <strong>⇄ Zotero</strong> button in Library pushes your entire reference list directly to your Zotero library.</p>
 
                 <p class="s-section">Academic &amp; Legal Databases</p>
                 <p class="s-note"><strong>All 22 databases are fully free — no API keys required.</strong> GURU searches all simultaneously on every query.</p>
@@ -3529,29 +3565,38 @@ ${body}}`;
             _refreshProviderUI();
         }
 
+        function selectProviderAccordion(prov) {
+            setProvider(prov); // sets localStorage + calls _refreshProviderUI
+        }
+
+        function toggleZoteroFields() {
+            const body = document.getElementById('zotero-body');
+            const hdr  = document.getElementById('zotero-hdr-btn');
+            if (!body) return;
+            const open = body.classList.toggle('prov-open');
+            if (hdr) hdr.classList.toggle('prov-open', open);
+        }
+
         function _refreshProviderUI() {
             const p = localStorage.getItem(SK_PROVIDER) || 'gemini';
-            const PROVIDERS = ['gemini', 'claude', 'groq', 'ollama'];
-            const activeStyles = {
-                gemini: { bg: '#00ffcc22', border: '1px solid var(--pulse)', color: 'var(--pulse)' },
-                claude: { bg: '#7c3aed',   border: 'none',                   color: '#fff' },
-                groq:   { bg: '#fb923c22', border: '1px solid #fb923c',       color: '#fb923c' },
-                ollama: { bg: '#334155',   border: '1px solid #94a3b8',       color: '#e2e8f0' },
-            };
-            const inactiveStyles = {
-                gemini: { bg: 'transparent', border: '1px solid rgba(0,255,204,0.3)',   color: 'var(--pulse)' },
-                claude: { bg: 'transparent', border: '1px solid rgba(167,139,250,0.4)', color: '#a78bfa' },
-                groq:   { bg: 'transparent', border: '1px solid rgba(251,146,60,0.4)',  color: '#fb923c' },
-                ollama: { bg: 'transparent', border: '1px solid rgba(148,163,184,0.3)', color: '#94a3b8' },
-            };
-            PROVIDERS.forEach(id => {
-                const btn = document.getElementById(`btn-provider-${id}`);
-                if (!btn) return;
-                const s = id === p ? activeStyles[id] : inactiveStyles[id];
-                btn.style.background = s.bg; btn.style.border = s.border; btn.style.color = s.color;
+            const colors = { gemini: '#1fb896', claude: '#f97316', groq: '#a78bfa', ollama: '#3b82f6' };
+
+            // Accordion: open active provider, close others
+            ['gemini','claude','groq','ollama'].forEach(id => {
+                const btn  = document.getElementById(`btn-provider-${id}`);
+                const body = document.getElementById(`prov-body-${id}`);
+                const isActive = id === p;
+                const c = colors[id];
+                if (btn) {
+                    btn.classList.toggle('prov-open', isActive);
+                    btn.style.color       = isActive ? c : '';
+                    btn.style.borderColor = isActive ? c + '66' : '';
+                    btn.style.background  = isActive ? c + '18' : '';
+                }
+                if (body) body.classList.toggle('prov-open', isActive);
             });
 
-            // Show/hide key groups
+            // Legacy show/hide guards (elements removed, if guards handle gracefully)
             const groups = { claude: 'cfg-claude-key-group', groq: 'cfg-groq-key-group', ollama: 'cfg-ollama-group' };
             Object.entries(groups).forEach(([id, elId]) => {
                 const el = document.getElementById(elId);
