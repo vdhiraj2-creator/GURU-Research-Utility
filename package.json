@@ -8,6 +8,7 @@
     "build:web": "vite build",
     "preview": "vite preview",
     "start": "electron .",
+    "prebuild": "vite build",
     "build": "electron-builder",
     "build:linux": "electron-builder --linux",
     "build:win": "electron-builder --win",
@@ -22,6 +23,19 @@
     "productName": "Horatio",
     "copyright": "Copyright © 2026 Dhiraj Varma",
     "icon": "icon.png",
+    "files": [
+      "main.js",
+      "dist/web/**/*",
+      "icon.png",
+      "!src/**",
+      "!public/**",
+      "!index.html",
+      "!vite.config.js",
+      "!test-functional.py",
+      "!screenshot.py",
+      "!docs/**",
+      "!*.md"
+    ],
     "linux": {
       "target": [
         "AppImage"

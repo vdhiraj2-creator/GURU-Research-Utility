@@ -80,7 +80,7 @@ function createWindow() {
 
     // ── LOAD APP ───────────────────────────────────────────────────
     // Load local build first (works offline); fall back to hosted version
-    const localIndex = path.join(__dirname, 'public', 'index.html');
+    const localIndex = path.join(__dirname, 'dist', 'web', 'index.html');
     const fs = require('fs');
     if (fs.existsSync(localIndex)) {
         win.loadFile(localIndex).catch(() => {
