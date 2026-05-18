@@ -1,7 +1,7 @@
 {
   "name": "horatio-doctoral-research",
   "version": "2.0.0",
-  "description": "Horatio — Guided University Research Utility · Doctoral Research Intelligence",
+  "description": "Horatio \u2014 Guided University Research Utility \u00b7 Doctoral Research Intelligence",
   "main": "main.js",
   "scripts": {
     "dev": "vite",
@@ -21,7 +21,7 @@
   "build": {
     "appId": "com.horatio.doctoral-research",
     "productName": "Horatio",
-    "copyright": "Copyright © 2026 Dhiraj Varma",
+    "copyright": "Copyright \u00a9 2026 Dhiraj Varma",
     "icon": "icon.png",
     "files": [
       "main.js",
@@ -41,14 +41,15 @@
         "AppImage"
       ],
       "category": "Education",
-      "description": "Horatio — Guided University Research Utility"
+      "description": "Horatio \u2014 Guided University Research Utility"
     },
     "win": {
       "target": [
         "nsis",
         "portable"
       ],
-      "icon": "icon.png"
+      "icon": "icon.png",
+      "forceCodeSigning": false
     },
     "mac": {
       "target": [
