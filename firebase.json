@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "horatioapp",
     "public": "dist/web",
     "ignore": [
       "firebase.json",

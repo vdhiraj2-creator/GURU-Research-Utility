@@ -1,5 +1,15 @@
 {
   "projects": {
     "default": "jarvisphd-80ecb"
-  }
+  },
+  "targets": {
+    "jarvisphd-80ecb": {
+      "hosting": {
+        "horatioapp": [
+          "horatioapp"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }
