@@ -1,4 +1,5 @@
-const { app, BrowserWindow, session } = require('electron');
+require('dotenv').config();            // load .env before anything else
+const { app, BrowserWindow, session, ipcMain } = require('electron');
 const path = require('path');
 
 // ── CHROMIUM FLAGS ─────────────────────────────────────────────────
@@ -32,6 +33,7 @@ function createWindow() {
             nodeIntegration:  false,
             contextIsolation: true,
             webSecurity:      true,
+            preload:          path.join(__dirname, 'preload.js'),
         }
     });
 
@@ -95,7 +97,11 @@ function createWindow() {
     // win.webContents.openDevTools({ mode: 'detach' });
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+    createWindow();
+    // Brain IPC handlers — registered after window exists so emits reach the renderer
+    require('./src/main/ipc/brain-handlers');
+});
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') app.quit();

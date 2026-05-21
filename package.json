@@ -1,7 +1,7 @@
 {
   "name": "horatio-doctoral-research",
   "version": "2.0.0",
-  "description": "Horatio \u2014 Guided University Research Utility \u00b7 Doctoral Research Intelligence",
+  "description": "Horatio — Guided University Research Utility · Doctoral Research Intelligence",
   "main": "main.js",
   "scripts": {
     "dev": "vite",
@@ -21,13 +21,14 @@
   "build": {
     "appId": "com.horatio.doctoral-research",
     "productName": "Horatio",
-    "copyright": "Copyright \u00a9 2026 Dhiraj Varma",
+    "copyright": "Copyright © 2026 Dhiraj Varma",
     "icon": "icon.png",
     "files": [
       "main.js",
+      "preload.js",
       "dist/web/**/*",
+      "src/main/**/*",
       "icon.png",
-      "!src/**",
       "!public/**",
       "!index.html",
       "!vite.config.js",
@@ -41,7 +42,7 @@
         "AppImage"
       ],
       "category": "Education",
-      "description": "Horatio \u2014 Guided University Research Utility"
+      "description": "Horatio — Guided University Research Utility"
     },
     "win": {
       "target": [
@@ -63,12 +64,16 @@
     }
   },
   "dependencies": {
+    "better-sqlite3": "^12.10.0",
+    "dotenv": "^16.6.1",
+    "node-html-parser": "^7.1.0",
+    "pdf-parse": "^2.4.5",
+    "playwright": "^1.60.0",
     "terser": "^5.46.2"
   },
   "devDependencies": {
-    "electron": "^28.0.0",
+    "electron": "^28.3.3",
     "electron-builder": "^24.0.0",
-    "playwright": "^1.60.0",
     "vite": "^8.0.13"
   }
 }

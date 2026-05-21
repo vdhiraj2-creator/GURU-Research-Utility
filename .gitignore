@@ -5,3 +5,8 @@ private/
 vault/
 *.txt
 .env
+data/*.db
+data/vectors/
+node_modules/electron/dist/
+node_modules/electron/path.txt
+node_modules/electron/index.js.bak

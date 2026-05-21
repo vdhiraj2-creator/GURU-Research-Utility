@@ -81,6 +81,7 @@
                 <button id="nav-journal"  onclick="setTab('journal')">Journal</button>
                 <button id="nav-data"     onclick="setTab('data')">Data</button>
                 <button id="nav-memory"  onclick="setTab('memory')">Memory</button>
+                <button id="nav-brain"   onclick="setTab('brain')">Brain</button>
                 <div id="sync-dot" style="display:none;"></div>
             </nav>
         </div>
@@ -764,6 +765,74 @@
                 <div style="padding:0 2.5rem 0.5rem;font-size:12px;color:var(--text-3);font-family:'Space Mono',monospace;">Longitudinal insights · arguments · decisions · sources · questions — <span id="nav-mem-count">0 nodes</span></div>
                 <div style="padding:0 2.5rem 2rem;" id="nav-mem-list"></div>
             </div>
+
+            <!-- BRAIN VIEW -->
+            <div id="view-brain" class="view">
+
+                <!-- Header -->
+                <div class="panel-header">
+                    <span class="panel-title">Research Brain</span>
+                    <div class="panel-actions" style="gap:0.5rem;">
+                        <div id="brain-ollama-pill" class="brain-ollama-pill brain-ollama-unknown" title="Ollama status">
+                            <span class="brain-ollama-dot"></span>
+                            <span id="brain-ollama-label">Ollama —</span>
+                        </div>
+                        <button class="panel-action-primary" onclick="brainRefreshSources()" style="font-size:11px;">Refresh</button>
+                    </div>
+                </div>
+
+                <!-- Subtitle -->
+                <div class="brain-subtitle">Local knowledge base · Thesis-aware source ingestion · Hallucination-verified summaries</div>
+
+                <!-- Search + Ingest controls -->
+                <div class="brain-controls">
+                    <div class="brain-search-row">
+                        <input id="brain-search-input" class="brain-input" placeholder="Search the web and ingest sources into your knowledge base…"
+                               onkeydown="if(event.key==='Enter')brainSearch()">
+                        <button class="brain-btn-primary" onclick="brainSearch()">Search &amp; Ingest</button>
+                    </div>
+                    <div class="brain-search-row" style="margin-top:0.5rem;">
+                        <input id="brain-semantic-input" class="brain-input" placeholder="Semantic search — find sources by meaning…"
+                               onkeydown="if(event.key==='Enter')brainSemanticSearch()">
+                        <button class="brain-btn-secondary" onclick="brainSemanticSearch()">Semantic Search</button>
+                    </div>
+                    <div class="brain-search-row" style="margin-top:0.5rem;">
+                        <input id="brain-url-input" class="brain-input" placeholder="Paste a URL to ingest directly…"
+                               onkeydown="if(event.key==='Enter')brainIngestUrl()">
+                        <button class="brain-btn-secondary" onclick="brainIngestUrl()">Ingest URL</button>
+                    </div>
+                </div>
+
+                <!-- Progress bar -->
+                <div id="brain-progress-wrap" style="display:none;" class="brain-progress-wrap">
+                    <div class="brain-progress-bar">
+                        <div id="brain-progress-inner" class="brain-progress-inner"></div>
+                    </div>
+                    <div id="brain-progress-label" class="brain-progress-label">Working…</div>
+                </div>
+
+                <!-- Alerts (contradictions + flagged sources) -->
+                <div id="brain-alerts"></div>
+
+                <!-- Stats row -->
+                <div class="brain-stats-row">
+                    <div class="brain-stat"><span id="brain-stat-total" class="brain-stat-num">0</span><span class="brain-stat-label">Sources</span></div>
+                    <div class="brain-stat"><span id="brain-stat-verified" class="brain-stat-num">0</span><span class="brain-stat-label">Verified</span></div>
+                    <div class="brain-stat"><span id="brain-stat-flagged" class="brain-stat-num">0</span><span class="brain-stat-label">Flagged</span></div>
+                    <div class="brain-stat"><span id="brain-stat-avg" class="brain-stat-num">—</span><span class="brain-stat-label">Avg Relevance</span></div>
+                </div>
+
+                <!-- Filter row -->
+                <div id="brain-filter-row" class="brain-filter-row">
+                    <button class="brain-filter active" data-filter="all"      onclick="setBrainFilter('all',this)">All</button>
+                    <button class="brain-filter"         data-filter="flagged" onclick="setBrainFilter('flagged',this)">⚑ Flagged</button>
+                    <input  id="brain-cat-filter" class="brain-input" style="max-width:160px;padding:3px 8px;font-size:10px;" placeholder="Filter by category…" oninput="brainFilterByCategory(this.value)">
+                </div>
+
+                <!-- Sources list -->
+                <div id="brain-sources-list"></div>
+
+            </div><!-- /view-brain -->
         </div>
 
         <!-- ONBOARDING OVERLAY -->
