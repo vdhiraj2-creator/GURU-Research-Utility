@@ -482,276 +482,316 @@
 
             <!-- SETTINGS -->
             <div id="view-settings" class="view">
-                <div class="cfg-tab-bar">
-                    <button class="cfg-tab active" data-tab="general" onclick="openCfgTab('general')">General</button>
-                    <button class="cfg-tab" data-tab="thesis" onclick="openCfgTab('thesis')">Thesis Brain</button>
-                    <button class="cfg-tab" data-tab="memory" onclick="openCfgTab('memory')">Memory</button>
+              <div class="cfg-body">
+
+                <!-- ── Scholar Persona ── -->
+                <div class="cfgs" id="cfgs-persona">
+                  <button class="cfgs-hdr" onclick="toggleCfgSection('persona')">
+                    <span class="cfgs-bar" style="background:var(--accent)"></span>
+                    <span class="cfgs-label">Scholar Persona</span>
+                    <span class="cfgs-hint">— tone and reasoning style across all modes</span>
+                    <span class="cfgs-caret" id="cfgs-caret-persona" style="transform:rotate(180deg)">▾</span>
+                  </button>
+                  <div class="cfgs-body" id="cfgs-body-persona" style="display:block;">
+                    <div class="cfgs-sublabel">Active Voice</div>
+                    <input id="cfg-scholar-persona" class="cfgs-input" placeholder="Describe your preferred AI scholarly voice...">
+                    <div class="cfgs-note">e.g. Socratic — rigorous and probing · Charon — authoritative gravitas · Collegiate peer · Devil's advocate</div>
+                    <div class="cfgs-sublabel" style="margin-top:14px;">PhD Research Focus</div>
+                    <textarea id="cfg-directive" class="cfgs-input" style="min-height:72px;resize:vertical;" placeholder="e.g. Medical negligence and AI diagnostics under UK tort law — duty of care, causation, NHS liability frameworks."></textarea>
+                  </div>
                 </div>
-                <div id="cfg-pane-general" class="cfg-pane active">
-                <p class="s-section">API Configuration</p>
-                <div class="s-group">
-                    <label class="s-label">Provider — click to configure</label>
-                    <div class="prov-accordion">
-                        <!-- GEMINI -->
-                        <div>
-                            <button id="btn-provider-gemini" class="prov-hdr" onclick="selectProviderAccordion('gemini')">
-                                <span>Gemini</span><i class="prov-caret">›</i>
-                            </button>
-                            <div class="prov-body" id="prov-body-gemini">
-                                <input type="password" id="cfg-key" class="s-input" placeholder="AIza…" style="margin-bottom:0.4rem;">
-                                <p class="s-note">Get a free key at <strong>aistudio.google.com</strong>. Stored locally only.</p>
-                            </div>
-                        </div>
-                        <!-- CLAUDE -->
-                        <div>
-                            <button id="btn-provider-claude" class="prov-hdr" onclick="selectProviderAccordion('claude')">
-                                <span>Claude</span><i class="prov-caret">›</i>
-                            </button>
-                            <div class="prov-body" id="prov-body-claude">
-                                <input type="password" id="cfg-claude-key" class="s-input" placeholder="sk-ant-…" autocomplete="off" style="margin-bottom:0.4rem;">
-                                <p class="s-note">Get a key at <strong>console.anthropic.com</strong>. Stored locally, never transmitted to our servers.</p>
-                            </div>
-                        </div>
-                        <!-- GROQ -->
-                        <div>
-                            <button id="btn-provider-groq" class="prov-hdr" onclick="selectProviderAccordion('groq')">
-                                <span>Groq <span style="font-size:8px;opacity:0.65;">FREE</span></span><i class="prov-caret">›</i>
-                            </button>
-                            <div class="prov-body" id="prov-body-groq">
-                                <input type="password" id="cfg-groq-key" class="s-input" placeholder="gsk_…" autocomplete="off" style="margin-bottom:0.4rem;">
-                                <p class="s-note">Free at <strong>console.groq.com</strong> — runs Llama 3.3 70B at ~300 tok/s. No credit card required.</p>
-                            </div>
-                        </div>
-                        <!-- OPENAI -->
-                        <div>
-                            <button id="btn-provider-openai" class="prov-hdr" onclick="selectProviderAccordion('openai')">
-                                <span>ChatGPT <span style="font-size:8px;opacity:0.65;">OPENAI</span></span><i class="prov-caret">›</i>
-                            </button>
-                            <div class="prov-body" id="prov-body-openai">
-                                <div id="cfg-openai-key-group">
-                                    <input type="password" id="cfg-openai-key" class="s-input" placeholder="sk-..." autocomplete="off" style="margin-bottom:0.4rem;">
-                                    <p class="s-note">Get your key at <strong>platform.openai.com/api-keys</strong></p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- PERPLEXITY -->
-                        <div>
-                            <button id="btn-provider-perplexity" class="prov-hdr" onclick="selectProviderAccordion('perplexity')">
-                                <span>Perplexity <span style="font-size:8px;opacity:0.65;">SONAR</span></span><i class="prov-caret">›</i>
-                            </button>
-                            <div class="prov-body" id="prov-body-perplexity">
-                                <div id="cfg-perplexity-key-group">
-                                    <input type="password" id="cfg-perplexity-key" class="s-input" placeholder="pplx-..." autocomplete="off" style="margin-bottom:0.4rem;">
-                                    <p class="s-note">Get your key at <strong>perplexity.ai/settings/api</strong></p>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- OLLAMA -->
-                        <div>
-                            <button id="btn-provider-ollama" class="prov-hdr" onclick="selectProviderAccordion('ollama')">
-                                <span>Ollama <span style="font-size:8px;opacity:0.65;">LOCAL</span></span><i class="prov-caret">›</i>
-                            </button>
-                            <div class="prov-body" id="prov-body-ollama">
-                                <input type="text" id="cfg-ollama-url" class="s-input" placeholder="http://localhost:11434" autocomplete="off" style="margin-bottom:0.4rem;">
-                                <div style="display:flex;gap:0.5rem;align-items:center;margin-bottom:0.4rem;">
-                                    <select id="cfg-ollama-model" class="s-input" style="font-size:10px;padding:4px 8px;flex:1;"></select>
-                                    <button onclick="fetchOllamaModels()" class="btn-save" style="font-size:9px;padding:4px 10px;white-space:nowrap;">Detect Models</button>
-                                </div>
-                                <p class="s-note">Runs models locally — no internet needed after setup. Requires <strong>Ollama</strong> installed.</p>
-                            </div>
-                        </div>
+                <div class="cfgs-divider"></div>
+
+                <!-- ── API Providers ── -->
+                <div class="cfgs" id="cfgs-providers">
+                  <button class="cfgs-hdr" onclick="toggleCfgSection('providers')">
+                    <span class="cfgs-bar" style="background:var(--accent)"></span>
+                    <span class="cfgs-label">API Providers</span>
+                    <span class="cfgs-hint">— add keys to unlock models</span>
+                    <span class="cfgs-caret" id="cfgs-caret-providers">▾</span>
+                  </button>
+                  <div class="cfgs-body" id="cfgs-body-providers" style="display:none;">
+                    <div class="cfgs-note" style="margin-bottom:10px;">Green dot = key configured. Leave blank to use HoRatio defaults.</div>
+                    <!-- Gemini -->
+                    <div class="cfgs-prov-card" id="cfgs-prov-gemini">
+                      <button class="cfgs-prov-hdr" onclick="toggleCfgsProv('gemini')">
+                        <span class="cfgs-status-dot" id="cfgs-dot-gemini"></span>
+                        <span class="cfgs-prov-color" style="background:#4285F4"></span>
+                        <span class="cfgs-prov-name">Gemini</span>
+                        <span class="cfgs-prov-caret">▾</span>
+                      </button>
+                      <div class="cfgs-prov-body" id="cfgs-prov-body-gemini" style="display:none;">
+                        <input type="password" id="cfg-key" class="cfgs-key-input" placeholder="AIza… — get free key at aistudio.google.com" autocomplete="off">
+                      </div>
                     </div>
-                </div>
-                <div class="s-group">
-                    <label class="s-label">Provider &amp; Model per Mode</label>
-                    <p class="s-note" style="margin-bottom:0.5rem;">Mix providers freely — e.g. Groq 70B for chat, Gemini Deep for viva, Groq 8B for tools.</p>
-                    <div style="display:grid;gap:0.5rem;">
-                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
-                            <span class="s-note" style="margin:0;">Dialectic Chat</span>
-                            <select id="cfg-prov-chat"   class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('chat')"></select>
-                            <select id="cfg-model-chat"  class="s-input" style="font-size:10px;padding:4px 8px;"></select>
-                        </div>
-                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
-                            <span class="s-note" style="margin:0;">Viva Examination</span>
-                            <select id="cfg-prov-viva"   class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('viva')"></select>
-                            <select id="cfg-model-viva"  class="s-input" style="font-size:10px;padding:4px 8px;"></select>
-                        </div>
-                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
-                            <span class="s-note" style="margin:0;">Tools &amp; Maps</span>
-                            <select id="cfg-prov-tools"  class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('tools')"></select>
-                            <select id="cfg-model-tools" class="s-input" style="font-size:10px;padding:4px 8px;"></select>
-                        </div>
-                        <div style="display:grid;grid-template-columns:90px 72px 1fr;gap:0.4rem;align-items:center;">
-                            <span class="s-note" style="margin:0;">Supervisor Report</span>
-                            <select id="cfg-prov-report" class="s-input" style="font-size:9px;padding:2px 4px;" onchange="onModeProviderChange('report')"></select>
-                            <select id="cfg-model-report" class="s-input" style="font-size:10px;padding:4px 8px;"></select>
-                        </div>
+                    <!-- Claude -->
+                    <div class="cfgs-prov-card" id="cfgs-prov-claude">
+                      <button class="cfgs-prov-hdr" onclick="toggleCfgsProv('claude')">
+                        <span class="cfgs-status-dot" id="cfgs-dot-claude"></span>
+                        <span class="cfgs-prov-color" style="background:var(--accent)"></span>
+                        <span class="cfgs-prov-name">Claude</span>
+                        <span class="cfgs-prov-caret">▾</span>
+                      </button>
+                      <div class="cfgs-prov-body" id="cfgs-prov-body-claude" style="display:none;">
+                        <input type="password" id="cfg-claude-key" class="cfgs-key-input" placeholder="sk-ant-… — get key at console.anthropic.com" autocomplete="off">
+                      </div>
                     </div>
+                    <!-- Groq -->
+                    <div class="cfgs-prov-card" id="cfgs-prov-groq">
+                      <button class="cfgs-prov-hdr" onclick="toggleCfgsProv('groq')">
+                        <span class="cfgs-status-dot cfgs-status-dot-on" id="cfgs-dot-groq"></span>
+                        <span class="cfgs-prov-color" style="background:#F55036"></span>
+                        <span class="cfgs-prov-name">Groq</span>
+                        <span class="cfgs-prov-badge" style="color:#4ade80;border-color:#4ade8044;">FREE</span>
+                        <span class="cfgs-prov-caret">▾</span>
+                      </button>
+                      <div class="cfgs-prov-body" id="cfgs-prov-body-groq" style="display:none;">
+                        <input type="password" id="cfg-groq-key" class="cfgs-key-input" placeholder="gsk_… — free at console.groq.com · Llama 3.3 70B" autocomplete="off">
+                      </div>
+                    </div>
+                    <!-- ChatGPT -->
+                    <div class="cfgs-prov-card" id="cfgs-prov-openai">
+                      <button class="cfgs-prov-hdr" onclick="toggleCfgsProv('openai')">
+                        <span class="cfgs-status-dot" id="cfgs-dot-openai"></span>
+                        <span class="cfgs-prov-color" style="background:#10A37F"></span>
+                        <span class="cfgs-prov-name">ChatGPT</span>
+                        <span class="cfgs-prov-badge" style="color:#818cf8;border-color:#818cf844;">OPENAI</span>
+                        <span class="cfgs-prov-caret">▾</span>
+                      </button>
+                      <div class="cfgs-prov-body" id="cfgs-prov-body-openai" style="display:none;">
+                        <input type="password" id="cfg-openai-key" class="cfgs-key-input" placeholder="sk-… — get key at platform.openai.com/api-keys" autocomplete="off">
+                      </div>
+                    </div>
+                    <!-- Perplexity -->
+                    <div class="cfgs-prov-card" id="cfgs-prov-perplexity">
+                      <button class="cfgs-prov-hdr" onclick="toggleCfgsProv('perplexity')">
+                        <span class="cfgs-status-dot" id="cfgs-dot-perplexity"></span>
+                        <span class="cfgs-prov-color" style="background:#6366F1"></span>
+                        <span class="cfgs-prov-name">Perplexity</span>
+                        <span class="cfgs-prov-badge" style="color:#818cf8;border-color:#818cf844;">SONAR</span>
+                        <span class="cfgs-prov-caret">▾</span>
+                      </button>
+                      <div class="cfgs-prov-body" id="cfgs-prov-body-perplexity" style="display:none;">
+                        <input type="password" id="cfg-perplexity-key" class="cfgs-key-input" placeholder="pplx-… — get key at perplexity.ai/settings/api" autocomplete="off">
+                      </div>
+                    </div>
+                    <!-- Ollama -->
+                    <div class="cfgs-prov-card" id="cfgs-prov-ollama">
+                      <button class="cfgs-prov-hdr" onclick="toggleCfgsProv('ollama')">
+                        <span class="cfgs-status-dot cfgs-status-dot-on" id="cfgs-dot-ollama"></span>
+                        <span class="cfgs-prov-color" style="background:#888"></span>
+                        <span class="cfgs-prov-name">Ollama</span>
+                        <span class="cfgs-prov-badge" style="color:#818cf8;border-color:#818cf844;">LOCAL</span>
+                        <span class="cfgs-prov-caret">▾</span>
+                      </button>
+                      <div class="cfgs-prov-body" id="cfgs-prov-body-ollama" style="display:none;">
+                        <input type="text" id="cfg-ollama-url" class="cfgs-key-input" placeholder="http://localhost:11434" autocomplete="off" style="margin-bottom:6px;">
+                        <div style="display:flex;gap:6px;align-items:center;">
+                          <select id="cfg-ollama-model" class="cfgs-select" style="flex:1;"></select>
+                          <button onclick="fetchOllamaModels()" class="cfgs-small-btn">Detect Models</button>
+                        </div>
+                        <div class="cfgs-note" style="margin-top:6px;">No API key needed — runs locally. Requires Ollama installed.</div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
-                <div class="s-group">
-                    <label class="s-label" for="cfg-voice">Horatio Voice</label>
-                    <select id="cfg-voice" class="s-input" onchange="localStorage.setItem('horatio_voice_name', this.value)">
-                        <option value="Charon">Charon — Deep, authoritative gravitas</option>
-                        <option value="Fenrir">Fenrir — Powerful, commanding baritone</option>
-                        <option value="Kore">Kore — Precise, professional clarity</option>
-                        <option value="Aoede">Aoede — Warm, measured engagement</option>
-                        <option value="Puck">Puck — Clear, articulate delivery</option>
-                        <option value="system">System Voice — Device TTS (no API cost)</option>
-                    </select>
-                    <p class="s-note" style="margin-top:0.4rem;">Charon recommended for doctoral supervision. Uses Gemini TTS — falls back to device voice if unavailable.</p>
+                <div class="cfgs-divider"></div>
+
+                <!-- ── Provider & Model per Mode ── -->
+                <div class="cfgs" id="cfgs-modes">
+                  <button class="cfgs-hdr" onclick="toggleCfgSection('modes')">
+                    <span class="cfgs-bar" style="background:var(--accent)"></span>
+                    <span class="cfgs-label">Provider &amp; Model per Mode</span>
+                    <span class="cfgs-hint">— assign the right intelligence to each function</span>
+                    <span class="cfgs-caret" id="cfgs-caret-modes" style="transform:rotate(180deg)">▾</span>
+                  </button>
+                  <div class="cfgs-body" id="cfgs-body-modes" style="display:block;">
+                    <div class="cfgs-note" style="margin-bottom:10px;">
+                      Cost: <span style="color:#4ade80">● fast/free</span> &nbsp;<span style="color:#f59e0b">● deep/paid</span> &nbsp;<span style="color:#6a6050">● standard</span>
+                    </div>
+                    <!-- Mode matrix rendered by JS -->
+                    <div id="cfg-mode-matrix"></div>
+                  </div>
                 </div>
-                <p class="s-section">Response Behaviour <span style="font-size:8px;color:#334155;font-style:normal;" id="pro-behaviour-note">(Pro)</span></p>
-                <div class="s-group">
-                    <label class="s-label">Context Window — <span id="cfg-context-val">6</span> messages</label>
-                    <input type="range" id="cfg-context" class="s-slider" min="6" max="50" step="2" value="6" disabled>
-                    <p class="s-note" style="margin-top:0.6rem;">Messages sent as conversation history. More = smarter, but slower and costlier. Pro: up to 50. Full history stored in IndexedDB.</p>
+                <div class="cfgs-divider"></div>
+
+                <!-- ── Thesis Brain ── -->
+                <div class="cfgs" id="cfgs-brain">
+                  <button class="cfgs-hdr" onclick="toggleCfgSection('brain')">
+                    <span class="cfgs-bar" style="background:#818cf8"></span>
+                    <span class="cfgs-label">Thesis Brain</span>
+                    <span class="cfgs-hint">— persistent research memory</span>
+                    <span class="cfgs-caret" id="cfgs-caret-brain">▾</span>
+                  </button>
+                  <div class="cfgs-body" id="cfgs-body-brain" style="display:none;">
+                    <!-- Brain feature toggles -->
+                    <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:20px;">
+                      <div class="cfgs-toggle-row">
+                        <div>
+                          <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="cfgs-toggle-label">Persistent Research Memory</span>
+                            <span class="cfgs-pro-badge">PRO</span>
+                          </div>
+                          <div class="cfgs-note" style="margin-top:2px;">Auto-extracts insights, arguments and decisions from every session</div>
+                        </div>
+                        <button class="cfgs-toggle" id="toggle-brain-mem" onclick="toggleBrainFeature('mem')" data-on="false"></button>
+                      </div>
+                      <div class="cfgs-toggle-row">
+                        <div>
+                          <div style="display:flex;align-items:center;gap:8px;">
+                            <span class="cfgs-toggle-label">Proactive Insight Surfacing</span>
+                            <span class="cfgs-pro-badge">PRO</span>
+                          </div>
+                          <div class="cfgs-note" style="margin-top:2px;">Flags contradictions, gaps and thesis deviations without being asked</div>
+                        </div>
+                        <button class="cfgs-toggle" id="toggle-brain-proactive" onclick="toggleBrainFeature('proactive')" data-on="true"></button>
+                      </div>
+                      <div class="cfgs-toggle-row">
+                        <div>
+                          <span class="cfgs-toggle-label">Session Summarisation</span>
+                          <div class="cfgs-note" style="margin-top:2px;">Condenses each session into the thesis model every 5 responses</div>
+                        </div>
+                        <button class="cfgs-toggle" id="toggle-brain-session" onclick="toggleBrainFeature('session')" data-on="true"></button>
+                      </div>
+                    </div>
+                    <div class="cfgs-divider" style="margin:0 0 20px;"></div>
+                    <!-- Thesis fields -->
+                    <div class="cfgs-sublabel">Research Title</div>
+                    <input type="text" id="thesis-title" class="cfgs-input" placeholder="The full title of your thesis..." style="margin-bottom:12px;">
+                    <div class="cfgs-sublabel">Research Field</div>
+                    <input type="text" id="thesis-field" class="cfgs-input" placeholder="e.g. Medical Law, AI Regulation, Criminal Justice..." style="margin-bottom:12px;">
+                    <div class="cfgs-sublabel">Central Argument</div>
+                    <textarea id="thesis-central-argument" class="cfgs-input" style="min-height:72px;resize:vertical;margin-bottom:12px;" placeholder="Your core thesis proposition — the argument your PhD defends..."></textarea>
+                    <div class="cfgs-sublabel">Theoretical Frameworks <span style="font-size:9px;opacity:0.5;text-transform:none;letter-spacing:0;">(one per line)</span></div>
+                    <textarea id="thesis-frameworks" class="cfgs-input" style="min-height:60px;resize:vertical;margin-bottom:12px;" placeholder="e.g.&#10;Critical Legal Studies&#10;Foucauldian discourse analysis"></textarea>
+                    <div class="cfgs-sublabel">Key Tensions</div>
+                    <textarea id="thesis-tensions" class="cfgs-input" style="min-height:60px;resize:vertical;margin-bottom:12px;" placeholder="Main tensions or contradictions your thesis navigates..."></textarea>
+                    <div class="cfgs-sublabel">Unresolved Research Questions</div>
+                    <textarea id="thesis-questions" class="cfgs-input" style="min-height:60px;resize:vertical;margin-bottom:12px;" placeholder="Questions still open in your research..."></textarea>
+                    <div class="cfgs-sublabel">Recurring Authors &amp; Sources</div>
+                    <textarea id="thesis-authors" class="cfgs-input" style="min-height:50px;resize:vertical;margin-bottom:12px;" placeholder="Key scholars, cases, or statutes central to your work..."></textarea>
+                    <div class="cfgs-sublabel">Chapter Map &amp; Progress</div>
+                    <textarea id="thesis-chapters" class="cfgs-input" style="min-height:90px;resize:vertical;margin-bottom:12px;" placeholder="e.g.&#10;Ch 1 — Introduction [DRAFT]&#10;Ch 2 — Literature Review [IN PROGRESS]"></textarea>
+                    <div class="cfgs-sublabel">Supervisor Feedback Notes</div>
+                    <textarea id="thesis-feedback" class="cfgs-input" style="min-height:70px;resize:vertical;margin-bottom:12px;" placeholder="Paste key supervisor feedback here (timestamped notes)..."></textarea>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                      <div>
+                        <div class="cfgs-sublabel">Supervisor Name</div>
+                        <input type="text" id="thesis-supervisor" class="cfgs-input" placeholder="Prof. / Dr. ...">
+                      </div>
+                      <div>
+                        <div class="cfgs-sublabel">Institution</div>
+                        <input type="text" id="thesis-institution" class="cfgs-input" placeholder="University name...">
+                      </div>
+                    </div>
+                    <div class="cfgs-sublabel">Target Completion</div>
+                    <input type="text" id="thesis-completion" class="cfgs-input" placeholder="e.g. September 2027" style="margin-bottom:4px;">
+                  </div>
                 </div>
-                <div class="s-group">
-                    <label class="s-label">Response Creativity — <span id="cfg-temp-val">0.7</span></label>
-                    <input type="range" id="cfg-temp" class="s-slider" min="0.3" max="1.0" step="0.1" value="0.7" disabled>
-                    <p class="s-note" style="margin-top:0.6rem;">Lower = more precise and reproducible. Higher = more exploratory. Pro only.</p>
+                <div class="cfgs-divider"></div>
+
+                <!-- ── Response Behaviour ── -->
+                <div class="cfgs" id="cfgs-behaviour">
+                  <button class="cfgs-hdr" onclick="toggleCfgSection('behaviour')">
+                    <span class="cfgs-bar" style="background:var(--accent)"></span>
+                    <span class="cfgs-label">Response Behaviour</span>
+                    <span class="cfgs-caret" id="cfgs-caret-behaviour">▾</span>
+                  </button>
+                  <div class="cfgs-body" id="cfgs-body-behaviour" style="display:none;">
+                    <div class="cfgs-beh-row">
+                      <span class="cfgs-beh-label">Response length</span>
+                      <select id="cfg-resp-length" class="cfgs-select" style="width:140px;">
+                        <option value="concise">Concise</option>
+                        <option value="balanced" selected>Balanced</option>
+                        <option value="detailed">Detailed</option>
+                      </select>
+                    </div>
+                    <div class="cfgs-beh-row">
+                      <span class="cfgs-beh-label">Citation style</span>
+                      <select id="cfg-cite-style" class="cfgs-select" style="width:140px;">
+                        <option value="oscola" selected>OSCOLA</option>
+                        <option value="apa">APA</option>
+                        <option value="harvard">Harvard</option>
+                        <option value="chicago">Chicago</option>
+                      </select>
+                    </div>
+                    <div class="cfgs-beh-row">
+                      <span class="cfgs-beh-label">Critique intensity</span>
+                      <select id="cfg-critique-intensity" class="cfgs-select" style="width:140px;">
+                        <option value="gentle">Gentle</option>
+                        <option value="rigorous" selected>Rigorous</option>
+                        <option value="adversarial">Adversarial</option>
+                      </select>
+                    </div>
+                    <div class="cfgs-beh-row">
+                      <span class="cfgs-beh-label">Horatio Voice</span>
+                      <select id="cfg-voice" class="cfgs-select" style="width:200px;" onchange="localStorage.setItem('horatio_voice_name', this.value)">
+                        <option value="Charon">Charon — authoritative gravitas</option>
+                        <option value="Fenrir">Fenrir — powerful baritone</option>
+                        <option value="Kore">Kore — precise clarity</option>
+                        <option value="Aoede">Aoede — warm engagement</option>
+                        <option value="Puck">Puck — articulate delivery</option>
+                        <option value="system">System Voice (no API cost)</option>
+                      </select>
+                    </div>
+                    <div style="margin-top:16px;">
+                      <div class="cfgs-sublabel">Context Window — <span id="cfg-context-val">6</span> messages <span style="color:var(--accent)88;font-size:9px;">(Pro)</span></div>
+                      <input type="range" id="cfg-context" class="s-slider" min="6" max="50" step="2" value="6" disabled style="margin-top:6px;">
+                    </div>
+                    <div style="margin-top:12px;">
+                      <div class="cfgs-sublabel">Response Creativity — <span id="cfg-temp-val">0.7</span> <span style="color:var(--accent)88;font-size:9px;">(Pro)</span></div>
+                      <input type="range" id="cfg-temp" class="s-slider" min="0.3" max="1.0" step="0.1" value="0.7" disabled style="margin-top:6px;">
+                    </div>
+                  </div>
                 </div>
-                <p class="s-section">Research Directive</p>
-                <div class="s-group">
-                    <label class="s-label" for="cfg-directive">PhD Research Focus</label>
-                    <textarea id="cfg-directive" class="s-input" placeholder="e.g. Medical negligence and AI diagnostics under UK tort law, PhD at [University]. Focus on duty of care, causation, and NHS liability frameworks."></textarea>
-                </div>
-                <button class="btn-save" onclick="saveSettings()">Save & Calibrate Horatio</button>
-                <p class="s-section">Horatio Pro</p>
-                <div class="s-group">
-                    <label class="s-label" for="cfg-pro">Licence Key</label>
-                    <input type="text" id="cfg-pro" class="s-input" placeholder="Horatio-XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off">
-                    <div id="pro-status-display"></div>
-                </div>
-                <button class="btn-save" style="background:transparent;border:1px solid rgba(0,255,204,0.3);color:var(--pulse);margin-bottom:0.75rem;" onclick="unlockPro()">Unlock Pro</button>
-                <p class="s-note">Pro unlocks: streaming responses · PDF vault · markdown export · temperature control · extended context window · cloud sync.</p>
-                <p class="s-section">External Research Context</p>
-                <div class="s-group">
-                    <label class="s-label" for="cfg-ext-context">Gemini Gem / Claude Project Instructions</label>
-                    <textarea id="cfg-ext-context" class="s-input" style="min-height:110px;resize:vertical;" placeholder="Paste your Gemini Gem system prompt or Claude Project instructions here. Horatio will use this as additional research context in every session — bridging your Gem and Project knowledge into Horatio."></textarea>
-                    <p class="s-note" style="margin-top:0.4rem;">Copy from: Gemini AI Studio → Your Gem → System Instructions · or · Claude.ai → Project → Project Instructions. There is no live API link to either — paste the context here once and Horatio carries it forward.</p>
+                <div class="cfgs-divider"></div>
+
+                <!-- ── Advanced ── -->
+                <div class="cfgs" id="cfgs-advanced">
+                  <button class="cfgs-hdr" onclick="toggleCfgSection('advanced')">
+                    <span class="cfgs-bar" style="background:var(--text-3)"></span>
+                    <span class="cfgs-label">Advanced</span>
+                    <span class="cfgs-hint">— Pro, Cloud Sync, Zotero, Integrations</span>
+                    <span class="cfgs-caret" id="cfgs-caret-advanced">▾</span>
+                  </button>
+                  <div class="cfgs-body" id="cfgs-body-advanced" style="display:none;">
+                    <div class="cfgs-sublabel">Horatio Pro — Licence Key</div>
+                    <div style="display:flex;gap:8px;align-items:center;margin-bottom:4px;">
+                      <input type="text" id="cfg-pro" class="cfgs-input" placeholder="Horatio-XXXX-XXXX-XXXX" spellcheck="false" autocomplete="off">
+                      <button onclick="unlockPro()" class="cfgs-small-btn" style="border-color:rgba(31,184,150,0.35);color:var(--accent);white-space:nowrap;">Unlock Pro</button>
+                    </div>
+                    <div id="pro-status-display" style="font-size:10px;min-height:14px;margin-bottom:16px;"></div>
+                    <div class="cfgs-sublabel">Cloud Sync Passphrase <span style="color:var(--accent)88;font-size:9px;">(Pro)</span></div>
+                    <input type="password" id="cfg-fb-pass" class="cfgs-input" placeholder="Choose a memorable passphrase..." autocomplete="off" spellcheck="false" disabled style="margin-bottom:4px;">
+                    <div id="fb-status-display" style="font-size:10px;font-family:'Space Mono',monospace;color:#475569;min-height:14px;margin-bottom:16px;"></div>
+                    <div class="cfgs-sublabel">Supervisor Email(s)</div>
+                    <input type="email" id="cfg-sup-email" class="cfgs-input" placeholder="supervisor@university.ac.uk" autocomplete="off" style="margin-bottom:16px;">
+                    <div class="cfgs-sublabel">Gemini Gem / Claude Project Instructions</div>
+                    <textarea id="cfg-ext-context" class="cfgs-input" style="min-height:80px;resize:vertical;margin-bottom:16px;" placeholder="Paste your Gemini Gem system prompt or Claude Project instructions here..."></textarea>
+                    <div class="cfgs-sublabel">Zotero</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+                      <input type="password" id="cfg-zotero-key" class="cfgs-input" placeholder="Zotero API key…" autocomplete="off">
+                      <input type="text" id="cfg-zotero-uid" class="cfgs-input" placeholder="Zotero User ID…" autocomplete="off" spellcheck="false">
+                    </div>
+                    <div id="storage-meter" style="margin-bottom:1rem;padding:0.75rem 1rem;background:rgba(255,255,255,0.03);border:1px solid #2a2820;border-radius:5px;">
+                      <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:#6a6050;margin-bottom:0.5rem;">Local Storage</div>
+                      <div id="storage-bar-wrap" style="height:3px;background:#1a1a16;border-radius:2px;overflow:hidden;margin-bottom:0.4rem;">
+                        <div id="storage-bar" style="height:100%;background:#D4A853;border-radius:2px;transition:width 0.3s;width:0%;"></div>
+                      </div>
+                      <div id="storage-label" style="font-family:'Space Mono',monospace;font-size:8px;color:#6a6050;">Calculating...</div>
+                    </div>
+                    <div class="cfgs-note">Horatio V2.0 · API keys stored in browser localStorage only · No data leaves your device without Cloud Sync</div>
+                  </div>
                 </div>
 
-                <p class="s-section">Integrations</p>
-                <div class="s-group">
-                    <button class="zotero-hdr" id="zotero-hdr-btn" onclick="toggleZoteroFields()">
-                        <span class="zotero-z">Z</span>
-                        <span>Zotero</span>
-                        <i class="prov-caret" style="margin-left:auto;">›</i>
-                    </button>
-                    <div class="zotero-body" id="zotero-body">
-                        <label class="s-label" for="cfg-zotero-key" style="margin-top:0;">API Key</label>
-                        <input type="password" id="cfg-zotero-key" class="s-input" placeholder="Paste Zotero API key…" autocomplete="off" style="margin-bottom:0.5rem;">
-                        <label class="s-label" for="cfg-zotero-uid">User ID</label>
-                        <input type="text" id="cfg-zotero-uid" class="s-input" placeholder="Numeric user ID…" autocomplete="off" spellcheck="false" style="margin-bottom:0.5rem;">
-                        <p class="s-note">Get both at <strong>zotero.org/settings/keys</strong>. Once saved, the ⇄ Zotero button in Library pushes your reference list directly to your Zotero library.</p>
-                    </div>
+                <!-- Save button -->
+                <div style="margin-top:40px;display:flex;justify-content:flex-end;padding:0 0 80px;">
+                  <button id="cfg-save-btn" onclick="saveSettings()" style="background:transparent;border:1px solid var(--accent);color:var(--accent);padding:10px 28px;font-family:'Georgia','Times New Roman',serif;font-size:11px;letter-spacing:0.18em;text-transform:uppercase;border-radius:3px;cursor:pointer;transition:all 0.25s;">Save Configuration</button>
                 </div>
 
-                <p class="s-section">Academic &amp; Legal Databases</p>
-                <p class="s-note"><strong>All 22 databases are fully free — no API keys required.</strong> Horatio searches all simultaneously on every query.</p>
-                <p class="s-note" style="margin-top:0.5rem;"><strong>Journals &amp; Academic:</strong> OpenAlex · CrossRef · PubMed · PubMed Central · Europe PMC · Semantic Scholar · DOAJ · arXiv · ClinicalTrials.gov · WHO IRIS</p>
-                <p class="s-note" style="margin-top:0.3rem;"><strong>Genetics &amp; Clinical:</strong> ClinVar · OMIM · NCBI Gene · UniProt · Orphanet · GWAS Catalog</p>
-                <p class="s-note" style="margin-top:0.3rem;"><strong>Case Law:</strong> HUDOC (ECHR) · Find Case Law UK · CourtListener (US) · Caselaw Access Project (US)</p>
-                <p class="s-note" style="margin-top:0.3rem;"><strong>Legislation &amp; Policy:</strong> legislation.gov.uk · EUR-Lex · Hansard</p>
+              </div><!-- /cfg-body -->
+            </div><!-- /view-settings -->
 
-                <p class="s-section">Supervisor Report</p>
-                <div class="s-group">
-                    <label class="s-label" for="cfg-sup-email">Supervisor Email(s)</label>
-                    <input type="email" id="cfg-sup-email" class="s-input" placeholder="supervisor@university.ac.uk" autocomplete="off">
-                    <p class="s-note" style="margin-top:0.4rem;">Used to pre-fill the To field when emailing your progress report from the Journal tab. Separate multiple addresses with commas.</p>
-                </div>
-
-                <p class="s-section">Cloud Sync <span id="sync-pro-note" style="font-size:8px;color:#334155;font-style:normal;">(Pro)</span></p>
-                <div class="s-group" id="fb-pass-group">
-                    <label class="s-label" for="cfg-fb-pass">Sync Passphrase</label>
-                    <input type="password" id="cfg-fb-pass" class="s-input" placeholder="Choose a memorable passphrase..." autocomplete="off" spellcheck="false">
-                    <div id="fb-status-display" style="margin-top:0.5rem;font-family:'Space Mono',monospace;font-size:9px;color:#475569;min-height:16px;"></div>
-                </div>
-                <p class="s-note" id="fb-help-note">The same passphrase on any device connects to the same cloud node. Chat and vault entries sync in real time. Your data is stored under a SHA-256 hash of this passphrase — no account or credentials needed.</p>
-                <p class="s-section">About</p>
-                <div id="storage-meter" style="margin-bottom:1rem;padding:0.75rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:8px;">
-                    <div style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:#334155;margin-bottom:0.5rem;">Local Storage Usage</div>
-                    <div id="storage-bar-wrap" style="height:4px;background:#0f172a;border-radius:2px;overflow:hidden;margin-bottom:0.4rem;">
-                        <div id="storage-bar" style="height:100%;background:var(--pulse);border-radius:2px;transition:width 0.3s;width:0%;"></div>
-                    </div>
-                    <div id="storage-label" style="font-family:'Space Mono',monospace;font-size:8px;color:#334155;">Calculating...</div>
-                </div>
-                <p class="s-note">
-                    Horatio V2.0 — Web app · Google Docs &amp; Sheets · Desktop (Electron) · Mobile PWA · Gemini TTS voices · Reference Manager · Viva Simulator · Cloud Sync (Pro) · Light &amp; Dark mode.<br>
-                    API key stored in browser localStorage only. No data leaves your device without Cloud Sync.<br>
-                    <a href="/privacy.html" target="_blank" style="color:var(--pulse);opacity:0.6;text-decoration:none;">Privacy Policy</a> &nbsp;·&nbsp; <a href="/terms.html" target="_blank" style="color:var(--pulse);opacity:0.6;text-decoration:none;">Terms of Use</a>
-                </p>
-                </div><!-- /cfg-pane-general -->
-
-                <!-- THESIS BRAIN PANE -->
-                <div id="cfg-pane-thesis" class="cfg-pane">
-                    <p class="s-section" style="margin-top:0;">Thesis Brain</p>
-                    <p class="s-note" style="margin-bottom:1.5rem;">Horatio treats this as permanent ground truth about your research — injected into every session as a THESIS PROFILE.</p>
-                    <div class="s-group">
-                        <label class="s-label">Research Title</label>
-                        <input type="text" id="thesis-title" class="s-input" placeholder="The full title of your thesis...">
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Research Field</label>
-                        <input type="text" id="thesis-field" class="s-input" placeholder="e.g. Medical Law, AI Regulation, Criminal Justice...">
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Central Argument</label>
-                        <textarea id="thesis-central-argument" class="s-input" style="min-height:80px;resize:vertical;" placeholder="Your core thesis proposition — the argument your PhD defends..."></textarea>
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Theoretical Frameworks <span style="font-size:8px;opacity:0.45;text-transform:none;letter-spacing:0;">(one per line)</span></label>
-                        <textarea id="thesis-frameworks" class="s-input" style="min-height:70px;resize:vertical;" placeholder="e.g.&#10;Critical Legal Studies&#10;Foucauldian discourse analysis&#10;Feminist jurisprudence"></textarea>
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Key Tensions</label>
-                        <textarea id="thesis-tensions" class="s-input" style="min-height:70px;resize:vertical;" placeholder="Main tensions or contradictions your thesis navigates..."></textarea>
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Unresolved Research Questions</label>
-                        <textarea id="thesis-questions" class="s-input" style="min-height:70px;resize:vertical;" placeholder="Questions still open in your research that Horatio should flag..."></textarea>
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Recurring Authors &amp; Sources</label>
-                        <textarea id="thesis-authors" class="s-input" style="min-height:60px;resize:vertical;" placeholder="Key scholars, cases, or statutes central to your work..."></textarea>
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Chapter Map &amp; Progress</label>
-                        <textarea id="thesis-chapters" class="s-input" style="min-height:100px;resize:vertical;" placeholder="e.g.&#10;Ch 1 — Introduction [DRAFT]&#10;Ch 2 — Literature Review [IN PROGRESS]&#10;Ch 3 — Methodology [NOT STARTED]&#10;Ch 4 — Analysis [PLANNED]"></textarea>
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Supervisor Feedback Notes</label>
-                        <textarea id="thesis-feedback" class="s-input" style="min-height:80px;resize:vertical;" placeholder="Paste key supervisor feedback here (timestamped notes)..."></textarea>
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Supervisor Name</label>
-                        <input type="text" id="thesis-supervisor" class="s-input" placeholder="Prof. / Dr. ...">
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Institution</label>
-                        <input type="text" id="thesis-institution" class="s-input" placeholder="University name...">
-                    </div>
-                    <div class="s-group">
-                        <label class="s-label">Target Completion</label>
-                        <input type="text" id="thesis-completion" class="s-input" placeholder="e.g. September 2027">
-                    </div>
-                    <button class="panel-action-primary" onclick="saveThesisBrain()" style="width:100%;margin-top:0.5rem;padding:0.85rem;">Save Thesis Brain</button>
-                </div><!-- /cfg-pane-thesis -->
-
-                <!-- MEMORY PANE -->
-                <div id="cfg-pane-memory" class="cfg-pane">
-                    <p class="s-section" style="margin-top:0;">Longitudinal Research Memory</p>
-                    <p class="s-note" style="margin-bottom:1rem;">Auto-extracted insights, arguments, and decisions from all your research sessions. Injected into every Horatio conversation as context.</p>
-                    <div style="display:flex;gap:0.5rem;margin-bottom:1rem;align-items:center;">
-                        <button class="panel-action-primary" onclick="extractMemoryNow()" id="mem-extract-btn" style="font-size:12px;padding:7px 14px;">Extract Now</button>
-                        <button class="mem-clear-btn" onclick="clearAllMemory()">Clear All</button>
-                        <span id="cfg-mem-count" style="font-family:'Space Mono',monospace;font-size:9px;color:var(--text-3);margin-left:auto;">0 nodes</span>
-                    </div>
-                    <p class="s-note" style="margin-bottom:1rem;font-size:11px;">Node types: <span style="color:#14b8a6;">insight</span> · <span style="color:#6366f1;">argument</span> · <span style="color:#f59e0b;">decision</span> · <span style="color:#3b82f6;">source</span> · <span style="color:#ef4444;">question</span> — extracted automatically every 5 responses and on session clear.</p>
-                    <div id="cfg-mem-list"></div>
-                </div><!-- /cfg-pane-memory -->
-            </div>
 
             <!-- MEMORY VIEW (Navigate → Memory) -->
             <div id="view-memory" class="view">

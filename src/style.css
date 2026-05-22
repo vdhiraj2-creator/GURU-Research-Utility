@@ -72,3 +72,61 @@
 .brain-flag-chip{font-family:'Space Mono',monospace;font-size:9px;color:#ef4444;line-height:1.5;}
 /* Empty state */
 .brain-empty{padding:3rem 0;text-align:center;font-family:'Space Mono',monospace;font-size:11px;color:var(--text-3);line-height:2;}
+
+/* ── Settings redesign ─────────────────────────────────────────────────── */
+#view-settings{padding:0;}
+.cfg-body{max-width:780px;margin:0 auto;padding:8px 2.5rem 100px;}
+/* Accordion section */
+.cfgs{margin-bottom:2px;}
+.cfgs-hdr{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;padding:14px 0;cursor:pointer;text-align:left;}
+.cfgs-bar{width:3px;height:14px;border-radius:2px;flex-shrink:0;}
+.cfgs-label{font-family:'Georgia','Times New Roman',serif;font-size:12px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-1);}
+.cfgs-hint{font-family:'Georgia','Times New Roman',serif;font-size:11px;color:var(--text-3);font-style:italic;}
+.cfgs-caret{color:var(--text-3);font-size:12px;margin-left:auto;transition:transform 0.2s;flex-shrink:0;}
+.cfgs-body{padding-bottom:16px;}
+.cfgs-divider{height:1px;background:var(--border);margin:4px 0;}
+.cfgs-sublabel{font-family:'Georgia','Times New Roman',serif;font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-2);margin-bottom:6px;}
+.cfgs-note{font-size:11px;color:var(--text-3);font-style:italic;font-family:'Georgia','Times New Roman',serif;line-height:1.6;}
+.cfgs-input{width:100%;background:var(--card);border:1px solid var(--border);border-radius:4px;padding:10px 12px;color:var(--text-1);font-family:'Georgia','Times New Roman',serif;font-size:13px;outline:none;box-sizing:border-box;transition:border-color 0.15s;}
+.cfgs-input:focus{border-color:var(--accent);}
+textarea.cfgs-input{resize:vertical;}
+/* Provider cards */
+.cfgs-prov-card{border:1px solid var(--border);border-radius:5px;background:var(--card);overflow:hidden;transition:all 0.2s;margin-bottom:6px;}
+.cfgs-prov-card.open{border-color:rgba(31,184,150,0.35);background:rgba(31,184,150,0.04);}
+.cfgs-prov-hdr{display:flex;align-items:center;gap:10px;width:100%;background:none;border:none;padding:11px 14px;cursor:pointer;text-align:left;}
+.cfgs-status-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:all 0.3s;}
+.cfgs-status-dot-on{background:#4ade80;box-shadow:0 0 6px #4ade8066;}
+.cfgs-prov-color{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.cfgs-prov-name{flex:1;font-family:'Georgia','Times New Roman',serif;font-size:12px;color:var(--text-1);}
+.cfgs-prov-badge{font-size:9px;letter-spacing:0.15em;text-transform:uppercase;border:1px solid;border-radius:2px;padding:1px 5px;font-family:'Georgia','Times New Roman',serif;}
+.cfgs-prov-caret{color:var(--text-3);font-size:11px;margin-left:4px;}
+.cfgs-prov-body{padding:0 14px 14px;}
+.cfgs-key-input{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:3px;padding:9px 12px;color:var(--text-2);font-family:monospace;font-size:12px;outline:none;box-sizing:border-box;}
+.cfgs-key-input:focus{border-color:var(--accent);color:var(--text-1);}
+/* Mode matrix */
+.cfgs-matrix-headers{display:grid;grid-template-columns:130px 110px 1fr 14px;gap:8px;padding:0 0 8px;border-bottom:1px solid var(--border);margin-bottom:8px;}
+.cfgs-matrix-hcell{font-family:'Georgia','Times New Roman',serif;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-3);}
+.cfgs-matrix-group{margin-bottom:20px;}
+.cfgs-matrix-group-label{font-family:'Georgia','Times New Roman',serif;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid;}
+.cfgs-matrix-row{display:grid;grid-template-columns:130px 110px 1fr 14px;gap:8px;align-items:center;padding:5px 0;border-bottom:1px solid rgba(42,40,32,0.4);}
+.cfgs-matrix-mode{font-family:'Georgia','Times New Roman',serif;font-size:12px;color:var(--text-2);}
+.cfgs-select{background:var(--card);border:1px solid var(--border);border-radius:3px;padding:7px 8px;color:var(--text-2);font-family:'Georgia','Times New Roman',serif;font-size:11px;outline:none;cursor:pointer;width:100%;}
+.cfgs-select:focus{border-color:var(--accent);}
+.cfgs-cost-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;justify-self:center;}
+/* Brain toggles */
+.cfgs-toggle-row{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;}
+.cfgs-toggle-label{font-family:'Georgia','Times New Roman',serif;font-size:12px;color:var(--text-1);}
+.cfgs-pro-badge{font-size:9px;color:var(--accent);border:1px solid rgba(31,184,150,0.4);border-radius:2px;padding:1px 5px;letter-spacing:0.1em;font-family:'Georgia','Times New Roman',serif;}
+.cfgs-toggle{width:34px;height:18px;border-radius:9px;border:none;cursor:pointer;flex-shrink:0;margin-top:2px;position:relative;transition:background 0.2s;}
+.cfgs-toggle[data-on="true"]{background:var(--accent);}
+.cfgs-toggle[data-on="false"]{background:var(--border);}
+.cfgs-toggle::after{content:'';width:12px;height:12px;border-radius:50%;background:var(--text-1);position:absolute;top:3px;transition:left 0.2s;}
+.cfgs-toggle[data-on="true"]::after{left:19px;}
+.cfgs-toggle[data-on="false"]::after{left:3px;}
+/* Behaviour rows */
+.cfgs-beh-row{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:6px 0;border-bottom:1px solid rgba(42,40,32,0.4);}
+.cfgs-beh-label{font-family:'Georgia','Times New Roman',serif;font-size:12px;color:var(--text-2);flex:1;}
+.cfgs-small-btn{background:transparent;border:1px solid var(--border);border-radius:3px;padding:6px 12px;font-family:'Georgia','Times New Roman',serif;font-size:10px;color:var(--text-2);cursor:pointer;white-space:nowrap;transition:all 0.15s;}
+.cfgs-small-btn:hover{border-color:var(--accent);color:var(--accent);}
+/* Save button flash */
+#cfg-save-btn.saved{background:var(--accent);border-color:var(--accent);color:#020407;}
