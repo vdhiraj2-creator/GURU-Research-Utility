@@ -95,12 +95,14 @@
 
             <!-- VAULT -->
             <div id="view-vault" class="view">
-                <div class="panel-header">
-                    <span class="panel-title">Research Library</span>
-                    <div class="panel-actions">
-                        <button class="panel-action-primary" onclick="document.getElementById('vault-file-input').click()">+ Load Files</button>
+                <div class="tv-header">
+                    <div class="tv-title-block">
+                        <span class="tv-label">Research Library</span>
+                    </div>
+                    <div class="tv-actions">
+                        <button class="tv-btn-primary" onclick="document.getElementById('vault-file-input').click()">+ Load Files</button>
                         <div class="panel-menu-wrap">
-                            <button class="panel-menu-trigger" onclick="togglePanelMenu('vault-panel-menu', event)" title="More actions">···</button>
+                            <button class="tv-btn-ghost" onclick="togglePanelMenu('vault-panel-menu', event)" title="More actions">···</button>
                             <div class="panel-menu" id="vault-panel-menu">
                                 <button class="panel-menu-item" onclick="runGapAnalysis();document.getElementById('vault-panel-menu').classList.remove('open')">Gap Analysis</button>
                                 <button class="panel-menu-item" onclick="toggleVaultSelectMode();document.getElementById('vault-panel-menu').classList.remove('open')" id="vault-select-btn">Select entries</button>
@@ -114,50 +116,51 @@
                     </div>
                     <input type="file" id="vault-file-input" class="hidden" multiple accept=".txt,.md,.json,.pdf,.odt,.docx,.doc">
                 </div>
-                <div class="vault-stats">
-                    <div class="vault-stat"><span class="vault-stat-num" id="vault-count">0</span><span class="vault-stat-label">Entries</span></div>
-                    <div class="vault-stat"><span class="vault-stat-num" id="vault-sessions">0</span><span class="vault-stat-label">Sessions</span></div>
-                    <div class="vault-stat"><span class="vault-stat-num" id="vault-words">0</span><span class="vault-stat-label">Words Indexed</span></div>
+                <div class="tv-stats">
+                    <div class="tv-stat"><span class="tv-stat-num" id="vault-count">0</span><span class="tv-stat-label">Entries</span></div>
+                    <div class="tv-stat"><span class="tv-stat-num" id="vault-sessions">0</span><span class="tv-stat-label">Sessions</span></div>
+                    <div class="tv-stat"><span class="tv-stat-num" id="vault-words">0</span><span class="tv-stat-label">Words Indexed</span></div>
                 </div>
-                <input type="text" class="vault-search" id="vault-search" placeholder="Search vault entries..." oninput="filterVaultDebounced(this.value)">
-                <div id="vault-drop-zone" class="vault-drop-zone"
+                <input type="text" class="tv-search" id="vault-search" placeholder="Search vault entries..." oninput="filterVaultDebounced(this.value)">
+                <div id="vault-drop-zone" class="tv-drop-zone"
                      ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)"
                      onclick="document.getElementById('vault-file-input').click()">
-                    <div class="vault-drop-icon">📂</div>
-                    <div class="vault-drop-text">Drop files here or click to load</div>
-                    <div class="vault-drop-sub">Supports .txt .md .json .pdf — session logs, notes, research files</div>
+                    <svg class="tv-drop-icon" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                    <div class="tv-drop-text">Drop files here or click to load</div>
+                    <div class="tv-drop-sub">.txt · .md · .json · .pdf · .docx — session logs, notes, research files</div>
                 </div>
                 <div id="vault-stage"></div>
             </div>
 
             <!-- REFERENCES -->
             <div id="view-refs" class="view">
-                <div class="refs-header">
-                    <div class="vault-title">// Reference Manager</div>
-                    <div class="vault-header-btns">
-                        <button class="vault-upload-btn" style="background:transparent;color:#34d399;border-color:rgba(52,211,153,0.35);" onclick="document.getElementById('refs-json-input').click()" title="Import references from a JSON file">↑ Import JSON</button>
+                <div class="tv-header">
+                    <div class="tv-title-block">
+                        <span class="tv-label">Reference Manager</span>
+                    </div>
+                    <div class="tv-actions">
+                        <button class="tv-btn-ghost" onclick="document.getElementById('refs-json-input').click()" title="Import references from JSON">↑ Import</button>
                         <input type="file" id="refs-json-input" class="hidden" accept=".json">
-                        <button id="zotero-push-btn" class="vault-upload-btn" style="background:transparent;color:#a78bfa;border-color:rgba(167,139,250,0.4);" onclick="pushAllToZotero()" title="Send all references to Zotero">⇄ Zotero</button>
-                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportBibliography()" title="Export as .rtf">Refs .rtf</button>
-                        <button class="vault-upload-btn" style="background:transparent;color:#475569;border-color:var(--border);" onclick="exportRIS()" title="Export as RIS">Refs RIS</button>
-                        <button class="vault-upload-btn" onclick="toggleRefsAdd()">+ Add Reference</button>
+                        <button id="zotero-push-btn" class="tv-btn-ghost tv-btn-accent" onclick="pushAllToZotero()" title="Push all to Zotero">⇄ Zotero</button>
+                        <button class="tv-btn-ghost" onclick="exportBibliography()" title="Export as .rtf">.rtf</button>
+                        <button class="tv-btn-ghost" onclick="exportRIS()" title="Export as RIS">.ris</button>
+                        <button class="tv-btn-primary" onclick="toggleRefsAdd()">+ Add Reference</button>
                     </div>
                 </div>
 
-                <!-- Stats -->
-                <div class="vault-stats">
-                    <div class="vault-stat"><span class="vault-stat-num" id="refs-count">0</span><span class="vault-stat-label">Total</span></div>
-                    <div class="vault-stat"><span class="vault-stat-num" id="refs-cases">0</span><span class="vault-stat-label">Cases</span></div>
-                    <div class="vault-stat"><span class="vault-stat-num" id="refs-articles">0</span><span class="vault-stat-label">Articles</span></div>
-                    <div class="vault-stat"><span class="vault-stat-num" id="refs-leg">0</span><span class="vault-stat-label">Legislation</span></div>
+                <div class="tv-stats">
+                    <div class="tv-stat"><span class="tv-stat-num" id="refs-count">0</span><span class="tv-stat-label">Total</span></div>
+                    <div class="tv-stat"><span class="tv-stat-num" id="refs-cases">0</span><span class="tv-stat-label">Cases</span></div>
+                    <div class="tv-stat"><span class="tv-stat-num" id="refs-articles">0</span><span class="tv-stat-label">Articles</span></div>
+                    <div class="tv-stat"><span class="tv-stat-num" id="refs-leg">0</span><span class="tv-stat-label">Legislation</span></div>
                 </div>
 
                 <!-- Add panel (hidden by default) -->
-                <div id="refs-add-panel" style="display:none;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.25rem;margin-bottom:1.25rem;">
-                    <div class="refs-add-tabs">
-                        <button class="refs-add-tab active" id="radd-paste-btn" onclick="switchAddMode('paste')">Paste Text</button>
-                        <button class="refs-add-tab" id="radd-doi-btn"   onclick="switchAddMode('doi')">DOI Lookup</button>
-                        <button class="refs-add-tab" id="radd-manual-btn" onclick="switchAddMode('manual')">Manual</button>
+                <div id="refs-add-panel" class="tv-add-panel" style="display:none;">
+                    <div class="tv-add-tabs">
+                        <button class="tv-add-tab active" id="radd-paste-btn" onclick="switchAddMode('paste')">Paste Text</button>
+                        <button class="tv-add-tab" id="radd-doi-btn"   onclick="switchAddMode('doi')">DOI Lookup</button>
+                        <button class="tv-add-tab" id="radd-manual-btn" onclick="switchAddMode('manual')">Manual</button>
                     </div>
 
                     <!-- Paste mode -->
@@ -174,7 +177,7 @@
                             <option value="website">Website / Online</option>
                             <option value="report">Report / Other</option>
                         </select>
-                        <button class="btn-save" style="margin-top:0.6rem;" onclick="addRefFromText()">Extract &amp; Save</button>
+                        <button class="tv-btn-primary" style="margin-top:0.75rem;" onclick="addRefFromText()">Extract &amp; Save</button>
                         <div id="ref-paste-status" class="status" style="font-family:'Space Mono',monospace;font-size:10px;margin-top:0.5rem;min-height:14px;"></div>
                     </div>
 
@@ -182,7 +185,7 @@
                     <div id="radd-doi" style="display:none;">
                         <p class="s-note" style="margin:0.6rem 0;">Enter a DOI — metadata fetched free from CrossRef, then formatted as OSCOLA.</p>
                         <input type="text" id="ref-doi-input" class="s-input" placeholder="e.g. 10.1093/ojls/gqad012" spellcheck="false">
-                        <button class="btn-save" style="margin-top:0.6rem;" onclick="addRefFromDOI()">Lookup &amp; Save</button>
+                        <button class="tv-btn-primary" style="margin-top:0.75rem;" onclick="addRefFromDOI()">Lookup &amp; Save</button>
                         <div id="ref-doi-status" class="status" style="font-family:'Space Mono',monospace;font-size:10px;margin-top:0.5rem;min-height:14px;"></div>
                     </div>
 
@@ -196,7 +199,7 @@
                             <option value="website">Website / Online</option>
                         </select>
                         <div id="ref-manual-fields"></div>
-                        <button class="btn-save" style="margin-top:0.6rem;" onclick="addRefManual()">Save Reference</button>
+                        <button class="tv-btn-primary" style="margin-top:0.75rem;" onclick="addRefManual()">Save Reference</button>
                         <div id="ref-manual-status" class="status" style="font-family:'Space Mono',monospace;font-size:10px;margin-top:0.5rem;min-height:14px;"></div>
                     </div>
                 </div>
@@ -206,13 +209,13 @@
 
                 <!-- Filter + search -->
                 <div style="display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;">
-                    <input type="text" class="vault-search" id="refs-search" placeholder="Search references..." oninput="filterRefsDebounced(this.value)" style="flex:1;min-width:160px;margin-bottom:0;">
-                    <div style="display:flex;gap:0.35rem;flex-wrap:wrap;">
-                        <button class="ref-filter-btn active" data-filter="all"         onclick="setRefsFilter('all',this)">All</button>
-                        <button class="ref-filter-btn" data-filter="case"               onclick="setRefsFilter('case',this)">Cases</button>
-                        <button class="ref-filter-btn" data-filter="legislation"        onclick="setRefsFilter('legislation',this)">Legislation</button>
-                        <button class="ref-filter-btn" data-filter="article"            onclick="setRefsFilter('article',this)">Articles</button>
-                        <button class="ref-filter-btn" data-filter="book"               onclick="setRefsFilter('book',this)">Books</button>
+                    <input type="text" class="tv-search" id="refs-search" placeholder="Search references..." oninput="filterRefsDebounced(this.value)" style="flex:1;min-width:160px;margin-bottom:0;">
+                    <div class="tv-filter-row">
+                        <button class="tv-filter active" data-filter="all"         onclick="setRefsFilter('all',this)">All</button>
+                        <button class="tv-filter" data-filter="case"               onclick="setRefsFilter('case',this)">Cases</button>
+                        <button class="tv-filter" data-filter="legislation"        onclick="setRefsFilter('legislation',this)">Legislation</button>
+                        <button class="tv-filter" data-filter="article"            onclick="setRefsFilter('article',this)">Articles</button>
+                        <button class="tv-filter" data-filter="book"               onclick="setRefsFilter('book',this)">Books</button>
                     </div>
                 </div>
 
@@ -221,18 +224,18 @@
                 <div id="refs-pagination" style="display:none;"></div>
 
                 <!-- Generate outputs -->
-                <div style="display:flex;gap:0.6rem;flex-wrap:wrap;margin-top:1.25rem;" id="refs-generate-bar" style="display:none;">
-                    <button class="btn-save" style="background:transparent;border:1px solid var(--border);color:#94a3b8;" onclick="generateBibliography()">Generate Bibliography</button>
-                    <button class="btn-save" style="background:transparent;border:1px solid var(--border);color:#94a3b8;" onclick="generateTableOfCases()">Table of Cases</button>
-                    <button class="btn-save" style="background:transparent;border:1px solid var(--border);color:#94a3b8;" onclick="generateTableOfLeg()">Table of Legislation</button>
-                    <button class="btn-save" style="background:transparent;border:1px solid rgba(245,158,11,0.45);color:#f59e0b;" onclick="cleanLibrary()" title="Remove duplicates and invalid entries from your saved library">✦ Clean Duplicates</button>
-                    <div style="display:flex;gap:0.35rem;align-items:center;margin-left:auto;">
-                        <select id="bib-export-fmt" class="s-input" style="font-size:11px;padding:3px 7px;height:auto;background:var(--card);color:#94a3b8;border:1px solid var(--border);border-radius:5px;">
+                <div class="tv-gen-bar" id="refs-generate-bar">
+                    <button class="tv-btn-ghost" onclick="generateBibliography()">Bibliography</button>
+                    <button class="tv-btn-ghost" onclick="generateTableOfCases()">Table of Cases</button>
+                    <button class="tv-btn-ghost" onclick="generateTableOfLeg()">Table of Legislation</button>
+                    <button class="tv-btn-ghost tv-btn-warn" onclick="cleanLibrary()" title="Remove duplicates">✦ Clean</button>
+                    <div class="tv-gen-export">
+                        <select id="bib-export-fmt" class="tv-search" style="max-width:180px;margin-bottom:0;">
                             <option value="rtf">.rtf — Word / LibreOffice</option>
                             <option value="html">.html — Word / Browser</option>
                             <option value="txt">.txt — Plain text</option>
                         </select>
-                        <button class="btn-save" style="background:transparent;border:1px solid rgba(167,139,250,0.45);color:#a78bfa;white-space:nowrap;" onclick="exportBibliographyAs()">↓ Export</button>
+                        <button class="tv-btn-accent-outline" onclick="exportBibliographyAs()">↓ Export</button>
                     </div>
                 </div>
                 <div id="refs-output" style="display:none;margin-top:1rem;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;font-family:'Space Mono',monospace;font-size:11px;line-height:1.8;color:#94a3b8;white-space:pre-wrap;"></div>
