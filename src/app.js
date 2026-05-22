@@ -24,7 +24,7 @@ function openCfgTab(tab){document.querySelectorAll(".cfg-tab").forEach(b=>b.clas
 // ── Settings redesign JS ────────────────────────────────────────────────
 
 const CFG_MODE_GROUPS = [
-  { group: 'Research',   color: 'var(--accent)',  modes: ['Critique','Sources','Consistency','Gap Analysis'] },
+  { group: 'Research',   color: '#60a5fa',        modes: ['Critique','Sources','Consistency','Gap Analysis'] },
   { group: 'Writing',    color: 'var(--accent)',  modes: ['Draft','Expand','Summarise','Footnotes'] },
   { group: 'Assessment', color: '#818cf8',        modes: ['Viva Prep','Supervisor Report','Examiner View'] },
   { group: 'Utilities',  color: '#f59e0b',        modes: ['OSCOLA Cite','Argument Map','Database Search'] },

@@ -498,7 +498,13 @@
                   <div class="cfgs-body" id="cfgs-body-persona" style="display:block;">
                     <div class="cfgs-sublabel">Active Voice</div>
                     <input id="cfg-scholar-persona" class="cfgs-input" placeholder="Describe your preferred AI scholarly voice...">
-                    <div class="cfgs-note">e.g. Socratic — rigorous and probing · Charon — authoritative gravitas · Collegiate peer · Devil's advocate</div>
+                    <div class="cfgs-voice-chips">
+                        <button class="cfgs-voice-chip" onclick="document.getElementById('cfg-scholar-persona').value=this.dataset.v" data-v="Socratic — rigorous, probing, expects well-formed arguments">Socratic</button>
+                        <button class="cfgs-voice-chip" onclick="document.getElementById('cfg-scholar-persona').value=this.dataset.v" data-v="Charon — authoritative gravitas, does not soften assessment">Charon</button>
+                        <button class="cfgs-voice-chip" onclick="document.getElementById('cfg-scholar-persona').value=this.dataset.v" data-v="Collegiate peer — engaged, collaborative, constructive">Collegiate peer</button>
+                        <button class="cfgs-voice-chip" onclick="document.getElementById('cfg-scholar-persona').value=this.dataset.v" data-v="Devil's advocate — challenges every assumption, surfaces weaknesses">Devil's advocate</button>
+                        <button class="cfgs-voice-chip" onclick="document.getElementById('cfg-scholar-persona').value=this.dataset.v" data-v="Senior barrister — precise, formal, citation-first">Senior barrister</button>
+                    </div>
                     <div class="cfgs-sublabel" style="margin-top:14px;">PhD Research Focus</div>
                     <textarea id="cfg-directive" class="cfgs-input" style="min-height:72px;resize:vertical;" placeholder="e.g. Medical negligence and AI diagnostics under UK tort law — duty of care, causation, NHS liability frameworks."></textarea>
                   </div>
@@ -637,7 +643,7 @@
                           </div>
                           <div class="cfgs-note" style="margin-top:2px;">Auto-extracts insights, arguments and decisions from every session</div>
                         </div>
-                        <button class="cfgs-toggle" id="toggle-brain-mem" onclick="toggleBrainFeature('mem')" data-on="false"></button>
+                        <button class="cfgs-toggle" id="toggle-brain-mem" onclick="toggleBrainFeature('mem')" data-on="true"></button>
                       </div>
                       <div class="cfgs-toggle-row">
                         <div>

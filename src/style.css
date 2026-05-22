@@ -183,3 +183,9 @@ textarea.cfgs-input{resize:vertical;}
 .role-tag-icon{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;opacity:0.55;}
 .role-tag-icon.bouncing{animation:roleIconBounce 1.8s ease-in-out infinite;opacity:0.75;}
 @keyframes roleIconBounce{0%,100%{transform:translateY(0);}40%{transform:translateY(-3px);}60%{transform:translateY(-1.5px);}}
+
+/* Voice chips */
+.cfgs-voice-chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.cfgs-voice-chip{background:transparent;border:1px solid var(--border);border-radius:3px;padding:4px 12px;font-family:'Georgia','Times New Roman',serif;font-size:10px;letter-spacing:0.08em;color:var(--text-3);cursor:pointer;transition:all 0.15s;}
+.cfgs-voice-chip:hover{border-color:var(--accent);color:var(--text-1);}
+.cfgs-voice-chip:active{background:var(--accent-dim);}
