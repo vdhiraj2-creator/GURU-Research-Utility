@@ -190,6 +190,8 @@ function _markLatestBubble(){
 }
 
 Object.assign(window, {
+  setStatus,
+  addBubble,
   _markLatestBubble,
   toggleCfgSection,
   toggleCfgsProv,

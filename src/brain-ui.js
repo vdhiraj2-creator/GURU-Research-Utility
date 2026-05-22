@@ -2,7 +2,7 @@
 // Brain tab UI — connects the HoRatio frontend to the brain IPC layer.
 // All brainAPI calls are no-ops if window.brainAPI is undefined (web/PWA mode).
 
-const _brain = window.brainAPI || null;
+const _brain = () => window.brainAPI || null;
 
 let _brainFilter     = 'all';
 let _brainCatFilter  = '';
@@ -25,14 +25,14 @@ async function _checkOllamaStatus() {
   const label = document.getElementById('brain-ollama-label');
   if (!pill) return;
 
-  if (!_brain) {
+  if (!_brain()) {
     pill.className = 'brain-ollama-pill brain-ollama-off';
     label.textContent = 'Ollama — desktop only';
     return;
   }
 
   try {
-    const res = await _brain.ollamaStatus();
+    const res = await _brain().ollamaStatus();
     if (res.running) {
       pill.className = 'brain-ollama-pill brain-ollama-on';
       label.textContent = `Ollama — ${res.models.length} model${res.models.length !== 1 ? 's' : ''}`;
@@ -51,14 +51,14 @@ async function _checkOllamaStatus() {
 // ── IPC event listeners ────────────────────────────────────────────────────
 
 function _registerListeners() {
-  if (_brainListeners || !_brain) return;
+  if (_brainListeners || !_brain()) return;
   _brainListeners = true;
 
-  _brain.on('brain:source-processing', ({ sourceId, url, status }) => {
+  _brain().on('brain:source-processing', ({ sourceId, url, status }) => {
     _setProgress(true, `${status}: ${_shortUrl(url)}`);
   });
 
-  _brain.on('brain:source-complete', ({ source }) => {
+  _brain().on('brain:source-complete', ({ source }) => {
     // Upsert source into local list and re-render
     const idx = _brainSources.findIndex(s => s.id === source.id);
     if (idx >= 0) _brainSources[idx] = source;
@@ -67,18 +67,18 @@ function _registerListeners() {
     _updateStats();
   });
 
-  _brain.on('brain:source-failed', ({ url, error }) => {
+  _brain().on('brain:source-failed', ({ url, error }) => {
     _addAlert('error', `Failed to ingest ${_shortUrl(url)}: ${error}`);
   });
 
-  _brain.on('brain:source-flagged', ({ sourceId, url, flags, confidence }) => {
+  _brain().on('brain:source-flagged', ({ sourceId, url, flags, confidence }) => {
     const msg = `Source flagged for review — confidence ${(confidence * 100).toFixed(0)}%`
               + (flags?.length ? `: ${flags[0]}` : '');
     _addAlert('flag', msg, sourceId);
     brainRefreshSources();
   });
 
-  _brain.on('brain:contradiction', ({ sourceId, contradictingSources, recommendation }) => {
+  _brain().on('brain:contradiction', ({ sourceId, contradictingSources, recommendation }) => {
     const detail = (contradictingSources || []).slice(0, 2).join(' · ');
     _addAlert('contradiction',
       `Contradiction detected (${recommendation}): ${detail}`,
@@ -87,13 +87,13 @@ function _registerListeners() {
     );
   });
 
-  _brain.on('brain:search-complete', ({ query, count }) => {
+  _brain().on('brain:search-complete', ({ query, count }) => {
     _setProgress(false);
     _addAlert('info', `Search complete — ${count} result${count !== 1 ? 's' : ''} for "${query}"`);
     brainRefreshSources();
   });
 
-  _brain.on('brain:progress', ({ stage, query }) => {
+  _brain().on('brain:progress', ({ stage, query }) => {
     _setProgress(true, query ? `${stage}: ${query}` : stage);
   });
 }
@@ -103,10 +103,10 @@ function _registerListeners() {
 window.brainSearch = async function () {
   const q = document.getElementById('brain-search-input')?.value.trim();
   if (!q) return;
-  if (!_brain) return _noBrainAlert();
+  if (!_brain()) return _noBrainAlert();
   _setProgress(true, `Searching: ${q}`);
   try {
-    await _brain.search(q);
+    await _brain().search(q);
   } catch (e) {
     _setProgress(false);
     _addAlert('error', `Search failed: ${e.message}`);
@@ -116,10 +116,10 @@ window.brainSearch = async function () {
 window.brainSemanticSearch = async function () {
   const q = document.getElementById('brain-semantic-input')?.value.trim();
   if (!q) return;
-  if (!_brain) return _noBrainAlert();
+  if (!_brain()) return _noBrainAlert();
   _setProgress(true, 'Running semantic search…');
   try {
-    const res = await _brain.semanticSearch(q);
+    const res = await _brain().semanticSearch(q);
     _setProgress(false);
     if (!res.ok) throw new Error(res.error);
     _brainSources = res.results;
@@ -134,10 +134,10 @@ window.brainSemanticSearch = async function () {
 window.brainIngestUrl = async function () {
   const url = document.getElementById('brain-url-input')?.value.trim();
   if (!url) return;
-  if (!_brain) return _noBrainAlert();
+  if (!_brain()) return _noBrainAlert();
   _setProgress(true, `Ingesting: ${_shortUrl(url)}`);
   try {
-    const res = await _brain.ingestUrl(url);
+    const res = await _brain().ingestUrl(url);
     _setProgress(false);
     if (res.ok) {
       document.getElementById('brain-url-input').value = '';
@@ -153,10 +153,10 @@ window.brainIngestUrl = async function () {
 };
 
 window.brainRefreshSources = async function () {
-  if (!_brain) { _renderEmpty(); return; }
+  if (!_brain()) { _renderEmpty(); return; }
   try {
     const filters = _brainFilter === 'flagged' ? { status: 'flagged' } : {};
-    const res = await _brain.getSources(filters);
+    const res = await _brain().getSources(filters);
     if (res.ok) {
       _brainSources = res.sources || [];
       _renderSources();
@@ -166,9 +166,9 @@ window.brainRefreshSources = async function () {
 };
 
 window.brainDeleteSource = async function (id) {
-  if (!_brain) return;
+  if (!_brain()) return;
   if (!confirm('Remove this source from the knowledge base?')) return;
-  await _brain.deleteSource(id);
+  await _brain().deleteSource(id);
   _brainSources = _brainSources.filter(s => s.id !== id);
   _renderSources();
   _updateStats();
@@ -269,7 +269,7 @@ function _sourceCard(s) {
 }
 
 function _emptyState() {
-  if (!_brain) {
+  if (!_brain()) {
     return `<div class="brain-empty">Brain runs in the desktop app — open HoRatio in Electron to use it.</div>`;
   }
   return `<div class="brain-empty">No sources yet.<br>Search the web or paste a URL above to build your knowledge base.</div>`;
