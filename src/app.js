@@ -31,12 +31,12 @@ const CFG_MODE_GROUPS = [
 ];
 
 const CFG_PROVIDERS = [
-  { id:'gemini',     label:'Gemini'    },
-  { id:'claude',     label:'Claude'    },
-  { id:'groq',       label:'Groq'      },
-  { id:'openai',     label:'ChatGPT'   },
-  { id:'perplexity', label:'Perplexity'},
-  { id:'ollama',     label:'Ollama'    },
+  { id:'gemini',     label:'✦ Gemini'     },
+  { id:'claude',     label:'◉ Claude'     },
+  { id:'groq',       label:'⚡ Groq'       },
+  { id:'openai',     label:'⊛ ChatGPT'   },
+  { id:'perplexity', label:'◆ Perplexity' },
+  { id:'ollama',     label:'⬡ Ollama'     },
 ];
 
 const CFG_MODELS = {

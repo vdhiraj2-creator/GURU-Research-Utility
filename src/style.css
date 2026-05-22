@@ -189,3 +189,6 @@ textarea.cfgs-input{resize:vertical;}
 .cfgs-voice-chip{background:transparent;border:1px solid var(--border);border-radius:3px;padding:4px 12px;font-family:'Georgia','Times New Roman',serif;font-size:10px;letter-spacing:0.08em;color:var(--text-3);cursor:pointer;transition:all 0.15s;}
 .cfgs-voice-chip:hover{border-color:var(--accent);color:var(--text-1);}
 .cfgs-voice-chip:active{background:var(--accent-dim);}
+
+/* Provider brand icons */
+.cfgs-prov-icon{flex-shrink:0;display:block;}
