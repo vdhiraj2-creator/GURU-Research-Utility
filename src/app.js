@@ -281,4 +281,10 @@ Object.assign(window, {
   openCfgTab,
   renderMemoryPanels,
   saveThesisBrain,
+  setDot,
+  _updateDirectiveStrip,
+  updateStorageMeter,
+  initFirebase,
 });
+Object.defineProperty(window,'_fbEnabled',{get:()=>_fbEnabled,set:v=>{_fbEnabled=v},configurable:true});
+Object.defineProperty(window,'_fbNodeHash',{get:()=>_fbNodeHash,set:v=>{_fbNodeHash=v},configurable:true});
