@@ -40,11 +40,11 @@ const CFG_PROVIDERS = [
 ];
 
 const CFG_MODELS = {
-  gemini:     ['gemini-2.5-flash','gemini-2.5-pro','gemini-2.0-flash'],
+  gemini:     ['gemini-3.5-flash','gemini-2.5-pro','gemini-2.5-flash'],
   claude:     ['claude-opus-4-7','claude-sonnet-4-6','claude-haiku-4-5-20251001'],
-  groq:       ['llama-3.3-70b-versatile','llama-3.1-8b-instant','gemma2-9b-it'],
-  openai:     ['gpt-4o','gpt-4o-mini','gpt-4.1','o4-mini'],
-  perplexity: ['sonar-pro','sonar','sonar-reasoning-pro'],
+  groq:       ['meta-llama/llama-4-scout-17b-16e-instruct','llama-3.3-70b-versatile','llama-3.1-8b-instant'],
+  openai:     ['gpt-4.1','gpt-4.1-mini','o4-mini'],
+  perplexity: ['sonar-pro','sonar-deep-research','sonar-reasoning-pro','sonar'],
   ollama:     [localStorage.getItem('SK_MODEL_OLLAMA')||'phi4-mini'],
 };
 
