@@ -3,11 +3,20 @@
 // Falls back to cosine similarity in memory if LanceDB is unavailable —
 // this makes the rest of the brain fully operational even without native bindings.
 
-const path = require('path');
-const fs   = require('fs');
+const path     = require('path');
+const fs       = require('fs');
+const { app }  = require('electron');
 
-const VECTORS_DIR = path.join(__dirname, '..', '..', '..', 'data', 'vectors');
-if (!fs.existsSync(VECTORS_DIR)) fs.mkdirSync(VECTORS_DIR, { recursive: true });
+const VECTORS_DIR = path.join(app.getPath('userData'), 'horatio-data', 'vectors');
+if (!fs.existsSync(VECTORS_DIR)) {
+  fs.mkdirSync(VECTORS_DIR, { recursive: true });
+  // One-time migration: copy existing vector store from the old app-relative location
+  const legacyVectors = path.join(__dirname, '..', '..', '..', 'data', 'vectors');
+  if (fs.existsSync(legacyVectors)) {
+    fs.cpSync(legacyVectors, VECTORS_DIR, { recursive: true });
+    console.log('[VectorStore] Migrated vectors → userData');
+  }
+}
 
 class VectorStore {
   constructor() {

@@ -4,10 +4,21 @@
 const Database = require('better-sqlite3');
 const path     = require('path');
 const fs       = require('fs');
+const { app }  = require('electron');
 
-// Store the database file in <app>/data/ alongside the vector store.
-const DATA_DIR = path.join(__dirname, '..', '..', '..', 'data');
-if (!fs.existsSync(DATA_DIR)) fs.mkdirSync(DATA_DIR, { recursive: true });
+// Store in Electron's userData directory — writable on all platforms, survives updates.
+const DATA_DIR    = path.join(app.getPath('userData'), 'horatio-data');
+const LEGACY_DIR  = path.join(__dirname, '..', '..', '..', 'data');
+
+if (!fs.existsSync(DATA_DIR)) {
+  fs.mkdirSync(DATA_DIR, { recursive: true });
+  // One-time migration: copy existing DB from the old app-relative location
+  const legacyDb = path.join(LEGACY_DIR, 'horatio.db');
+  if (fs.existsSync(legacyDb)) {
+    fs.copyFileSync(legacyDb, path.join(DATA_DIR, 'horatio.db'));
+    console.log('[DB] Migrated horatio.db → userData');
+  }
+}
 
 const DB_PATH = path.join(DATA_DIR, 'horatio.db');
 

@@ -64,114 +64,43 @@ class BrainOrchestrator {
     const existing = db.prepare("SELECT id, status FROM sources WHERE url = ?").get(url);
     if (existing?.status === 'complete') return false;
 
-    const sourceId = existing?.id ?? db.prepare(
-      'INSERT OR IGNORE INTO sources (url, title, status) VALUES (?, ?, ?)'
-    ).run(url, opts.suggestedTitle || url, 'pending').lastInsertRowid;
+    // INSERT OR IGNORE then SELECT to get the real ID — avoids race where
+    // a concurrent ingest on the same URL causes lastInsertRowid to return 0.
+    if (!existing) {
+      db.prepare(
+        'INSERT OR IGNORE INTO sources (url, title, status) VALUES (?, ?, ?)'
+      ).run(url, opts.suggestedTitle || url, 'pending');
+    }
+    const sourceId = db.prepare('SELECT id FROM sources WHERE url = ?').get(url)?.id;
+    if (!sourceId) return false;
 
     this._emit('brain:source-processing', { sourceId, url, status: 'fetching' });
     db.prepare("UPDATE sources SET status='processing' WHERE id=?").run(sourceId);
 
-    // Step 1 — Fetch
     const fetched = await sourceFetcher.fetchUrl(url);
-
-    // Step 2 — Summarise + score relevance
-    this._emit('brain:source-processing', { sourceId, url, status: 'analysing' });
-    const analysis = await sourceAnalyser.analyse(fetched.text);
-
-    // Step 3 — HallucinationGuard: verify summary against source text
-    this._emit('brain:source-processing', { sourceId, url, status: 'verifying' });
-    const guard = await hallucinationGuard.verify(analysis.summary, fetched.text);
-
-    if (!guard.verified || guard.confidence < 0.7) {
-      await hallucinationGuard.flagForReview(
-        sourceId,
-        guard.hallucinationFlags,
-        `verified=${guard.verified} confidence=${guard.confidence.toFixed(2)}`,
-        'flag'   // soft flag — not removed, but marked for human review
-      );
-      this._emit('brain:source-flagged', {
-        sourceId, url,
-        flags:      guard.hallucinationFlags,
-        confidence: guard.confidence,
-        reason:     'Failed hallucination check',
-      });
-      return false;
-    }
-
-    // Step 4 — Cross-reference against existing knowledge base
-    const crossRef = await hallucinationGuard.crossReference(
-      guard.verifiedSummary, sourceId
-    );
-
-    if (crossRef.contradictionDetected) {
-      // Notify UI — user decides whether to accept or reject
-      this._emit('brain:contradiction', {
-        sourceId, url,
-        contradictingSources: crossRef.contradictingSources,
-        recommendation:       crossRef.recommendation,
-      });
-      // If recommendation is 'reject', remove immediately
-      if (crossRef.recommendation === 'reject') {
-        await hallucinationGuard.flagForReview(sourceId, [], 'Contradiction detected', 'reject');
-        return false;
-      }
-      // 'flag' or 'accept' — write but mark contradiction
-      db.prepare("UPDATE sources SET contradiction_flags=? WHERE id=?")
-        .run(JSON.stringify(crossRef.contradictingSources), sourceId);
-    }
-
-    // Step 5 — Embed the verified summary
-    let vectorId = null;
-    try {
-      const embedding = await ollama.embed(guard.verifiedSummary);
-      vectorId = `src_${sourceId}`;
-      await vectorStore.addSource(vectorId, sourceId, guard.verifiedSummary, embedding);
-    } catch (err) {
-      console.warn('[Orchestrator] Embedding failed (non-fatal):', err.message);
-    }
-
-    // Step 6 — Write to SQLite
-    db.prepare(`
-      UPDATE sources SET
-        title               = ?,
-        summary             = ?,
-        relevance_score     = ?,
-        relevance_notes     = ?,
-        category            = ?,
-        tags                = ?,
-        hallucination_flags = ?,
-        guard_confidence    = ?,
-        requires_review     = 0,
-        vector_id           = ?,
-        status              = 'complete',
-        processed_at        = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `).run(
-      fetched.title                         || opts.suggestedTitle || url,
-      guard.verifiedSummary,
-      analysis.relevanceScore,
-      analysis.relevanceNotes,
-      analysis.category,
-      JSON.stringify(analysis.tags),
-      JSON.stringify(guard.hallucinationFlags),
-      guard.confidence,
-      vectorId,
-      sourceId
-    );
-
-    // Upsert category count
-    this._upsertCategory(db, analysis.category);
-
-    const source = db.prepare('SELECT * FROM sources WHERE id = ?').get(sourceId);
-    this._emit('brain:source-complete', { source: this._deserialise(source) });
-
-    return true;
+    return this._processContent(sourceId, url, fetched, { crossRef: true });
   }
 
   // Ingest a local PDF file.
   async ingestPdf(filePath) {
+    const db      = getDb();
     const fetched = await sourceFetcher.fetchPdf(filePath);
-    return this._ingestFetchedContent(filePath, fetched);
+
+    const existing = db.prepare("SELECT id, status FROM sources WHERE url = ?").get(filePath);
+    if (existing?.status === 'complete') return false;
+
+    if (!existing) {
+      db.prepare(
+        'INSERT OR IGNORE INTO sources (url, title, status) VALUES (?, ?, ?)'
+      ).run(filePath, fetched.title, 'pending');
+    }
+    const sourceId = db.prepare('SELECT id FROM sources WHERE url = ?').get(filePath)?.id;
+    if (!sourceId) return false;
+
+    db.prepare("UPDATE sources SET status='processing' WHERE id=?").run(sourceId);
+    this._emit('brain:source-processing', { sourceId, url: filePath, status: 'analysing' });
+
+    return this._processContent(sourceId, filePath, fetched, { crossRef: true });
   }
 
   // Semantic search: embed query, find nearest vectors, return full source objects.
@@ -233,47 +162,100 @@ class BrainOrchestrator {
 
   // ── Private helpers ────────────────────────────────────────────────────
 
-  async _ingestFetchedContent(identifier, fetched) {
+  // Shared pipeline: analyse → verify → [crossRef] → embed → write.
+  // Called by both ingestUrl and ingestPdf so both paths run identical steps.
+  async _processContent(sourceId, identifier, fetched, opts = {}) {
     const db = getDb();
-    const existing = db.prepare("SELECT id, status FROM sources WHERE url = ?").get(identifier);
-    if (existing?.status === 'complete') return false;
 
-    const sourceId = existing?.id ?? db.prepare(
-      'INSERT OR IGNORE INTO sources (url, title, status) VALUES (?, ?, ?)'
-    ).run(identifier, fetched.title, 'pending').lastInsertRowid;
-
+    // Step 1 — Summarise + score relevance
     this._emit('brain:source-processing', { sourceId, url: identifier, status: 'analysing' });
     const analysis = await sourceAnalyser.analyse(fetched.text);
-    const guard    = await hallucinationGuard.verify(analysis.summary, fetched.text);
+
+    // Step 2 — HallucinationGuard: verify summary against source text
+    this._emit('brain:source-processing', { sourceId, url: identifier, status: 'verifying' });
+    const guard = await hallucinationGuard.verify(analysis.summary, fetched.text);
 
     if (!guard.verified || guard.confidence < 0.7) {
-      await hallucinationGuard.flagForReview(sourceId, guard.hallucinationFlags,
-        `verified=${guard.verified}`, 'flag');
-      this._emit('brain:source-flagged', { sourceId, flags: guard.hallucinationFlags });
+      await hallucinationGuard.flagForReview(
+        sourceId,
+        guard.hallucinationFlags,
+        `verified=${guard.verified} confidence=${guard.confidence.toFixed(2)}`,
+        'flag'
+      );
+      this._emit('brain:source-flagged', {
+        sourceId, url: identifier,
+        flags:      guard.hallucinationFlags,
+        confidence: guard.confidence,
+        reason:     'Failed hallucination check',
+      });
       return false;
     }
 
+    // Step 3 — Cross-reference against existing knowledge base
+    if (opts.crossRef) {
+      const crossRef = await hallucinationGuard.crossReference(
+        guard.verifiedSummary, sourceId
+      );
+
+      if (crossRef.contradictionDetected) {
+        this._emit('brain:contradiction', {
+          sourceId, url: identifier,
+          contradictingSources: crossRef.contradictingSources,
+          recommendation:       crossRef.recommendation,
+        });
+        if (crossRef.recommendation === 'reject') {
+          await hallucinationGuard.flagForReview(sourceId, [], 'Contradiction detected', 'reject');
+          return false;
+        }
+        db.prepare("UPDATE sources SET contradiction_flags=? WHERE id=?")
+          .run(JSON.stringify(crossRef.contradictingSources), sourceId);
+      }
+    }
+
+    // Step 4 — Embed the verified summary
     let vectorId = null;
     try {
       const embedding = await ollama.embed(guard.verifiedSummary);
       vectorId = `src_${sourceId}`;
       await vectorStore.addSource(vectorId, sourceId, guard.verifiedSummary, embedding);
-    } catch { /* non-fatal */ }
+    } catch (err) {
+      console.warn('[Orchestrator] Embedding failed (non-fatal):', err.message);
+    }
 
+    // Step 5 — Write to SQLite
     db.prepare(`
-      UPDATE sources SET title=?, summary=?, relevance_score=?, relevance_notes=?,
-        category=?, tags=?, hallucination_flags=?, guard_confidence=?,
-        vector_id=?, status='complete', processed_at=CURRENT_TIMESTAMP
-      WHERE id=?
+      UPDATE sources SET
+        title               = ?,
+        summary             = ?,
+        relevance_score     = ?,
+        relevance_notes     = ?,
+        category            = ?,
+        tags                = ?,
+        hallucination_flags = ?,
+        guard_confidence    = ?,
+        requires_review     = 0,
+        vector_id           = ?,
+        status              = 'complete',
+        processed_at        = CURRENT_TIMESTAMP
+      WHERE id = ?
     `).run(
-      fetched.title, guard.verifiedSummary, analysis.relevanceScore, analysis.relevanceNotes,
-      analysis.category, JSON.stringify(analysis.tags),
-      JSON.stringify(guard.hallucinationFlags), guard.confidence, vectorId, sourceId
+      fetched.title || identifier,
+      guard.verifiedSummary,
+      analysis.relevanceScore,
+      analysis.relevanceNotes,
+      analysis.category,
+      JSON.stringify(analysis.tags),
+      JSON.stringify(guard.hallucinationFlags),
+      guard.confidence,
+      vectorId,
+      sourceId
     );
 
     this._upsertCategory(db, analysis.category);
+
     const source = db.prepare('SELECT * FROM sources WHERE id = ?').get(sourceId);
     this._emit('brain:source-complete', { source: this._deserialise(source) });
+
     return true;
   }
 
@@ -291,7 +273,7 @@ class BrainOrchestrator {
     }
   }
 
-  _deserialise(row) {
+  deserialise(row) {
     if (!row) return null;
     return {
       ...row,
@@ -301,6 +283,9 @@ class BrainOrchestrator {
       contradiction_flags: this._tryParse(row.contradiction_flags, []),
     };
   }
+
+  // Keep underscore alias so existing callers (mcp-client, brain-handlers) don't break.
+  _deserialise(row) { return this.deserialise(row); }
 
   _tryParse(json, fallback) {
     try { return JSON.parse(json) ?? fallback; } catch { return fallback; }

@@ -45,7 +45,7 @@ function createWindow() {
     ses.setPermissionRequestHandler((webContents, permission, callback) => {
         const allowed = [
             'microphone', 'media', 'audioCapture',
-            'mediaKeySystem', 'geolocation'
+            'mediaKeySystem'
         ];
         console.log('[Horatio] permission request:', permission,
             '→', allowed.includes(permission) ? 'GRANTED' : 'DENIED');
@@ -99,12 +99,14 @@ function createWindow() {
 
 app.whenReady().then(() => {
     // MCP stdio server mode — spawned by Claude Desktop / Cursor, no window needed
-    if (process.argv.includes('--mcp-server')) {
+    if (process.argv.includes('--mcp-server') || process.argv.includes('--mcp')) {
         require('./src/main/db/schema');        // initialise DB
         require('./src/main/mcp/mcp-client').startStdioServer();
         return;
     }
 
+    // Keystore must be registered before createWindow so preload sendSync is handled
+    require('./src/main/ipc/keystore-handlers');
     createWindow();
     // Brain IPC handlers — registered after window exists so emits reach the renderer
     require('./src/main/ipc/brain-handlers');
