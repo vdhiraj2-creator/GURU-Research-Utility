@@ -65,6 +65,7 @@
   },
   "dependencies": {
     "@lancedb/lancedb": "^0.29.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
     "better-sqlite3": "^12.10.0",
     "dotenv": "^16.6.1",
     "node-html-parser": "^7.1.0",

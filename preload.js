@@ -35,3 +35,10 @@ contextBridge.exposeInMainWorld('brainAPI', {
     return () => ipcRenderer.removeListener(channel, handler);
   },
 });
+
+// ── MCP tool bridge ───────────────────────────────────────────────────────────
+// Exposes HoRatio's 9 horatio_* tools to the renderer's AI agent loop.
+contextBridge.exposeInMainWorld('mcpAPI', {
+  listTools: ()           => ipcRenderer.invoke('mcp:list-tools'),
+  callTool:  (name, args) => ipcRenderer.invoke('mcp:call-tool', { name, args }),
+});

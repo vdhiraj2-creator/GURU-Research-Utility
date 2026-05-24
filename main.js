@@ -98,9 +98,18 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+    // MCP stdio server mode — spawned by Claude Desktop / Cursor, no window needed
+    if (process.argv.includes('--mcp-server')) {
+        require('./src/main/db/schema');        // initialise DB
+        require('./src/main/mcp/mcp-client').startStdioServer();
+        return;
+    }
+
     createWindow();
     // Brain IPC handlers — registered after window exists so emits reach the renderer
     require('./src/main/ipc/brain-handlers');
+    // MCP IPC handlers — lets renderer AI call horatio_* tools via window.mcpAPI
+    require('./src/main/ipc/mcp-handlers');
 });
 
 app.on('window-all-closed', () => {
