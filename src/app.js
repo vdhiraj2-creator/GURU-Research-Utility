@@ -45,7 +45,7 @@ const CFG_MODELS = {
   groq:       ['meta-llama/llama-4-scout-17b-16e-instruct','llama-3.3-70b-versatile','llama-3.1-8b-instant'],
   openai:     ['gpt-4.1','gpt-4.1-mini','o4-mini'],
   perplexity: ['sonar-pro','sonar-deep-research','sonar-reasoning-pro','sonar'],
-  ollama:     [localStorage.getItem('SK_MODEL_OLLAMA')||'phi4-mini'],
+  ollama:     [localStorage.getItem('horatio_model_ollama')||'phi4-mini'],
 };
 
 function _modeSlug(mode){ return mode.toLowerCase().replace(/\s+/g,'-'); }
